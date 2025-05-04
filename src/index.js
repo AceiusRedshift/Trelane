@@ -48,7 +48,13 @@ let Edit = {
             m.route.set(SPLASH_PATH);
         }
 
-        return m("p", currentDeck.name);
+        if (currentDeck.cards.length === 0) {
+            return m("p", "No cards in deck.")
+        }
+
+        return m(".user-list", currentDeck.cards.map(function (card) {
+            return m(".user-list-item", card.front + " " + card.back)
+        }))
     }
 }
 

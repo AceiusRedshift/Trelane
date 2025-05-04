@@ -41,6 +41,14 @@ button {
     padding: var(--spacing);
 }
 
+table {
+    border: var(--border);
+
+    td {
+        padding: var(--spacing);
+    }
+}
+
 .primary {
     background-color: var(--link);
     color: var(--back);

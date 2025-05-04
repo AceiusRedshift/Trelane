@@ -14,8 +14,8 @@ export let Splash = {
             m("h2.subtitle", "A semi-competent SRS"),
         ]),
         m("#splash-bar", [
-            button("New Deck", Splash.makeDeck),
-            button("Load Deck", Splash.loadDeck, "accent")
+            button("New Deck", Splash.makeDeck, "primary"),
+            button("Load Deck", Splash.loadDeck)
         ])
     ]
 }

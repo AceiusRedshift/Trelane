@@ -41,6 +41,12 @@ button {
     padding: var(--spacing);
 }
 
+.primary {
+    background-color: var(--link);
+    color: var(--back);
+    border: 0;
+}
+
 .heading {
     text-align: center;
 
@@ -66,11 +72,5 @@ button {
 
     button {
         margin: 0 calc(var(--spacing) / 2);
-    }
-
-    .accent {
-        background-color: var(--link);
-        color: var(--back);
-        border: 0;
     }
 }

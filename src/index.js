@@ -7,6 +7,12 @@ window.SPLASH_PATH = "/splash";
 window.EDITOR_PATH = "/edit";
 window.CurrentDeck = null;
 
+setInterval(() => {
+    if (CurrentDeck != null) {
+        // TODO autosave
+    }
+}, 1000);
+
 try {
     let routes = {};
     routes[`${SPLASH_PATH}`] = Splash;

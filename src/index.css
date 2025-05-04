@@ -52,10 +52,21 @@ button {
 
 table {
     border: var(--border);
+    min-width: 400px;
 
     td {
         padding: var(--spacing);
     }
+
+    td.last {
+        text-align: right;
+    }
+}
+
+.card-input {
+    border: 0;
+    background: transparent;
+    color: var(--text);
 }
 
 .primary {

@@ -3,28 +3,28 @@ import {Card} from "./card";
 import {button, isNull} from "./utils";
 
 function makeTable() {
-    let table = [
-        m("tr", [
-            m("th", "Front"),
-            m("th", "Back"),
-            m("th", "Options")
-        ])
-    ];
+    let table = [];
 
     for (const i in CurrentDeck.cards) {
         let card = CurrentDeck.cards[i];
 
         table.push(
             m("tr", [
-                m("td", card.front),
-                m("td", card.back),
-                m("td", [
-                    m("a", {
-                        onclick: () => {
-                            CurrentDeck.cards[i] = new Card(prompt("New Front", card.front), prompt("New Back", card.back))
-                        }
-                    }, "edit"),
-                    m("span", " "),
+                m("td", m("input.card-input", {
+                    value: card.front,
+                    placeholder: `Card ${Number(i) + 1} Front`,
+                    oninput: e => {
+                        CurrentDeck.cards[i].front = e.target.value;
+                    }
+                })),
+                m("td", m("input.card-input", {
+                    value: card.back,
+                    placeholder: `Card ${Number(i) + 1} Back`,
+                    oninput: e => {
+                        CurrentDeck.cards[i].back = e.target.value;
+                    }
+                })),
+                m("td.last", [
                     m("a", {
                         onclick: () => {
                             if (confirm("Are you sure you want to delete this card?")) {
@@ -55,17 +55,17 @@ export let Edit = {
             return;
         }
 
-        console.log(deck);
         let content = deck.cards.length === 0 ? m("p", "No cards in deck.") : makeTable();
 
         return [
             m("h1", deck.name),
             m("p", `Author: ${deck.author}`),
+            m("p", "(Just click and start typing to edit!)"),
             content,
             m("br"),
             m(".buttons", [
                 button("New Card", () => {
-                    deck.cards.push(new Card(prompt("Card Front"), prompt("Card Back")))
+                    deck.cards.push(new Card("", ""))
                 }, "primary"),
                 button("Home", () => {
                     m.route.set(SPLASH_PATH);

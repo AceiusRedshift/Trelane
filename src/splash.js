@@ -1,7 +1,6 @@
 import {Deck} from "./deck";
 import {button} from "./button";
 import m from "mithril";
-import {Saver} from "./saver";
 
 export let Splash = {
     makeDeck: () => {
@@ -14,7 +13,7 @@ export let Splash = {
             m("h1.title", "Trelane"),
             m("h2.subtitle", "A semi-competent SRS"),
         ]),
-        m("#splash-bar", [
+        m(".buttons", [
             button("New Deck", Splash.makeDeck, "primary"),
             button("Load Deck", Splash.loadDeck)
         ])

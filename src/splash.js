@@ -1,21 +1,29 @@
-import {Deck} from "./deck";
 import m from "mithril";
+import {Deck} from "./deck";
+import {Card} from "./card";
+import {Saver} from "./saver";
 import {button} from "./utils";
 
 export let Splash = {
-    makeDeck: () => {
-        window.CurrentDeck = new Deck(prompt("What would you like to name the deck?", "New Deck"), prompt("What is your name? (Optional)"), []);
-        m.route.set(EDITOR_PATH);
-    },
-    loadDeck: () => alert("TODO"),
     view: () => [
         m(".heading", [
             m("h1.title", "Trelane"),
             m("h2.subtitle", "A semi-competent SRS"),
         ]),
         m(".buttons", [
-            button("New Deck", Splash.makeDeck, "primary"),
-            button("Load Deck", Splash.loadDeck)
+            button("New Deck", () => {
+                Saver.setDeck(
+                    new Deck(
+                        prompt("What would you like to name the deck?", "New Deck"),
+                        prompt("What is your name?", "User"),
+                        [
+                            new Card("", "")
+                        ]
+                    )
+                );
+                m.route.set(EDITOR_PATH);
+            }, "primary"),
+            button("Load Deck", () => m.route.set(LOADER_PATH))
         ])
     ]
 }

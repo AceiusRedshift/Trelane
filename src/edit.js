@@ -1,12 +1,14 @@
 import m from "mithril";
 import {Card} from "./card";
-import {bailToSplashIfDeckIsNull, button, isNull} from "./utils";
+import {button} from "./utils";
+import {Saver} from "./saver";
 
 function makeTable() {
+    let deck = Saver.getDeck();
     let table = [];
 
-    for (const i in CurrentDeck.cards) {
-        let card = CurrentDeck.cards[i];
+    for (const i in deck.cards) {
+        let card = deck.cards[i];
 
         table.push(
             m("tr", [
@@ -14,21 +16,24 @@ function makeTable() {
                     value: card.front,
                     placeholder: `Card ${Number(i) + 1} Front`,
                     oninput: e => {
-                        CurrentDeck.cards[i].front = e.target.value;
+                        deck.cards[i].front = e.target.value;
+                        Saver.setDeck(deck);
                     }
                 })),
                 m("td", m("input.card-input", {
                     value: card.back,
                     placeholder: `Card ${Number(i) + 1} Back`,
                     oninput: e => {
-                        CurrentDeck.cards[i].back = e.target.value;
+                        deck.cards[i].back = e.target.value;
+                        Saver.setDeck(deck);
                     }
                 })),
                 m("td.last", [
                     m("a", {
                         onclick: () => {
                             if (confirm("Are you sure you want to delete this card?")) {
-                                CurrentDeck.cards.splice(i, 1);
+                                deck.cards.splice(i, 1);
+                                Saver.setDeck(deck);
                             }
                         }
                     }, "delete"),
@@ -42,9 +47,14 @@ function makeTable() {
 
 export let Edit = {
     view: () => {
-        let deck = CurrentDeck;
+        let deck;
 
-        bailToSplashIfDeckIsNull();
+        if (Saver.deckSaved()) {
+            deck = Saver.getDeck();
+        } else {
+            m.route.set(SPLASH_PATH);
+            return;
+        }
 
         let content = deck.cards.length === 0 ? m("p", "No cards in deck.") : makeTable();
 

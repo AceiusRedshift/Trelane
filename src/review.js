@@ -1,5 +1,6 @@
 import m from "mithril";
-import {bailToSplashIfDeckIsNull, button, isNull} from "./utils";
+import {button} from "./utils";
+import {Saver} from "./saver";
 
 let cardNumber = 0;
 let showAnswer = false;
@@ -7,9 +8,14 @@ let showAnswer = false;
 export let Review = {
     reset: () => cardNumber = 0,
     view: () => {
-        let deck = CurrentDeck;
+        let deck;
 
-        bailToSplashIfDeckIsNull();
+        if (Saver.deckSaved()) {
+            deck = Saver.getDeck();
+        } else {
+            m.route.set(SPLASH_PATH);
+            return;
+        }
 
         let frontText = "No cards to review... :c";
         if (deck.cards.length > 0) {

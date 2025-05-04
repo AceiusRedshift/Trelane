@@ -1,24 +1,29 @@
+import "../node_modules/@mielo-ui/mielo/css/mielo.css"; // make esbuild bundle the css
 import m from "mithril";
-import "../node_modules/@mielo-ui/mielo/css/mielo.css";
+import "./card.js"
+import "./deck.js"
 
 const ROOT = document.getElementById("app");
 const SPLASH_PATH = "/splash";
-const EDITOR_PATH = "/edit"
+const EDITOR_PATH = "/edit";
+
+let currentDeck = null;
 
 /* Utility functions */
-function button(text, onclick, css) {
-    return m(
-        "button",
-        {
-            className: "mie button pilled " + css,
-            onclick: onclick
-        },
-        text
-    );
-}
+const button = (text, onclick, css) => m(
+    "button",
+    {
+        className: "mie button pilled " + css,
+        onclick: onclick
+    },
+    text
+);
 
 let Splash = {
-    makeDeck: () => m.route.set(EDITOR_PATH),
+    makeDeck: () => {
+        currentDeck = new Deck(prompt("What would you like to name the deck?"), prompt("What is your name? (Optional)"), [])
+        m.route.set(EDITOR_PATH);
+    },
     loadDeck: () => m.route.set(EDITOR_PATH),
     view: () => [
         m("div", {className: "mie header large center"}, [
@@ -37,7 +42,14 @@ let Splash = {
 }
 
 let Edit = {
-    view: () => m("p", "Card Screen")
+    view: () => {
+        if (currentDeck === null) {
+            alert("Deck is unloaded, cannot edit unloaded deck.")
+            m.route.set(SPLASH_PATH);
+        }
+
+        return m("p", "Card Screen");
+    }
 }
 
 try {

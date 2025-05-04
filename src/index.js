@@ -1,4 +1,5 @@
 import m from "mithril";
+import "../node_modules/@mielo-ui/mielo/css/mielo.css";
 
 const root = document.getElementById("app");
 

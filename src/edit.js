@@ -1,6 +1,7 @@
 import m from "mithril";
 import {button} from "./button";
 import {Card} from "./card";
+import {isNull} from "./utils";
 
 function makeTable() {
     let table = [
@@ -42,20 +43,30 @@ function makeTable() {
 
 export let Edit = {
     view: () => {
-        if (CurrentDeck == null) {
+        let deck = CurrentDeck;
+
+        if (isNull(deck)) {
             m.route.set(SPLASH_PATH);
+            return;
         }
 
-        let content = CurrentDeck.cards.length === 0 ? m("p", "No cards in deck.") : makeTable();
+        if (!deck || !Array.isArray(deck.cards)) {
+            console.error('Invalid deck structure');
+            m.route.set(SPLASH_PATH);
+            return;
+        }
+
+        console.log(deck);
+        let content = deck.cards.length === 0 ? m("p", "No cards in deck.") : makeTable();
 
         return [
-            m("h1", CurrentDeck.name),
-            m("p", `Author: ${CurrentDeck.author}`),
+            m("h1", deck.name),
+            m("p", `Author: ${deck.author}`),
             content,
             m("br"),
             m(".buttons", [
                 button("New Card", () => {
-                    CurrentDeck.cards.push(new Card(prompt("Card Front"), prompt("Card Back")))
+                    deck.cards.push(new Card(prompt("Card Front"), prompt("Card Back")))
                 }, "primary"),
                 button("Home", () => {
                     m.route.set(SPLASH_PATH);

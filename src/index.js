@@ -1,7 +1,21 @@
 import m from "mithril";
 
-let app = {}
+const root = document.getElementById("app");
 
-m.render(document.getElementById("app"), m("h1", "hello world!"));
+let Splash = {
+    view: () => m("a", {href: "#!/app"}, "Enter!")
+}
 
-// TODO M.Mount
+let App = {
+    view: () => m("p", "screen2")
+}
+
+try {
+    m.route(root, "/splash", {
+        "/splash": Splash,
+        "/app": App
+    });
+} catch (e) {
+    m.render(root, m("p", e.toString()));
+    throw e;
+}

@@ -1,4 +1,3 @@
-import "../node_modules/@mielo-ui/mielo/css/mielo.css"; // make esbuild bundle the css
 import m from "mithril";
 import {Card} from "./card.js"
 import {Deck} from "./deck.js"
@@ -13,7 +12,7 @@ let currentDeck = null;
 const button = (text, onclick, css) => m(
     "button",
     {
-        className: "mie button pilled " + css,
+        className: css,
         onclick: onclick
     },
     text

@@ -1,8 +1,11 @@
 import m from "mithril";
 import "../node_modules/@mielo-ui/mielo/css/mielo.css";
 
-const root = document.getElementById("app");
+const ROOT = document.getElementById("app");
+const SPLASH_PATH = "/splash";
+const EDITOR_PATH = "/edit"
 
+/* Utility functions */
 function button(text, onclick, css) {
     return m(
         "button",
@@ -15,30 +18,35 @@ function button(text, onclick, css) {
 }
 
 let Splash = {
+    makeDeck: () => m.route.set(EDITOR_PATH),
+    loadDeck: () => m.route.set(EDITOR_PATH),
     view: () => [
         m("div", {className: "mie header large center"}, [
-            m("div", {className: "heading"}, [
-                m("div", {className: "title"}, "Trelane"),
-                m("div", {className: "subtitle"}, "A semi-competent SRS"),
+            m(".heading", [
+                m(".title", "Trelane"),
+                m(".subtitle", "A semi-competent SRS"),
             ]),
         ]),
-        m("div", {className: "mie buttons"}, [
-            button("New Deck", () => m.route.set("/app")),
-            button("Load Deck", () => m.route.set("/app"), "accent")
-        ])
+        m("div", {className: "mie view p-massive"},
+            m("div", {className: "mie buttons"}, [
+                button("New Deck", Splash.makeDeck),
+                button("Load Deck", Splash.loadDeck, "accent")
+            ])
+        )
     ]
 }
 
-let App = {
-    view: () => m("p", "screen2")
+let Edit = {
+    view: () => m("p", "Card Screen")
 }
 
 try {
-    m.route(root, "/splash", {
-        "/splash": Splash,
-        "/app": App
-    });
+    let routes = {};
+    routes[`${SPLASH_PATH}`] = Splash;
+    routes[`${EDITOR_PATH}`] = Edit;
+
+    m.route(ROOT, SPLASH_PATH, routes);
 } catch (e) {
-    m.render(root, m("p", e.toString()));
+    m.render(ROOT, m("p", e.toString()));
     throw e;
 }

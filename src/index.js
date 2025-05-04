@@ -10,7 +10,7 @@ window.EDITOR_PATH = "/edit";
 window.CurrentDeck = null;
 
 try {
-    if (Saver.deckSaved) {
+    if (Saver.deckSaved()) {
         console.log("Restoring Saved Deck")
         CurrentDeck = Saver.getDeck();
     }

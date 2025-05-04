@@ -1,6 +1,6 @@
 import m from "mithril";
 import {Card} from "./card";
-import {button, isNull} from "./utils";
+import {bailToSplashIfDeckIsNull, button, isNull} from "./utils";
 
 function makeTable() {
     let table = [];
@@ -44,16 +44,7 @@ export let Edit = {
     view: () => {
         let deck = CurrentDeck;
 
-        if (isNull(deck)) {
-            m.route.set(SPLASH_PATH);
-            return;
-        }
-
-        if (!deck || !Array.isArray(deck.cards)) {
-            console.error('Invalid deck structure');
-            m.route.set(SPLASH_PATH);
-            return;
-        }
+        bailToSplashIfDeckIsNull();
 
         let content = deck.cards.length === 0 ? m("p", "No cards in deck.") : makeTable();
 
@@ -64,12 +55,9 @@ export let Edit = {
             content,
             m("br"),
             m(".buttons", [
-                button("New Card", () => {
-                    deck.cards.push(new Card("", ""))
-                }, "primary"),
-                button("Home", () => {
-                    m.route.set(SPLASH_PATH);
-                })
+                button("New Card", () => deck.cards.push(new Card("", "")), "primary"),
+                button("Review Cards", () => m.route.set(REVIEW_PATH)),
+                button("Back", () => m.route.set(SPLASH_PATH))
             ])
         ]
     }

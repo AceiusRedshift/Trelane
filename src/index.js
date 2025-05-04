@@ -2,11 +2,13 @@ import m from "mithril";
 import {Splash} from "./splash";
 import {Edit} from "./edit";
 import {Saver} from "./saver";
+import {Review} from "./review";
 
 const root = document.getElementById("app");
 
 window.SPLASH_PATH = "/splash";
 window.EDITOR_PATH = "/edit";
+window.REVIEW_PATH = "/view";
 window.CurrentDeck = null;
 
 try {
@@ -18,6 +20,7 @@ try {
     let routes = {};
     routes[`${SPLASH_PATH}`] = Splash;
     routes[`${EDITOR_PATH}`] = Edit;
+    routes[`${REVIEW_PATH}`] = Review;
 
     m.route(root, Saver.deckSaved ? EDITOR_PATH : SPLASH_PATH, routes);
 

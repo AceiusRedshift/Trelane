@@ -26,7 +26,7 @@ body {
 a {
     color: var(--link);
     cursor: pointer;
-    
+
     text-decoration: underline;
 }
 
@@ -63,7 +63,7 @@ table {
     }
 }
 
-.card-input {
+input {
     border: 0;
     background: transparent;
     color: var(--text);
@@ -72,6 +72,11 @@ table {
 .primary {
     background-color: var(--link);
     color: var(--back);
+    border: 0;
+}
+
+.none {
+    cursor: auto;
     border: 0;
 }
 
@@ -87,13 +92,6 @@ table {
     }
 }
 
-#wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
 .buttons {
     margin: auto;
     text-align: center;
@@ -101,4 +99,23 @@ table {
     button {
         margin: 0 calc(var(--spacing) / 2);
     }
+}
+
+.card {
+    background: var(--back);
+    color: var(--text);
+
+    border: var(--border);
+    border-radius: var(--spacing);
+
+    padding: calc(var(--spacing) * 10);
+
+    cursor: pointer;
+}
+
+#wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }

@@ -3,7 +3,7 @@ import m from "mithril";
 export let Edit = {
     view: () => {
         if (CurrentDeck === null) {
-            alert("Deck is unloaded, cannot edit unloaded deck.")
+            console.log("Deck is unloaded, cannot edit unloaded deck.")
             m.route.set(SPLASH_PATH);
         }
 

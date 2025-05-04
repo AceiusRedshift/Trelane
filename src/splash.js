@@ -1,10 +1,10 @@
 import {Deck} from "./deck";
-import {button} from "./button";
 import m from "mithril";
+import {button} from "./utils";
 
 export let Splash = {
     makeDeck: () => {
-        CurrentDeck = new Deck(prompt("What would you like to name the deck?", "New Deck"), prompt("What is your name? (Optional)"), []);
+        window.CurrentDeck = new Deck(prompt("What would you like to name the deck?", "New Deck"), prompt("What is your name? (Optional)"), []);
         m.route.set(EDITOR_PATH);
     },
     loadDeck: () => alert("TODO"),

@@ -1,7 +1,6 @@
 import m from "mithril";
-import {button} from "./button";
 import {Card} from "./card";
-import {isNull} from "./utils";
+import {button, isNull} from "./utils";
 
 function makeTable() {
     let table = [

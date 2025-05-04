@@ -7,19 +7,15 @@ export let Splash = {
         CurrentDeck = new Deck(prompt("What would you like to name the deck?", "New Deck"), prompt("What is your name? (Optional)"), [])
         m.route.set(EDITOR_PATH);
     },
-    loadDeck: () => m.route.set(EDITOR_PATH),
+    loadDeck: () => alert("TODO"),
     view: () => [
-        m("div", {className: "mie header large center"}, [
-            m(".heading", [
-                m(".title", "Trelane"),
-                m(".subtitle", "A semi-competent SRS"),
-            ]),
+        m(".heading", [
+            m("h1.title", "Trelane"),
+            m("h2.subtitle", "A semi-competent SRS"),
         ]),
-        m("div", {className: "mie view p-massive"},
-            m("div", {className: "mie buttons"}, [
-                button("New Deck", Splash.makeDeck),
-                button("Load Deck", Splash.loadDeck, "accent")
-            ])
-        )
+        m("#splash-bar", [
+            button("New Deck", Splash.makeDeck),
+            button("Load Deck", Splash.loadDeck, "accent")
+        ])
     ]
 }

@@ -11,12 +11,28 @@ function generateCardHyperscript() {
         ])
     ];
 
-    for (const card of CurrentDeck.cards) {
+    for (const i in CurrentDeck.cards) {
+        let card = CurrentDeck.cards[i];
+
         hyperscript.push(
             m("tr", [
                 m("td", card.front),
                 m("td", card.back),
-                m("td", "edit delete"),
+                m("td", [
+                    m("a", {
+                        onclick: () => {
+                            CurrentDeck.cards[i] = new Card(prompt("New Front", card.front), prompt("New Back", card.back))
+                        }
+                    }, "edit"),
+                    m("span", " "),
+                    m("a", {
+                        onclick: () => {
+                            if (confirm("Are you sure you want to delete this card?")) {
+                                CurrentDeck.cards.splice(i, 1);
+                            }
+                        }
+                    }, "delete"),
+                ]),
             ])
         );
     }
@@ -26,7 +42,7 @@ function generateCardHyperscript() {
 
 export let Edit = {
     view: () => {
-        if (CurrentDeck === null) {
+        if (CurrentDeck == null) {
             m.route.set(SPLASH_PATH);
         }
 

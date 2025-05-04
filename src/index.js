@@ -1,7 +1,7 @@
 import "../node_modules/@mielo-ui/mielo/css/mielo.css"; // make esbuild bundle the css
 import m from "mithril";
-import "./card.js"
-import "./deck.js"
+import {Card} from "./card.js"
+import {Deck} from "./deck.js"
 
 const ROOT = document.getElementById("app");
 const SPLASH_PATH = "/splash";
@@ -48,7 +48,7 @@ let Edit = {
             m.route.set(SPLASH_PATH);
         }
 
-        return m("p", "Card Screen");
+        return m("p", currentDeck.name);
     }
 }
 

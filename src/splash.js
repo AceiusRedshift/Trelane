@@ -11,6 +11,7 @@ export let Splash = {
             m("h2.subtitle", "A semi-competent memorization tool."),
         ]),
         m(".buttons", [
+            Saver.isDeckSaved() ? button("Continue Editing", () => m.route.set(EDITOR_PATH), "primary") : [],
             button("New Deck", () => {
                 Saver.setDeck(
                     new Deck(
@@ -22,8 +23,9 @@ export let Splash = {
                     )
                 );
                 m.route.set(EDITOR_PATH);
-            }, "primary"),
-            button("Load Deck", () => m.route.set(LOADER_PATH))
+            }, Saver.isDeckSaved() ? "" : "primary"),
+            button("Load Deck", () => m.route.set(LOADER_PATH)),
+            button("Help", () => m.route.set(HELP_PATH))
         ])
     ]
 }

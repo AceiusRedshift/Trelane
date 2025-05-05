@@ -20,7 +20,7 @@ body {
     background: var(--back);
     color: var(--text);
 
-    margin: 0;
+    margin: var(--spacing);
 }
 
 a {
@@ -121,5 +121,9 @@ input[type="file"] {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: calc(100vh - var(--spacing) * 2);
+}
+
+#app {
+    max-width: 800px;
 }

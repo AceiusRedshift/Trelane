@@ -3,6 +3,7 @@ import {Card} from "./card";
 import {button, download} from "./utils";
 import {Saver} from "./saver";
 import {Review} from "./review";
+import {Learn} from "./learn";
 
 function makeTable() {
     let deck = Saver.getDeck();
@@ -72,6 +73,10 @@ export let Edit = {
                     deck.cards.push(new Card("", ""));
                     Saver.setDeck(deck);
                 }, "primary"),
+                button("Learn Deck", () => {
+                    Learn.reset();
+                    m.route.set(REVIEW_PATH);
+                }),
                 button("Review Deck", () => {
                     Review.reset();
                     m.route.set(REVIEW_PATH);

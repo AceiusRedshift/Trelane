@@ -17,9 +17,9 @@ try {
     routes[`${SPLASH_PATH}`] = Splash;
     routes[`${EDITOR_PATH}`] = Edit;
     routes[`${REVIEW_PATH}`] = Review;
-    routes[`${LOADER_PATH}`] = Load; // TODO
+    routes[`${LOADER_PATH}`] = Load;
 
-    m.route(root, Saver.deckSaved ? EDITOR_PATH : SPLASH_PATH, routes);
+    m.route(root, Saver.isDeckSaved ? EDITOR_PATH : SPLASH_PATH, routes);
 } catch (e) {
     m.render(root, m("p", e.toString()));
     throw e;

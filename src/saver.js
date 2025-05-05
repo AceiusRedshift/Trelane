@@ -4,14 +4,14 @@ const KEY = "trelane-deck";
 
 /**
  * Handles saving data to local storage. For now, only one deck can be saved at a time.
- * @type {{deckSaved: (function(): boolean), getDeck: (function(): Deck), setDeck: (function(*): void)}}
+ * @type {{isDeckSaved: (function(): boolean), getDeck: (function(): Deck), setDeck: (function(*): void)}}
  */
 export const Saver = {
     /**
      * Checks if a deck is saved in local storage.
      * @returns {boolean} True when there is a deck present.
      */
-    deckSaved: () => localStorage.getItem(KEY) != null,
+    isDeckSaved: () => localStorage.getItem(KEY) != null,
     /**
      * Retrieve a deck from local storage.
      */

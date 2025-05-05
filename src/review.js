@@ -10,7 +10,7 @@ export let Review = {
     view: () => {
         let deck;
 
-        if (Saver.deckSaved()) {
+        if (Saver.isDeckSaved()) {
             deck = Saver.getDeck();
         } else {
             m.route.set(SPLASH_PATH);

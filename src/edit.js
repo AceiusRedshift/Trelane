@@ -2,6 +2,7 @@ import m from "mithril";
 import {Card} from "./card";
 import {button, download} from "./utils";
 import {Saver} from "./saver";
+import {Review} from "./review";
 
 function makeTable() {
     let deck = Saver.getDeck();
@@ -49,7 +50,7 @@ export let Edit = {
     view: () => {
         let deck;
 
-        if (Saver.deckSaved()) {
+        if (Saver.isDeckSaved()) {
             deck = Saver.getDeck();
         } else {
             m.route.set(SPLASH_PATH);
@@ -71,7 +72,10 @@ export let Edit = {
                     deck.cards.push(new Card("", ""));
                     Saver.setDeck(deck);
                 }, "primary"),
-                button("Review Deck", () => m.route.set(REVIEW_PATH)),
+                button("Review Deck", () => {
+                    Review.reset();
+                    m.route.set(REVIEW_PATH);
+                }),
                 button("Save Deck", () => download(JSON.stringify(deck), deck.name + ".json", "application/json")),
                 button("Back", () => m.route.set(SPLASH_PATH))
             ])

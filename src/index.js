@@ -3,6 +3,7 @@ import {Splash} from "./splash";
 import {Edit} from "./edit";
 import {Saver} from "./saver";
 import {Review} from "./review";
+import {Load} from "./load";
 
 const root = document.getElementById("app");
 
@@ -16,7 +17,7 @@ try {
     routes[`${SPLASH_PATH}`] = Splash;
     routes[`${EDITOR_PATH}`] = Edit;
     routes[`${REVIEW_PATH}`] = Review;
-    routes[`${LOADER_PATH}`] = Review; // TODO
+    routes[`${LOADER_PATH}`] = Load; // TODO
 
     m.route(root, Saver.deckSaved ? EDITOR_PATH : SPLASH_PATH, routes);
 } catch (e) {

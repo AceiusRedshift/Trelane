@@ -1,6 +1,6 @@
 import m from "mithril";
 import {Card} from "./card";
-import {button} from "./utils";
+import {button, download} from "./utils";
 import {Saver} from "./saver";
 
 function makeTable() {
@@ -59,14 +59,20 @@ export let Edit = {
         let content = deck.cards.length === 0 ? m("p", "No cards in deck.") : makeTable();
 
         return [
-            m("h1", deck.name),
-            m("p", `Author: ${deck.author}`),
+            m(".heading", [
+                m("h1.title", deck.name),
+                m("h2.subtitle", `By ${deck.author}`),
+            ]),
             m("p", "(Just click and start typing to edit!)"),
             content,
             m("br"),
             m(".buttons", [
-                button("New Card", () => deck.cards.push(new Card("", "")), "primary"),
-                button("Review Cards", () => m.route.set(REVIEW_PATH)),
+                button("New Card", () => {
+                    deck.cards.push(new Card("", ""));
+                    Saver.setDeck(deck);
+                }, "primary"),
+                button("Review Deck", () => m.route.set(REVIEW_PATH)),
+                button("Save Deck", () => download(JSON.stringify(deck), deck.name + ".json", "application/json")),
                 button("Back", () => m.route.set(SPLASH_PATH))
             ])
         ]

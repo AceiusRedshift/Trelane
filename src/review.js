@@ -34,10 +34,10 @@ export let Review = {
             content.push(m("h2.subtitle", backText))
         }
 
-        let backButton = button("Back", () => Review.cardNumber = Math.max(0, cardNumber - 1));
+        let backButton = button("Back", () => cardNumber = Math.max(0, cardNumber - 1));
         let editorButton = button("Back", () => m.route.set(EDITOR_PATH));
 
-        let nextButton = button("Next", () => Review.cardNumber = Math.min(deck.cards.length - 1, cardNumber + 1));
+        let nextButton = button("Next", () => cardNumber = Math.min(deck.cards.length - 1, cardNumber + 1));
         let finishButton = button("Finish", () => m.route.set(EDITOR_PATH), "primary");
 
         return [

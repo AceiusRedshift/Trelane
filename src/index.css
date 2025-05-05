@@ -38,7 +38,7 @@ a:visited {
     color: var(--visited);
 }
 
-button {
+button, input[type="file"] {
     background: var(--back);
     color: var(--text);
 
@@ -67,6 +67,10 @@ input {
     border: 0;
     background: transparent;
     color: var(--text);
+}
+
+input[type="file"] {
+    color: red;
 }
 
 .primary {

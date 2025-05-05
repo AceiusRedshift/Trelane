@@ -1,13 +1,5 @@
 import m from "mithril";
 
-export function isNull(obj) {
-    return !isNotNull(obj);
-}
-
-export function isNotNull(obj) {
-    return obj != null;
-}
-
 export const button = (text, onclick, css = "") => m(
     "button",
     {
@@ -17,17 +9,14 @@ export const button = (text, onclick, css = "") => m(
     text
 );
 
-export function bailToSplashIfDeckIsNull(){
-    let deck = window.CurrentDeck;
+export const isString = (value) => typeof value === 'string' || value instanceof String;
 
-    if (isNull(deck)) {
-        m.route.set(SPLASH_PATH);
-        return;
-    }
+export const isValidDeck = (deck) => isString(deck.name) && isString(deck.author) && Array.isArray(deck.cards);
 
-    if (!deck || !Array.isArray(deck.cards)) {
-        console.error('Invalid deck structure');
-        m.route.set(SPLASH_PATH);
-        return;
-    }
+export const download = (content, fileName, contentType) => {
+    let a = document.createElement("a");
+
+    a.href = URL.createObjectURL(new Blob([content], {type: contentType}));
+    a.download = fileName;
+    a.click();
 }

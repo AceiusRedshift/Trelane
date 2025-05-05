@@ -3,7 +3,7 @@ import {Deck} from "./deck";
 const KEY = "trelane-deck";
 
 /**
- * Manages saving data to local storage. For now, only one deck can be saved at a time.
+ * Handles saving data to local storage. For now, only one deck can be saved at a time.
  * @type {{deckSaved: (function(): boolean), getDeck: (function(): Deck), setDeck: (function(*): void)}}
  */
 export const Saver = {

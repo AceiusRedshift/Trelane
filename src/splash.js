@@ -8,7 +8,7 @@ export let Splash = {
     view: () => [
         m(".heading", [
             m("h1.title", "Trelane"),
-            m("h2.subtitle", "A semi-competent SRS"),
+            m("h2.subtitle", "A semi-competent memorization tool."),
         ]),
         m(".buttons", [
             button("New Deck", () => {

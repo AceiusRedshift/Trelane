@@ -5,7 +5,7 @@ export let Help = {
     view: () => [
         m(".heading", [
             m("h1.title", "Help"),
-            m("h2.subtitle", "A semi-competent help guide."),
+            // m("h2.subtitle", "A semi-competent help guide."),
         ]),
         m("p", "Trelane is a semi-competent memorization tool. It is designed to help you learn new terms and concepts."),
         m("p", "It is intended to be used as a drop-in replacement for Quizlet, and it's design is also partly informed by the quiz format used at my school."),

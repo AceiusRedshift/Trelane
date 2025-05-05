@@ -16,7 +16,18 @@ export const isValidDeck = (deck) => isString(deck.name) && isString(deck.author
 export const download = (content, fileName, contentType) => {
     let a = document.createElement("a");
 
-    a.href = URL.createObjectURL(new Blob([content], {type: contentType}));
+    a.href = URL.createObjectURL(new Blob([content], { type: contentType }));
     a.download = fileName;
     a.click();
+}
+
+export const shuffle = (array) => {
+    let currentIndex = array.length;
+
+    while (currentIndex != 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
 }

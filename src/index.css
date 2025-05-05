@@ -38,7 +38,8 @@ a:visited {
     color: var(--visited);
 }
 
-button, input[type="file"] {
+button,
+input[type="file"] {
     background: var(--back);
     color: var(--text);
 
@@ -70,7 +71,7 @@ input {
 }
 
 input[type="file"] {
-    color: red;
+    padding: calc(var(--spacing)/2);
 }
 
 .primary {

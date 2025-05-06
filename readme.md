@@ -10,6 +10,8 @@ However, I picked Mithril for its hyperscript component style, which is very sim
 - [ ] Saving Card Decks to Logseq Pages
 - [ ] Saving Card Decks to a remote server
 - [ ] Loading Decks from a remote server
+- [ ] Learn Mode
+- [ ] Quiz Mode
 
 ## Building
 You must have a npm compatible package manager installed.

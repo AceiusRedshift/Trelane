@@ -1,7 +1,6 @@
 import m from "mithril";
 import {button, isValidDeck, shuffle} from "./utils";
 import {Saver} from "./saver";
-import {Review} from "./review";
 import {EDITOR_PATH, LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
 let cardNumber = 0;

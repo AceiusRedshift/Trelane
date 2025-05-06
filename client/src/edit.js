@@ -2,8 +2,6 @@ import m from "mithril";
 import {Card} from "./card";
 import {button, download} from "./utils";
 import {Saver} from "./saver";
-import {Review} from "./review";
-import {Learn} from "./learn";
 import {LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
 function makeTable() {

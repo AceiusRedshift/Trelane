@@ -13,7 +13,7 @@ export let Load = {
             button("Back", () => m.route.set(SPLASH_PATH)),
             m("input", {
                 type: "file", onchange: e => e.target.files[0].text().then(text => {
-                    let potentialDeck = JSON.parse(text);
+                    let potentialDeck = JSON.parse(text.toString());
 
                     if (isValidDeck(potentialDeck)) {
                         Saver.setDeck(potentialDeck);

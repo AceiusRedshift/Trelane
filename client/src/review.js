@@ -1,6 +1,7 @@
 import m from "mithril";
 import { button } from "./utils";
 import { Saver } from "./saver";
+import {EDITOR_PATH, SPLASH_PATH} from "./constants";
 
 let cardNumber = 0;
 let showAnswer = false;

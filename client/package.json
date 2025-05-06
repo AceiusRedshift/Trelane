@@ -23,6 +23,7 @@
     "mithril": "^2.2.15"
   },
   "devDependencies": {
+    "@types/mithril": "^2.2.7",
     "esbuild": "^0.25.3"
   }
 }

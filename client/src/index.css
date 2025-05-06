@@ -5,6 +5,7 @@
     --visited: #86c;
     --spacing: 8px;
     --border: 1px solid #444;
+    --width: 800px;
 }
 
 @media (prefers-color-scheme: light) {
@@ -16,7 +17,7 @@
 
 body {
     font-family: Cantarell, Ubuntu, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: calc(var(--spacing)*2);
+    font-size: calc(var(--spacing) * 2);
 
     background: var(--back);
     color: var(--text);
@@ -56,7 +57,7 @@ input[type="file"] {
 
 table {
     border: var(--border);
-    min-width: 600px;
+    width: var(--width);
 
     td {
         padding: var(--spacing);
@@ -75,7 +76,7 @@ input {
 }
 
 input[type="file"] {
-    padding: calc(var(--spacing)/2);
+    padding: calc(var(--spacing) / 2);
 }
 
 .primary {
@@ -116,11 +117,12 @@ input[type="file"] {
     background: var(--back);
     color: var(--text);
 
+    padding: calc(var(--spacing) * 10);
+
     border: var(--border);
     border-radius: var(--spacing);
 
-    padding: calc(var(--spacing) * 10);
-
+    text-align: center;
     cursor: pointer;
 }
 
@@ -132,5 +134,5 @@ input[type="file"] {
 }
 
 #app {
-    max-width: 800px;
+    max-width: calc(var(--width) + (var(--spacing) * 2));
 }

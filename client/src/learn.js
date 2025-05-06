@@ -2,6 +2,7 @@ import m from "mithril";
 import {button, isValidDeck, shuffle} from "./utils";
 import {Saver} from "./saver";
 import {Review} from "./review";
+import {EDITOR_PATH, LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
 let cardNumber = 0;
 let score = 0;
@@ -11,7 +12,7 @@ let startTime = Date.now();
 let deck;
 
 export let Learn = {
-    reset: () => {
+    oninit: () => {
         cardNumber = 0;
         score = 0;
         totalAnswered = 0;
@@ -36,11 +37,9 @@ export let Learn = {
                 m("p", `Time taken: ${Math.floor((Date.now() - startTime) / 1000)} seconds.`),
                 m(".buttons", [
                     button("Learn Again", () => {
-                        Learn.reset();
                         m.route.set(LEARN_PATH);
                     }, "primary"),
                     button("Switch to Review", () => {
-                        Review.reset();
                         m.route.set(REVIEW_PATH);
                     }),
                     button("Back", () => m.route.set(EDITOR_PATH))
@@ -49,7 +48,7 @@ export let Learn = {
         }
 
         if (deck === -1 || deck == null || !isValidDeck(deck)) {
-            Learn.reset();
+            Learn.oninit(); // hack lol
         }
 
         if (deck === -1 || deck == null || !isValidDeck(deck)) {

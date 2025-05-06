@@ -1,5 +1,6 @@
 import m from "mithril";
 import {button} from "./utils";
+import {SPLASH_PATH} from "./constants";
 
 export let Help = {
     view: () => [

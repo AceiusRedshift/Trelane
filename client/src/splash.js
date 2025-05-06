@@ -3,6 +3,7 @@ import {Deck} from "./deck";
 import {Card} from "./card";
 import {Saver} from "./saver";
 import {button} from "./utils";
+import {EDITOR_PATH, HELP_PATH, LOADER_PATH} from "./constants";
 
 export let Splash = {
     view: () => [

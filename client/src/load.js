@@ -1,6 +1,7 @@
 import m from "mithril";
 import {Saver} from "./saver";
 import {button, isValidDeck} from "./utils";
+import {EDITOR_PATH, SPLASH_PATH} from "./constants";
 
 export let Load = {
     view: () => [

@@ -6,7 +6,7 @@ let cardNumber = 0;
 let showAnswer = false;
 
 export let Review = {
-    reset: () => cardNumber = 0,
+    oninit: () => cardNumber = 0,
     view: () => {
         let deck;
 

@@ -6,15 +6,9 @@ import { Review } from "./review";
 import { Load } from "./load";
 import { Help } from "./help";
 import { Learn } from "./learn";
+import {EDITOR_PATH, HELP_PATH, LEARN_PATH, LOADER_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
 const root = document.getElementById("app");
-
-window.SPLASH_PATH = "/splash";
-window.EDITOR_PATH = "/edit";
-window.REVIEW_PATH = "/view";
-window.LOADER_PATH = "/load";
-window.LEARN_PATH = "/learn";
-window.HELP_PATH = "/help";
 
 try {
     let routes = {};

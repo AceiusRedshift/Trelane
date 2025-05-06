@@ -4,6 +4,7 @@ import {button, download} from "./utils";
 import {Saver} from "./saver";
 import {Review} from "./review";
 import {Learn} from "./learn";
+import {LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
 function makeTable() {
     let deck = Saver.getDeck();
@@ -97,12 +98,10 @@ export let Edit = {
                 }, "primary"),
                 button("Learn Deck", () => {
                     Saver.setDeck(deck);
-                    Learn.reset();
                     m.route.set(LEARN_PATH);
                 }),
                 button("Review Deck", () => {
                     Saver.setDeck(deck);
-                    Review.reset();
                     m.route.set(REVIEW_PATH);
                 }),
                 button("Save Deck", () => download(JSON.stringify(deck), deck.name + ".json", "application/json")),

@@ -135,4 +135,9 @@ input[type="file"] {
 
 #app {
     max-width: calc(var(--width) + (var(--spacing) * 2));
+    max-height: 90vh;
+
+    padding: var(--spacing);
+
+    overflow-y: scroll;
 }

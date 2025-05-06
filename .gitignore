@@ -35,3 +35,6 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # builds
 bin/
+
+# i feel like this should be ignored but like idk
+package-lock.json

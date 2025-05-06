@@ -11,7 +11,8 @@ function makeTable() {
 
     deck.cards = deck.cards.filter(card => card !== null);
 
-    for (const i in deck.cards) {
+    for (const index in deck.cards) {
+        const i = Number(index);
         let card = deck.cards[i];
 
         table.push(
@@ -33,7 +34,7 @@ function makeTable() {
                     }
                 })),
                 m("td.last", [
-                    i == 0 ? m("a.disabled", "↑") : m("a", {
+                    i === 0 ? m("a.disabled", "↑") : m("a", {
                         onclick: () => {
                             let hold = deck.cards[i];
 
@@ -43,13 +44,12 @@ function makeTable() {
                             Saver.setDeck(deck);
                         }
                     }, "↑"),
-                    i == deck.cards.length - 1 ? m("a.disabled", "↓") : m("a", {
+                    i === deck.cards.length - 1 ? m("a.disabled", "↓") : m("a", {
                         onclick: () => {
-                            let j = Number(i); // i is a string apparently
                             let hold = deck.cards[i];
 
-                            deck.cards[i] = deck.cards[j - 1];
-                            deck.cards[i - j] = hold;
+                            deck.cards[i] = deck.cards[i + 1];
+                            deck.cards[i + 1] = hold;
 
                             Saver.setDeck(deck);
                         }

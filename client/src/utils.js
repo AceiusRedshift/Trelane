@@ -1,6 +1,6 @@
 import m from "mithril";
 
-export const button = (text, onclick, css = "") => m(
+export const button = (text, onclick, css = "", tooltip = "") => m(
     "button",
     {
         className: css,
@@ -16,7 +16,7 @@ export const isValidDeck = (deck) => isString(deck.name) && isString(deck.author
 export const download = (content, fileName, contentType) => {
     let a = document.createElement("a");
 
-    a.href = URL.createObjectURL(new Blob([content], {type: contentType}));
+    a.href = URL.createObjectURL(new Blob([content], { type: contentType }));
     a.download = fileName;
     a.click();
 }

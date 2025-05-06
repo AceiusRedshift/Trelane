@@ -1,7 +1,7 @@
 :root {
     --back: #222;
     --text: #eee;
-    --link: #8cd;
+    --link: rgb(79, 121, 247);
     --visited: #86c;
     --spacing: 8px;
     --border: 1px solid #444;
@@ -47,10 +47,8 @@ input[type="file"] {
     background: var(--back);
     color: var(--text);
 
-    border: var(--border);
-    border-radius: var(--spacing);
-
     padding: var(--spacing);
+    border: var(--border);
 
     cursor: pointer;
 }
@@ -69,12 +67,13 @@ table {
 }
 
 input {
-    border: 0;border-bottom: var(--border);
+    border: 0;
+    border-bottom: var(--border);
     background: transparent;
     color: var(--text);
     font-size: inherit;
     text-align: center;
-    width: fit-content ;
+    width: fit-content;
 }
 
 input.card-input {
@@ -89,7 +88,6 @@ input[type="file"] {
 
 .primary {
     background-color: var(--link);
-    color: var(--back);
     border: 0;
 }
 
@@ -117,7 +115,7 @@ input[type="file"] {
     text-align: center;
 
     button {
-        margin: 0 calc(var(--spacing) / 2);
+        margin: 0 calc(var(--spacing) / 4);
     }
 }
 
@@ -132,6 +130,31 @@ input[type="file"] {
 
     text-align: center;
     cursor: pointer;
+}
+
+.modal {
+    display: flex;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+
+    .content {
+        background-color: var(--back);
+        color: var(--text);
+
+        margin: auto;
+        padding: 20px;
+
+        text-align: center;
+
+        border: var(--border);
+        width: var(--width);
+    }
 }
 
 #wrap {

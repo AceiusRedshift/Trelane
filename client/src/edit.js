@@ -1,8 +1,10 @@
 import m from "mithril";
-import {Card} from "./card";
-import {button, download} from "./utils";
-import {Saver} from "./saver";
-import {LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
+import { Card } from "./card";
+import { button, download } from "./utils";
+import { Saver } from "./saver";
+import { LEARN_PATH, REVIEW_PATH, SPLASH_PATH } from "./constants";
+
+let showExportModal = false;
 
 function makeTable() {
     let deck = Saver.getDeck();
@@ -69,7 +71,25 @@ function makeTable() {
     return m("table", table);
 }
 
+let ExportModal = {
+    view: () => {
+        return m(".modal", m(".content", [
+            m("h2.subtitle", "Save/Export"),
+            m(".buttons", [
+                button("Save Deck", () => download(JSON.stringify(deck), deck.name + ".json", "application/json"), "", "Save the active deck to a Trelane JSON file."),
+                button("Export CSV", () => download(convertDeckToCsv(deck), deck.name + ".csv", "text/plain"), "", "Save the active deck to a Generic CSV file."),
+                button("Export MD", () => download(convertDeckToLogseq(deck), deck.name + ".md", "text/plain"), "", "Save the active deck to a Logseq file containing flashcard definitions."),
+            ]),
+            m("br"),
+            button("Close", () => showExportModal = false)
+        ]));
+    }
+}
+
 export let Edit = {
+    oninit: () => {
+        showExportModal = false;
+    },
     view: () => {
         let deck;
 
@@ -119,9 +139,13 @@ export let Edit = {
                     Saver.setDeck(deck);
                     m.route.set(REVIEW_PATH);
                 }),
-                button("Save Deck", () => download(JSON.stringify(deck), deck.name + ".json", "application/json")),
+                button("Save/Export", () => {
+                    Saver.setDeck(deck);
+                    showExportModal = true;
+                }),
                 button("Back", () => m.route.set(SPLASH_PATH))
-            ])
+            ]),
+            showExportModal && m(ExportModal)
         ]
     }
 }

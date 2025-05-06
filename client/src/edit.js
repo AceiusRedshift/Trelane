@@ -18,7 +18,7 @@ function makeTable() {
             m("tr", [
                 m("td", m("input.card-input", {
                     value: card.front,
-                    placeholder: `Card ${Number(i) + 1} Front`,
+                    placeholder: `Term ${Number(i) + 1}`,
                     oninput: e => {
                         deck.cards[i].front = e.target.value;
                         Saver.setDeck(deck);
@@ -26,7 +26,7 @@ function makeTable() {
                 })),
                 m("td", m("input.card-input", {
                     value: card.back,
-                    placeholder: `Card ${Number(i) + 1} Back`,
+                    placeholder: `Definition ${Number(i) + 1}`,
                     oninput: e => {
                         deck.cards[i].back = e.target.value;
                         Saver.setDeck(deck);
@@ -84,8 +84,25 @@ export let Edit = {
 
         return [
             m(".heading", [
-                m("h1.title", deck.name),
-                m("h2.subtitle", `By ${deck.author}`),
+                m("h1.title", m("input", {
+                    value: deck.name,
+                    placeholder: `Deck Name`,
+                    oninput: e => {
+                        deck.name = e.target.value;
+                        Saver.setDeck(deck);
+                    }
+                })),
+                m("h2.subtitle", [
+                    "By ",
+                    m("input", {
+                        value: deck.author,
+                        placeholder: `Author`,
+                        oninput: e => {
+                            deck.author = e.target.value;
+                            Saver.setDeck(deck);
+                        }
+                    })
+                ]),
             ]),
             content,
             m("br"),

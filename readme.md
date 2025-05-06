@@ -10,6 +10,9 @@ However, I picked Mithril for its hyperscript component style, which is very sim
 - [ ] Saving Card Decks to Logseq Pages
 - [ ] Saving Card Decks to a remote server
 - [ ] Loading Decks from a remote server
+- [x] Loading Decks from JSON
+- [x] Loading Decks from CSV
+- [ ] Loading Multiple Decks from Memory
 - [ ] Learn Mode
 - [ ] Quiz Mode
 

@@ -16,8 +16,8 @@ export let Splash = {
             button("New Deck", () => {
                 Saver.setDeck(
                     new Deck(
-                        prompt("What would you like to name the deck?", "New Deck"),
-                        prompt("What is your name?", "User"),
+                        "New Deck",
+                        "You!",
                         [
                             new Card("", "")
                         ]

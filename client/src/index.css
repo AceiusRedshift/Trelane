@@ -69,10 +69,18 @@ table {
 }
 
 input {
-    border: 0;
+    border: 0;border-bottom: var(--border);
     background: transparent;
     color: var(--text);
+    font-size: inherit;
+    text-align: center;
+    width: fit-content ;
+}
+
+input.card-input {
     width: 100%;
+    font-size: calc(var(--spacing) * 1.75);
+    border: 0;
 }
 
 input[type="file"] {

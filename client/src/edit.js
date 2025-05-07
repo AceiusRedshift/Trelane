@@ -1,8 +1,8 @@
 import m from "mithril";
-import { Card } from "./card";
-import { button, download } from "./utils";
-import { Storage } from "./storage";
-import { LEARN_PATH, REVIEW_PATH, SPLASH_PATH } from "./constants";
+import {Card} from "./card";
+import {button, download} from "./utils";
+import {Storage} from "./storage";
+import {LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
 let showExportModal = false;
 
@@ -125,7 +125,7 @@ export let Edit = {
                 m("h1.title", m("input", {
                     value: deck.name,
                     placeholder: `Deck Name`,
-                    oninput: e => {
+                    onfocusout: e => {
                         deck.name = e.target.value;
                         Storage.setActiveDeck(deck);
                     }
@@ -135,7 +135,7 @@ export let Edit = {
                     m("input", {
                         value: deck.author,
                         placeholder: `Author`,
-                        oninput: e => {
+                        onfocusout: e => {
                             deck.author = e.target.value;
                             Storage.setActiveDeck(deck);
                         }

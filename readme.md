@@ -1,7 +1,8 @@
 # Trelane
 A semi-competent memorization app, named for that one character from _Star Trek_ cause why not.
 I was struggling to pick between Mithril and Svelte, as both are fast and small.
-However, I picked Mithril for its hyperscript component style, which is very similar to how I write UI code for my custom game engine.
+However, I picked Mithril for its hyperscript component style, 
+which is very similar to how I write UI code for my custom game engine, so it felt familiar.
 
 ## Features
 - [X] Basic Card Editing
@@ -12,9 +13,8 @@ However, I picked Mithril for its hyperscript component style, which is very sim
 - [ ] Loading Decks from a remote server
 - [x] Loading Decks from JSON
 - [x] Loading Decks from CSV
-- [ ] Loading Multiple Decks from Memory
-- [ ] Learn Mode
-- [ ] Quiz Mode
+- [x] Loading Multiple Decks from Memory
+- [x] Learn Mode
 
 ## Building
 You must have a npm compatible package manager installed.

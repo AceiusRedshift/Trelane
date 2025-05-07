@@ -16,8 +16,9 @@
 }
 
 body {
-    font-family: Cantarell, Ubuntu, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: Veranda, sans-serif;
     font-size: calc(var(--spacing) * 2);
+    font-weight: normal;
 
     background: var(--back);
     color: var(--text);
@@ -101,7 +102,7 @@ input[type="file"] {
 
     .title {
         font-size: 24pt;
-        font-weight: bold;
+        font-weight: 600;
     }
 
     .subtitle {

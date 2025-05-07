@@ -6,8 +6,8 @@ However, I picked Mithril for its hyperscript component style, which is very sim
 ## Features
 - [X] Basic Card Editing
 - [X] Saving Card Decks to JSON
-- [ ] Saving Card Decks to CSV
-- [ ] Saving Card Decks to Logseq Pages
+- [X] Saving Card Decks to CSV
+- [X] Saving Card Decks to Logseq Pages
 - [ ] Saving Card Decks to a remote server
 - [ ] Loading Decks from a remote server
 - [x] Loading Decks from JSON

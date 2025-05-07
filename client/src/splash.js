@@ -14,15 +14,7 @@ export let Splash = {
         m(".buttons", [
             Saver.isDeckSaved() ? button("Continue Editing", () => m.route.set(EDITOR_PATH), "primary") : [],
             button("New Deck", () => {
-                Saver.setDeck(
-                    new Deck(
-                        "New Deck",
-                        "You!",
-                        [
-                            new Card("", "")
-                        ]
-                    )
-                );
+                Saver.setDeck(new Deck("New Deck", "You!", [new Card("", "")]));
                 m.route.set(EDITOR_PATH);
             }, Saver.isDeckSaved() ? "" : "primary"),
             button("Load Deck", () => m.route.set(LOADER_PATH)),

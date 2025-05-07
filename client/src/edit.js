@@ -6,6 +6,22 @@ import { LEARN_PATH, REVIEW_PATH, SPLASH_PATH } from "./constants";
 
 let showExportModal = false;
 
+function convertDeckToCsv(deck) {
+    let string = "";
+
+    deck.cards.forEach(card => string += `${card.front}, ${card.back}\n`);
+
+    return string;
+}
+
+function convertDeckToLogseq(deck) {
+    let string = `- # ${deck.name}\n- **Author:** ${deck.author}\n`;
+
+    deck.cards.forEach(card => string += `- ${card.front} #card\n	- ${card.back}\n`);
+
+    return string;
+}
+
 function makeTable() {
     let deck = Saver.getDeck();
     let table = [];

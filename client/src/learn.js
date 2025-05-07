@@ -1,7 +1,7 @@
 import m from "mithril";
-import {button, isValidDeck, shuffle} from "./utils";
-import {Storage} from "./storage";
-import {EDITOR_PATH, LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
+import { button, isValidDeck, shuffle } from "./utils";
+import { Storage } from "./storage";
+import { EDITOR_PATH, LEARN_PATH, REVIEW_PATH, SPLASH_PATH } from "./constants";
 
 let cardNumber = 0;
 let score = 0;
@@ -10,20 +10,24 @@ let quizCompleted = false;
 let startTime = Date.now();
 let deck;
 
+function resetValues() {
+    cardNumber = 0;
+    score = 0;
+    totalAnswered = 0;
+    quizCompleted = false;
+    startTime = Date.now();
+
+    if (Storage.hasActiveDeck()) {
+        deck = Storage.getActiveDeck();
+        shuffle(deck.cards);
+    } else {
+        deck = -1;
+    }
+}
+
 export let Learn = {
     oninit: () => {
-        cardNumber = 0;
-        score = 0;
-        totalAnswered = 0;
-        quizCompleted = false;
-        startTime = Date.now();
-
-        if (Storage.hasActiveDeck()) {
-            deck = Storage.getActiveDeck();
-            shuffle(deck.cards);
-        } else {
-            deck = -1;
-        }
+        resetValues();
     },
     view: () => {
         if (quizCompleted) {
@@ -47,7 +51,7 @@ export let Learn = {
         }
 
         if (deck === -1 || deck == null || !isValidDeck(deck)) {
-            Learn.oninit(); // hack lol
+            resetValues();
         }
 
         if (deck === -1 || deck == null || !isValidDeck(deck)) {
@@ -96,7 +100,7 @@ export let Learn = {
                     }
                 })
             )),
-            m("p", {style: "text-align: center;"}, `Question: ${cardNumber}/${deck.cards.length} | Score: ${score}/${totalAnswered}`)
+            m("p", { style: "text-align: center;" }, `Question: ${cardNumber}/${deck.cards.length} | Score: ${score}/${totalAnswered}`)
         ]
     }
 }

@@ -1,5 +1,5 @@
 import m from "mithril";
-import {Saver} from "./saver";
+import {Storage} from "./storage";
 import {button, isValidDeck} from "./utils";
 import {EDITOR_PATH, SPLASH_PATH} from "./constants";
 
@@ -41,7 +41,7 @@ export let Load = {
                         let potentialDeck = selectedFormat === "json" ? JSON.parse(text.toString()) : convertCsvToDeck(text);
 
                         if (isValidDeck(potentialDeck)) {
-                            Saver.setDeck(potentialDeck);
+                            Storage.setActiveDeck(potentialDeck);
                             m.route.set(EDITOR_PATH);
                         } else {
                             alert("Malformed deck file.");

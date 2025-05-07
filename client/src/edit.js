@@ -1,7 +1,7 @@
 import m from "mithril";
 import { Card } from "./card";
 import { button, download } from "./utils";
-import { Saver } from "./saver";
+import { Storage } from "./storage";
 import { LEARN_PATH, REVIEW_PATH, SPLASH_PATH } from "./constants";
 
 let showExportModal = false;
@@ -23,7 +23,7 @@ function convertDeckToLogseq(deck) {
 }
 
 function makeTable() {
-    let deck = Saver.getDeck();
+    let deck = Storage.getActiveDeck();
     let table = [];
 
     deck.cards = deck.cards.filter(card => card !== null);
@@ -39,7 +39,7 @@ function makeTable() {
                     placeholder: `Term ${Number(i) + 1}`,
                     oninput: e => {
                         deck.cards[i].front = e.target.value;
-                        Saver.setDeck(deck);
+                        Storage.setActiveDeck(deck);
                     }
                 })),
                 m("td", m("input.card-input", {
@@ -47,7 +47,7 @@ function makeTable() {
                     placeholder: `Definition ${Number(i) + 1}`,
                     oninput: e => {
                         deck.cards[i].back = e.target.value;
-                        Saver.setDeck(deck);
+                        Storage.setActiveDeck(deck);
                     }
                 })),
                 m("td.last", [
@@ -58,7 +58,7 @@ function makeTable() {
                             deck.cards[i] = deck.cards[i - 1];
                             deck.cards[i - 1] = hold;
 
-                            Saver.setDeck(deck);
+                            Storage.setActiveDeck(deck);
                         }
                     }, "↑"),
                     i === deck.cards.length - 1 ? m("a.disabled", "↓") : m("a", {
@@ -68,14 +68,14 @@ function makeTable() {
                             deck.cards[i] = deck.cards[i + 1];
                             deck.cards[i + 1] = hold;
 
-                            Saver.setDeck(deck);
+                            Storage.setActiveDeck(deck);
                         }
                     }, "↓"),
                     m("a", {
                         onclick: () => {
                             if (confirm("Are you sure you want to delete this card?")) {
                                 deck.cards.splice(i, 1);
-                                Saver.setDeck(deck);
+                                Storage.setActiveDeck(deck);
                             }
                         }
                     }, "×")
@@ -89,6 +89,8 @@ function makeTable() {
 
 let ExportModal = {
     view: () => {
+        let deck = Storage.getActiveDeck();
+
         return m(".modal", m(".content", [
             m("h2.subtitle", "Save/Export"),
             m(".buttons", [
@@ -109,8 +111,8 @@ export let Edit = {
     view: () => {
         let deck;
 
-        if (Saver.isDeckSaved()) {
-            deck = Saver.getDeck();
+        if (Storage.hasActiveDeck()) {
+            deck = Storage.getActiveDeck();
         } else {
             m.route.set(SPLASH_PATH);
             return;
@@ -125,7 +127,7 @@ export let Edit = {
                     placeholder: `Deck Name`,
                     oninput: e => {
                         deck.name = e.target.value;
-                        Saver.setDeck(deck);
+                        Storage.setActiveDeck(deck);
                     }
                 })),
                 m("h2.subtitle", [
@@ -135,7 +137,7 @@ export let Edit = {
                         placeholder: `Author`,
                         oninput: e => {
                             deck.author = e.target.value;
-                            Saver.setDeck(deck);
+                            Storage.setActiveDeck(deck);
                         }
                     })
                 ]),
@@ -145,18 +147,18 @@ export let Edit = {
             m(".buttons", [
                 button("New Card", () => {
                     deck.cards.push(new Card("", ""));
-                    Saver.setDeck(deck);
+                    Storage.setActiveDeck(deck);
                 }, "primary"),
                 button("Learn Deck", () => {
-                    Saver.setDeck(deck);
+                    Storage.setActiveDeck(deck);
                     m.route.set(LEARN_PATH);
                 }),
                 button("Review Deck", () => {
-                    Saver.setDeck(deck);
+                    Storage.setActiveDeck(deck);
                     m.route.set(REVIEW_PATH);
                 }),
                 button("Save/Export", () => {
-                    Saver.setDeck(deck);
+                    Storage.setActiveDeck(deck);
                     showExportModal = true;
                 }),
                 button("Back", () => m.route.set(SPLASH_PATH))

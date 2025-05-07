@@ -1,6 +1,6 @@
 import m from "mithril";
 import { button } from "./utils";
-import { Saver } from "./saver";
+import { Storage } from "./storage";
 import {EDITOR_PATH, SPLASH_PATH} from "./constants";
 
 let cardNumber = 0;
@@ -11,8 +11,8 @@ export let Review = {
     view: () => {
         let deck;
 
-        if (Saver.isDeckSaved()) {
-            deck = Saver.getDeck();
+        if (Storage.hasActiveDeck()) {
+            deck = Storage.getActiveDeck();
         } else {
             m.route.set(SPLASH_PATH);
             return;

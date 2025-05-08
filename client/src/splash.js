@@ -28,18 +28,29 @@ function makeTable() {
         const i = Number(d);
         let deck = decks[i];
 
-        table.push(m("tr", [
-            m("td", deck.name),
-            m("td", deck.author),
-            m("td", deck.cards.length + " cards"),
-            m("td", [
+        const loadDeck = () => {
+            if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+                return;
+            }
+
+            Storage.setActiveDeck(storage.getDeck(i));
+            m.route.set(EDITOR_PATH);
+        }
+
+        table.push(m("tr.load-table", [
+            m("td", {onclick: loadDeck}, deck.name),
+            m("td", {onclick: loadDeck}, deck.author),
+            m("td", {onclick: loadDeck}, deck.cards.length + " cards"),
+            m("td.load-table-solid", [
+                m("a", {onclick: loadDeck}, "Load"),
+                " ",
                 m("a", {
                     onclick: () => {
                         if (confirm("Are you sure you want to delete this deck?")) {
                             Storage.removeDeck(i);
                         }
                     }
-                }, "×")
+                }, "Delete")
             ])
         ]));
     }

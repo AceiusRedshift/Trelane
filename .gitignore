@@ -38,3 +38,6 @@ bin/
 
 # i feel like this should be ignored but like idk
 package-lock.json
+
+#.net
+obj/

@@ -40,4 +40,4 @@ obj/
 # i feel like this should be ignored but like idk
 package-lock.json
 
-server/Trelane.db
+server/Trelane.db*

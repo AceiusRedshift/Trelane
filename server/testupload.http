@@ -1,0 +1,19 @@
+### GET request to example server
+POST http://localhost:5226/new
+
+{
+  "name": "New Deck",
+  "author": "You!",
+  "cards": [
+    {
+      "front": "fafa",
+      "back": "sfsdagasgs"
+    },
+    {
+      "front": "131",
+      "back": "tad"
+    }
+  ]
+}
+
+###

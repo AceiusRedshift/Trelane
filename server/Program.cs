@@ -29,7 +29,7 @@ static Task Dash(HttpContext context, TrelaneDatabaseContext db)
     timesVisited++;
     context.Session.SetInt32("v", timesVisited);
 
-    return context.Response.WriteAsJsonAsync(new Deck($"Visited: {timesVisited} | {DateTime.Now} | {db}", "Aceius", []));
+    return context.Response.WriteAsJsonAsync("acs");
 }
 
 static Task Explore(HttpContext context, TrelaneDatabaseContext db) => context.Response.WriteAsJsonAsync(db.Decks.Take(5));

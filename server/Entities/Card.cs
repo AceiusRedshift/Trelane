@@ -1,13 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+
 namespace Trelane.Server.Entities;
 
-public class Card(string front, string back)
+[Owned]
+public class Card
 {
-    public string Front { get; init; } = front;
-    public string Back { get; init; } = back;
-
-    public void Deconstruct(out string Front, out string Back)
-    {
-        Front = this.Front;
-        Back = this.Back;
-    }
+    [Key]
+    public string Id { get; set; }
+    
+    public string Front { get; set; }
+    public string Back { get; set; }
 }

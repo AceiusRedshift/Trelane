@@ -158,6 +158,18 @@ input[type="file"] {
     }
 }
 
+.load-table * {
+    cursor: pointer;
+}
+
+.load-table * a:hover {
+    text-decoration: underline;
+}
+
+.load-table-solid {
+    background-color: var(--back);
+}
+
 #wrap {
     display: flex;
     justify-content: center;

@@ -48,6 +48,13 @@ function makeTable() {
                     oninput: e => {
                         deck.cards[i].back = e.target.value;
                         Storage.setActiveDeck(deck);
+                    },
+                    onkeypress: e => {
+                        let keyCode = e.code || e.key;
+                        let validKeyCode = keyCode == "Enter";
+                        if (validKeyCode && i === deck.cards.length - 1) {
+                            addNewCard();
+                        }
                     }
                 })),
                 m("td.last", [
@@ -85,6 +92,12 @@ function makeTable() {
     }
 
     return m("table", table);
+}
+
+function addNewCard() {
+    let deck = Storage.getActiveDeck();
+    deck.cards.push(new Card("", ""));
+    Storage.setActiveDeck(deck);
 }
 
 let ExportModal = {
@@ -145,10 +158,7 @@ export let Edit = {
             content,
             m("br"),
             m(".buttons", [
-                button("New Card", () => {
-                    deck.cards.push(new Card("", ""));
-                    Storage.setActiveDeck(deck);
-                }, "primary"),
+                button("New Card", addNewCard, "primary"),
                 button("Learn Deck", () => {
                     Storage.setActiveDeck(deck);
                     m.route.set(LEARN_PATH);

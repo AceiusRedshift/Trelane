@@ -122,6 +122,33 @@ export let Edit = {
                     })
                 ]),
             ]),
+            m("p", [
+                m("label", [
+                    `Save to ${Storage.getServerUrl()}: `,
+                    m("input", {
+                        type: "checkbox", oninput: e => {
+                            let meta = Storage.getActiveDeckMeta();
+
+                            meta.sync = e.target.checked;
+
+                            Storage.setActiveDeckMeta(meta);
+                        }
+                    })
+                ]),
+                m("label", [
+                    " | Public: ",
+                    m("input", {
+                        type: "checkbox",
+                        oninput: e => {
+                            let meta = Storage.getActiveDeckMeta();
+
+                            meta.isPublic = e.target.checked;
+
+                            Storage.setActiveDeckMeta(meta);
+                        }
+                    })
+                ]),
+            ]),
             content,
             m("br"),
             m(".buttons", [

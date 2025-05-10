@@ -1,13 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 
 namespace Trelane.Server.Entities;
 
-public class Card
+public class SavedDeck
 {
     [Key]
     public string Id { get; set; }
     
-    public string Front { get; set; }
-    public string Back { get; set; }
+    public Deck InnerDeck { get; private set; }
 }

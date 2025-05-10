@@ -58,7 +58,7 @@ static class App
         Dictionary<string, string> body = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd(), JsonSerializerOptions.Web) ?? throw new NullReferenceException();
         Dictionary<string, object> response = new()
         {
-            { "exists", db.Users.Any(u => u.Username == body["username"] && u.Password == body["password"]) }
+            { "exists", db.CredentialsValid(body["username"], body["password"]) }
         };
 
         return context.Response.WriteAsJsonAsync(response);

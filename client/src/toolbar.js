@@ -214,7 +214,8 @@ export let Toolbar = {
             m(".dropdown", [
                 m(".dropdown-button", "Help"),
                 m(".dropdown-content", [
-                    button("View Help", () => m.route.set(HELP_PATH))
+                    button("View Help", () => m.route.set(HELP_PATH)),
+                    button("Dump Storage", () => Storage.dump())
                 ]),
             ]),
             m(".status", Toolbar.statusText)

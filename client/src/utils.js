@@ -65,3 +65,7 @@ export const validateAccount = (server, username, password) => {
         }
     });
 }
+
+const guidSegment = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+
+export const guid = () => `${guidSegment() + guidSegment()}-${guidSegment()}-${guidSegment()}-${guidSegment()}-${guidSegment()}${guidSegment()}${guidSegment()}`;

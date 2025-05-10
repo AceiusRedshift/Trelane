@@ -1,20 +1,30 @@
 import {Deck} from "./deck";
-import {STORAGE_DECK_KEY, STORAGE_MAIN_KEY} from "./constants";
+import {
+    STORAGE_DECK_KEY,
+    STORAGE_MAIN_KEY,
+    STORAGE_PASSWORD_KEY,
+    STORAGE_SERVER_KEY,
+    STORAGE_USERNAME_KEY
+} from "./constants";
 
 /**
  * Handles saving data to local storage. For now, only one deck can be saved at a time.
- * @type {{init: Storage.init, getDecks: (function(): any), getDeck: (function(number): Deck), setDeck: Storage.setDeck, addDeck: Storage.addDeck, removeDeck: Storage.removeDeck, hasActiveDeck: (function(): boolean), getActiveDeck: (function(): any), setActiveDeck: Storage.setActiveDeck}}
  */
 export const Storage = {
     /**
      * Set up local storage.
      */
     init: () => {
+        console.log("Initializing storage.");
+        
         let stored = localStorage.getItem(STORAGE_MAIN_KEY);
 
         if (stored == null || Array.isArray(stored)) {
-            console.log("Initializing storage.")
             localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify([]));
+        }
+
+        if (Storage.getServerUrl() == null) {
+            Storage.setServerUrl("http://localhost:5226");
         }
     },
 
@@ -100,4 +110,13 @@ export const Storage = {
         // ok, if we havent returned by now we must add the deck
         Storage.addDeck(deck);
     },
+
+    getUsername: () => localStorage.getItem(STORAGE_USERNAME_KEY),
+    setUsername: (name) => localStorage.setItem(STORAGE_USERNAME_KEY, name),
+
+    getPassword: () => localStorage.getItem(STORAGE_PASSWORD_KEY),
+    setPassword: (password) => localStorage.setItem(STORAGE_PASSWORD_KEY, password),
+
+    getServerUrl: () => localStorage.getItem(STORAGE_SERVER_KEY),
+    setServerUrl: (url) => localStorage.setItem(STORAGE_SERVER_KEY, url),
 }

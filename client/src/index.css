@@ -53,6 +53,11 @@ input[type="file"] {
     cursor: pointer;
 }
 
+button:hover {
+    background: var(--text);
+    color: var(--back);
+}
+
 table {
     border: var(--border);
     width: var(--width);
@@ -184,10 +189,10 @@ input[type="file"] {
     font-size: calc(var(--spacing) * 2);
 
     background: var(--toolbar);
-    
+
     .status {
         display: inline-block;
-        
+
         position: absolute;
         top: 0;
         right: 0;
@@ -198,7 +203,7 @@ input[type="file"] {
     display: inline-block;
 
     font-size: calc(var(--spacing) * 1.75);
-    
+
     margin: 0;
     padding: 0;
 }
@@ -210,13 +215,13 @@ input[type="file"] {
 
 .dropdown-content {
     background-color: var(--toolbar);
-    
+
     display: none;
     position: absolute;
     z-index: 1;
-    
+
     min-width: 100px;
-    
+
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     border: var(--border);
 }
@@ -225,11 +230,11 @@ input[type="file"] {
     padding: var(--spacing);
     margin: 0;
     border: none;
-    
+
     width: 100%;
-    
+
     background-color: var(--toolbar);
-    
+
     text-decoration: none;
     text-align: left;
     display: block;

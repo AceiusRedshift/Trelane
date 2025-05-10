@@ -2,7 +2,7 @@ import m from "mithril";
 import {Storage as Saver, Storage, Storage as storage} from "./storage";
 import {Deck} from "./deck";
 import {Card} from "./card";
-import {EDITOR_PATH, HELP_PATH, LEARN_PATH, REVIEW_PATH} from "./constants";
+import {EDITOR_PATH, HELP_PATH, LEARN_PATH, REVIEW_PATH, STORAGE_PASSWORD_KEY, STORAGE_USERNAME_KEY} from "./constants";
 import {download, isValidDeck} from "./utils";
 
 /**
@@ -16,9 +16,6 @@ const button = (text, click, disabled = () => false) => m("button", {
     onclick: !disabled() && click,
     className: disabled() && "disabled"
 }, text);
-
-let showLoader = false;
-let selectedFormat = null;
 
 function convertCsvToDeck(text) {
     const lines = text.split("\n");
@@ -40,6 +37,12 @@ function convertDeckToCsv(deck) {
     return string;
 }
 
+function attemptLogin(server, username, password) {
+    console.log(`Attempting to login to ${server} as ${username}...`);
+    
+    
+}
+
 function convertDeckToLogseq(deck) {
     let string = `- # ${deck.name}\n- **Author:** ${deck.author}\n`;
 
@@ -48,6 +51,8 @@ function convertDeckToLogseq(deck) {
     return string;
 }
 
+let showLoader = false;
+let selectedFormat = null;
 let Loader = {
     view: () => m(".modal", m(".content", [
         m(".heading", [
@@ -82,8 +87,8 @@ let Loader = {
             ]);
         })),
         m("p", [
-            "Import from file: ",
-            m("select", {
+            m("label", {for: "load-file-select"}, "Import from file: "),
+            m("select#load-file-select", {
                 value: selectedFormat || "",
                 onchange: (e) => selectedFormat = e.target.value
             }, [
@@ -114,6 +119,68 @@ let Loader = {
     ]))
 }
 
+let showSettings = false;
+let Settings = {
+    view: () => m(".modal", m(".content", [
+        m(".heading", [
+            m("h1.title", "Settings"),
+            m("h2.subtitle", "Configure Trelane."),
+        ]),
+        m("p", [
+            m("label", {for: "load-file-select"}, [
+                "Server URL: ",
+                m("select", {
+                    value: Saver.getServerUrl(),
+                    onchange: (e) => {
+                        Saver.setServerUrl(e.target.value);
+                        attemptLogin(e.target.value, Saver.getUsername(), Saver.getPassword());
+                    },
+                }, [
+                    m("option", {value: "http://localhost:5226", selected: Saver.getServerUrl() === "http://localhost:5226"}, "Localhost"),
+                    m("option", {value: "https://trelane.aceius.org", selected: Saver.getServerUrl() === "https://trelane.aceius.org"}, "Aceius.org")
+                ])
+            ])
+        ]),
+        m("p",
+            m("label", [
+                "Username: ",
+                m("input", {
+                    type: "text",
+                    value: Saver.getUsername(),
+                    onfocusout: (e) => {
+                        Saver.setUsername(e.target.value);
+
+                        if (Saver.getPassword() !== "") {
+                            attemptLogin(Saver.getServerUrl(), e.target.value, Saver.getPassword());
+                        }
+                    },
+                }),
+            ])
+        ),
+        m("p",
+            m("label", [
+                "Password: ",
+                m("input", {
+                    type: "password",
+                    value: Saver.getPassword(),
+                    onfocusout: (e) => {
+                        Saver.setPassword(e.target.value);
+
+                        if (Saver.getUsername() !== "") {
+                            attemptLogin(Saver.getServerUrl(), Saver.getUsername(), e.target.value);
+                        }
+                    },
+                }),
+            ])
+        ),
+        m("p", statusText),
+        m(".buttons", [
+            button("Close", () => showSettings = false)
+        ])
+    ]))
+}
+
+let statusText = "Welcome back! c:";
 export let Toolbar = {
     view: () => [
         m(".toolbar", [
@@ -132,6 +199,7 @@ export let Toolbar = {
                     button("Save to file", () => download(JSON.stringify(Saver.getActiveDeck()), Saver.getActiveDeck().name + ".json", "application/json"), () => !Saver.hasActiveDeck()),
                     button("Export to CSV", () => download(convertDeckToCsv(Saver.getActiveDeck()), Saver.getActiveDeck().name + ".csv", "text/csv"), () => !Saver.hasActiveDeck()),
                     button("Export to Logseq", () => download(convertDeckToLogseq(Saver.getActiveDeck()), Saver.getActiveDeck().name + ".md", "text/markdown"), () => !Saver.hasActiveDeck()),
+                    button("Settings", () => showSettings = true)
                 ]),
             ]),
             m(".dropdown", [
@@ -148,8 +216,9 @@ export let Toolbar = {
                     button("View Help", () => m.route.set(HELP_PATH))
                 ]),
             ]),
-            m(".status", "Welcome back :D")
+            m(".status", statusText)
         ]),
-        showLoader && m(Loader)
+        showLoader && m(Loader),
+        showSettings && m(Settings)
     ]
 }

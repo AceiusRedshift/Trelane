@@ -6,22 +6,6 @@ import {LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
 let showExportModal = false;
 
-function convertDeckToCsv(deck) {
-    let string = "";
-
-    deck.cards.forEach(card => string += `${card.front}, ${card.back}\n`);
-
-    return string;
-}
-
-function convertDeckToLogseq(deck) {
-    let string = `- # ${deck.name}\n- **Author:** ${deck.author}\n`;
-
-    deck.cards.forEach(card => string += `- ${card.front} #card\n	- ${card.back}\n`);
-
-    return string;
-}
-
 function makeTable() {
     let deck = Storage.getActiveDeck();
     let table = [];
@@ -100,23 +84,6 @@ function addNewCard() {
     Storage.setActiveDeck(deck);
 }
 
-let ExportModal = {
-    view: () => {
-        let deck = Storage.getActiveDeck();
-
-        return m(".modal", m(".content", [
-            m("h2.subtitle", "Save/Export"),
-            m(".buttons", [
-                button("Save Deck", () => download(JSON.stringify(deck), deck.name + ".json", "application/json"), "", "Save the active deck to a Trelane JSON file."),
-                button("Export CSV", () => download(convertDeckToCsv(deck), deck.name + ".csv", "text/plain"), "", "Save the active deck to a Generic CSV file."),
-                button("Export MD", () => download(convertDeckToLogseq(deck), deck.name + ".md", "text/plain"), "", "Save the active deck to a Logseq file containing flashcard definitions."),
-            ]),
-            m("br"),
-            button("Close", () => showExportModal = false)
-        ]));
-    }
-}
-
 export let Edit = {
     oninit: () => {
         showExportModal = false;
@@ -173,7 +140,6 @@ export let Edit = {
                 }),
                 button("Back", () => m.route.set(SPLASH_PATH))
             ]),
-            showExportModal && m(ExportModal)
         ]
     }
 }

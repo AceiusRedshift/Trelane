@@ -1,7 +1,7 @@
 :root {
     --back: #222;
     --text: #eee;
-    --link: rgb(79, 121, 247);
+    --link: #4F79F7FF;
     --visited: #86c;
     --toolbar: #111;
     --spacing: 8px;
@@ -14,6 +14,7 @@
         --back: #fff;
         --text: #222;
         --toolbar: #ddd;
+        --border: 1px solid #ccc;
     }
 }
 
@@ -86,8 +87,8 @@ input[type="file"] {
 }
 
 .primary {
-    background-color: var(--link);
-    border: 0;
+    border-color: var(--link);
+    color: var(--link);
 }
 
 .disabled {

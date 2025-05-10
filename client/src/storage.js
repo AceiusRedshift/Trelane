@@ -19,10 +19,14 @@ export const Storage = {
     init: () => {
         console.log("Initializing storage.");
 
-        let stored = localStorage.getItem(STORAGE_MAIN_KEY);
-
-        if (stored == null || Array.isArray(stored)) {
+        let storedDecks = localStorage.getItem(STORAGE_MAIN_KEY);
+        if (storedDecks == null || Array.isArray(storedDecks)) {
             localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify([]));
+        }
+
+        let storedMeta = localStorage.getItem(STORAGE_META_KEY);
+        if (storedMeta == null || Array.isArray(storedMeta)) {
+            localStorage.setItem(STORAGE_META_KEY, JSON.stringify([]));
         }
 
         if (!Storage.hasAccount()) {
@@ -66,9 +70,9 @@ export const Storage = {
      */
     setMeta: (number, metaData) => {
         let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
-        
+
         meta[number] = metaData;
-        
+
         localStorage.setItem(STORAGE_META_KEY, JSON.stringify(meta));
     },
 
@@ -80,7 +84,7 @@ export const Storage = {
     setDeck: (number, deck) => {
         let stored = JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY));
         let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
-        
+
         stored[number] = deck;
         meta[number].updated = Date.now();
 
@@ -96,8 +100,10 @@ export const Storage = {
         let stored = JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY));
         let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
 
+        let dm = new DeckMeta(false, false, Date.now(), Date.now());
+        
         stored.push(deck);
-        meta.push(new DeckMeta(false, false, Date.now(), Date.now()));
+        meta.push(dm);
 
         localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(stored));
         localStorage.setItem(STORAGE_META_KEY, JSON.stringify(meta));
@@ -110,10 +116,10 @@ export const Storage = {
     removeDeck: (number) => {
         let stored = JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY));
         let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
-        
+
         stored.splice(number, 1);
         meta.splice(number, 1);
-        
+
         localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(stored));
         localStorage.setItem(STORAGE_META_KEY, JSON.stringify(meta));
     },
@@ -165,7 +171,7 @@ export const Storage = {
                 return meta[i];
             }
         }
-        
+
         throw new Error(`Active deck ${activeDeck.name} not in decks`);
     },
 
@@ -198,12 +204,16 @@ export const Storage = {
 
     getServerUrl: () => localStorage.getItem(STORAGE_SERVER_KEY),
     setServerUrl: (url) => localStorage.setItem(STORAGE_SERVER_KEY, url),
-    
+
     dump() {
         console.log("Dumping storage");
 
         let decks = this.getDecks();
-        
+
+        if (decks.length === 0) {
+            console.log("No decks to dump");
+        }
+
         for (let i = 0; i < decks.length; i++) {
             console.log(`${i}. ${decks[i].name}`);
             console.log(decks[i]);

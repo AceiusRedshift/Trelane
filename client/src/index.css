@@ -6,7 +6,7 @@
     --toolbar: #111;
     --spacing: 8px;
     --border: 1px solid #444;
-    --width: 800px;
+    --width: 80vw;
 }
 
 @media (prefers-color-scheme: light) {
@@ -19,7 +19,7 @@
 }
 
 body {
-    font-family: Veranda, sans-serif;
+    font-family: system-ui, -apple-system, sans-serif;
     font-size: calc(var(--spacing) * 2);
     font-weight: normal;
 
@@ -108,16 +108,16 @@ input[type="file"] {
 
 .heading {
     text-align: center;
+}
 
-    .title {
-        font-size: 24pt;
-        font-weight: 600;
-    }
+h1, .heading.title {
+    font-size: 24pt;
+    font-weight: bold;
+}
 
-    .subtitle {
-        font-size: 18pt;
-        font-weight: lighter;
-    }
+h2, .heading.subtitle {
+    font-size: 16pt;
+    font-weight: normal;
 }
 
 .buttons {
@@ -160,10 +160,8 @@ input[type="file"] {
         margin: auto;
         padding: 20px;
 
-        text-align: center;
-
         border: var(--border);
-        width: var(--width);
+        max-width: var(--width);
     }
 }
 

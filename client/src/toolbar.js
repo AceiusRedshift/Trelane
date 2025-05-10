@@ -181,6 +181,20 @@ let Settings = {
     ]))
 }
 
+let showAbout = false;
+let About = {
+    view: () => m(".modal", m(".content", [
+        m("h1", [
+            m("img", {src: "favicon.png", width: 24, height: 24}),
+            " Trelane"
+        ]),
+        m("p", "Trelane is a FOSS memorization tool with optional cloud sync functionality."),
+        m(".buttons", [
+            button("Close", () => showAbout = false)
+        ])
+    ]))
+}
+
 export let Toolbar = {
     statusText: "Loading...",
     view: () => [
@@ -215,12 +229,14 @@ export let Toolbar = {
                 m(".dropdown-button", "Help"),
                 m(".dropdown-content", [
                     button("View Help", () => m.route.set(HELP_PATH)),
-                    button("Dump Storage", () => Storage.dump())
+                    button("Dump Data", () => Storage.dump()),
+                    button("About...", () => showAbout = true),
                 ]),
             ]),
             m(".status", Toolbar.statusText)
         ]),
         showLoader && m(Loader),
-        showSettings && m(Settings)
+        showSettings && m(Settings),
+        showAbout && m(About)
     ]
 }

@@ -124,7 +124,7 @@ export let Edit = {
             ]),
             m("p", [
                 m("label", [
-                    `Save to ${Storage.getServerUrl()}: `,
+                    `Save to cloud? `,
                     m("input", {
                         type: "checkbox", oninput: e => {
                             let meta = Storage.getActiveDeckMeta();
@@ -135,7 +135,7 @@ export let Edit = {
                         }
                     })
                 ]),
-                m("label", [
+                Storage.getActiveDeckMeta().sync && m("label", [
                     " | Public: ",
                     m("input", {
                         type: "checkbox",

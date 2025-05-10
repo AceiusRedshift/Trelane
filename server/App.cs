@@ -50,4 +50,17 @@ static class App
             return context.Response.WriteAsync(e.ToString());
         }
     }
+
+    public static Task ValidateAccount(HttpContext context, TrelaneDatabaseContext db)
+    {
+        using StreamReader reader = new(context.Request.Body);
+
+        Dictionary<string, string> body = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd(), JsonSerializerOptions.Web) ?? throw new NullReferenceException();
+        Dictionary<string, object> response = new()
+        {
+            { "exists", db.Users.Any(u => u.Username == body["username"] && u.Password == body["password"]) }
+        };
+
+        return context.Response.WriteAsJsonAsync(response);
+    }
 }

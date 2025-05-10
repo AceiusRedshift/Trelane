@@ -6,6 +6,7 @@ import {
     STORAGE_SERVER_KEY,
     STORAGE_USERNAME_KEY
 } from "./constants";
+import {Toolbar} from "./toolbar";
 
 /**
  * Handles saving data to local storage. For now, only one deck can be saved at a time.
@@ -16,11 +17,15 @@ export const Storage = {
      */
     init: () => {
         console.log("Initializing storage.");
-        
+
         let stored = localStorage.getItem(STORAGE_MAIN_KEY);
 
         if (stored == null || Array.isArray(stored)) {
             localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify([]));
+        }
+
+        if (!Storage.hasAccount()) {
+            Toolbar.statusText = "";
         }
 
         if (Storage.getServerUrl() == null) {
@@ -110,6 +115,8 @@ export const Storage = {
         // ok, if we havent returned by now we must add the deck
         Storage.addDeck(deck);
     },
+
+    hasAccount: () => !(Storage.getUsername() == null || Storage.getUsername() === "") && !(Storage.getPassword() == null || Storage.getPassword() === ""),
 
     getUsername: () => localStorage.getItem(STORAGE_USERNAME_KEY),
     setUsername: (name) => localStorage.setItem(STORAGE_USERNAME_KEY, name),

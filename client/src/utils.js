@@ -1,4 +1,5 @@
 import m from "mithril";
+import {Toolbar} from "./toolbar";
 
 export const button = (text, onclick, css = "", tooltip = "") => m(
     "button",
@@ -16,7 +17,7 @@ export const isValidDeck = (deck) => isString(deck.name) && isString(deck.author
 export const download = (content, fileName, contentType) => {
     let a = document.createElement("a");
 
-    a.href = URL.createObjectURL(new Blob([content], { type: contentType }));
+    a.href = URL.createObjectURL(new Blob([content], {type: contentType}));
     a.download = fileName;
     a.click();
 }
@@ -33,3 +34,34 @@ export const shuffle = (array) => {
 }
 
 export const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+export const validateAccount = (server, username, password) => {
+    console.log(`Attempting to login to ${server} as ${username}...`);
+
+    Toolbar.statusText = "Logging in...";
+
+    m.request({
+        method: "POST",
+        url: `${server}/validate-account`,
+        body: {
+            username: username,
+            password: password,
+        },
+        timeout: 5000,
+        withCredentials: true
+    }).then((response) => {
+        if (response.exists) {
+            Toolbar.statusText = "Login succeeded.";
+        } else {
+            Toolbar.statusText = "Login failed."
+        }
+
+        console.log(Toolbar.statusText)
+    }).catch((error) => {
+        Toolbar.statusText = "Error: " + error.message;
+
+        if (error.message === "Request timed out") {
+            Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline."
+        }
+    });
+}

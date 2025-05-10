@@ -2,8 +2,15 @@ import m from "mithril";
 import {Storage as Saver, Storage, Storage as storage} from "./storage";
 import {Deck} from "./deck";
 import {Card} from "./card";
-import {EDITOR_PATH, HELP_PATH, LEARN_PATH, REVIEW_PATH, STORAGE_PASSWORD_KEY, STORAGE_USERNAME_KEY} from "./constants";
-import {download, isValidDeck} from "./utils";
+import {
+    MAIN_SERVER,
+    EDITOR_PATH,
+    HELP_PATH,
+    LEARN_PATH,
+    LOCAL_SERVER,
+    REVIEW_PATH
+} from "./constants";
+import {download, isValidDeck, validateAccount} from "./utils";
 
 /**
  * Special toolbar button
@@ -35,12 +42,6 @@ function convertDeckToCsv(deck) {
     deck.cards.forEach(card => string += `${card.front}, ${card.back}\n`);
 
     return string;
-}
-
-function attemptLogin(server, username, password) {
-    console.log(`Attempting to login to ${server} as ${username}...`);
-    
-    
 }
 
 function convertDeckToLogseq(deck) {
@@ -133,11 +134,11 @@ let Settings = {
                     value: Saver.getServerUrl(),
                     onchange: (e) => {
                         Saver.setServerUrl(e.target.value);
-                        attemptLogin(e.target.value, Saver.getUsername(), Saver.getPassword());
+                        validateAccount(e.target.value, Saver.getUsername(), Saver.getPassword());
                     },
                 }, [
-                    m("option", {value: "http://localhost:5226", selected: Saver.getServerUrl() === "http://localhost:5226"}, "Localhost"),
-                    m("option", {value: "https://trelane.aceius.org", selected: Saver.getServerUrl() === "https://trelane.aceius.org"}, "Aceius.org")
+                    m("option", {value: LOCAL_SERVER, selected: Saver.getServerUrl() === LOCAL_SERVER}, "Localhost"),
+                    m("option", {value: MAIN_SERVER, selected: Saver.getServerUrl() === MAIN_SERVER}, "Aceius.org")
                 ])
             ])
         ]),
@@ -150,8 +151,8 @@ let Settings = {
                     onfocusout: (e) => {
                         Saver.setUsername(e.target.value);
 
-                        if (Saver.getPassword() !== "") {
-                            attemptLogin(Saver.getServerUrl(), e.target.value, Saver.getPassword());
+                        if (Saver.getPassword() !== "" && Saver.hasAccount()) {
+                            validateAccount(Saver.getServerUrl(), e.target.value, Saver.getPassword());
                         }
                     },
                 }),
@@ -166,22 +167,22 @@ let Settings = {
                     onfocusout: (e) => {
                         Saver.setPassword(e.target.value);
 
-                        if (Saver.getUsername() !== "") {
-                            attemptLogin(Saver.getServerUrl(), Saver.getUsername(), e.target.value);
+                        if (Saver.getUsername() !== "" && Saver.hasAccount()) {
+                            validateAccount(Saver.getServerUrl(), Saver.getUsername(), e.target.value);
                         }
                     },
                 }),
             ])
         ),
-        m("p", statusText),
+        m("p", Toolbar.statusText),
         m(".buttons", [
             button("Close", () => showSettings = false)
         ])
     ]))
 }
 
-let statusText = "Welcome back! c:";
 export let Toolbar = {
+    statusText: "Loading...",
     view: () => [
         m(".toolbar", [
             m(".dropdown", [
@@ -216,7 +217,7 @@ export let Toolbar = {
                     button("View Help", () => m.route.set(HELP_PATH))
                 ]),
             ]),
-            m(".status", statusText)
+            m(".status", Toolbar.statusText)
         ]),
         showLoader && m(Loader),
         showSettings && m(Settings)

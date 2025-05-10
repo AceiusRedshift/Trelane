@@ -7,6 +7,7 @@ import { Help } from "./help";
 import { Learn } from "./learn";
 import { EDITOR_PATH, HELP_PATH, LEARN_PATH, REVIEW_PATH, SPLASH_PATH } from "./constants";
 import {Toolbar} from "./toolbar";
+import {validateAccount} from "./utils";
 
 const root = document.getElementById("app");
 
@@ -20,6 +21,10 @@ try {
     routes[HELP_PATH] = Help;
 
     Storage.init();
+    
+    if (Storage.hasAccount()) {
+        validateAccount(Storage.getServerUrl(), Storage.getUsername(), Storage.getPassword());
+    }
 
     m.mount(document.getElementById("toolbar"), Toolbar);
     m.route(root, Storage.hasActiveDeck() ? EDITOR_PATH : SPLASH_PATH, routes);

@@ -7,6 +7,31 @@ import {EDITOR_PATH, HELP_PATH} from "./constants";
 import {Toolbar} from "./toolbar";
 import {Edit} from "./edit";
 
+let showExplore = false;
+let exploreDecks = [];
+let Explore = {
+    fetchDecks: () => {
+        m.request({
+            method: "GET",
+            url: `${Saver.getServerUrl()}/explore`,
+            timeout: 5000,
+        }).then((response) => {
+            exploreDecks = response;
+            console.log(response);
+        }).catch((error) => {
+            Toolbar.statusText = "Load Error: " + error.message;
+
+            if (error.message === "Request timed out") {
+                Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline."
+            }
+        });
+    },
+    oninit: () => Explore.fetchDecks(),
+    view: () => {
+        m("p", "explore");
+    }
+}
+
 export let Splash = {
     view: () => m("#splash", [
         m("header", [
@@ -34,6 +59,10 @@ export let Splash = {
                     })
                 ])
             ])
-        ])
+        ]),
+        m(".buttons", [
+            button("Explore Decks Online", () => showExplore = true, "", "Discover decks published by other users of Trelane.")
+        ]),
+        showExplore && m(Explore),
     ])
 }

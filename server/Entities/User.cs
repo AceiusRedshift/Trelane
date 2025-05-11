@@ -11,4 +11,6 @@ public class User
     
     [MaxLength(128)]
     public string Password { get; set; }
+    
+    public ICollection<SavedDeck> Decks { get; set; }
 }

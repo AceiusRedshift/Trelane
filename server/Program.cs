@@ -19,9 +19,23 @@ app.MapGet("/-", c => WrapContext(c, Dash));
 app.MapGet("/explore", c => WrapContext(c, Explore));
 app.MapPost("/new", c => WrapContext(c, Upload));
 app.MapPost("/validate-account", c => WrapContext(c, ValidateAccount));
+app.MapPost("/set-deck", c => WrapContext(c, SetDeck));
+app.MapGet("/u1", c => WrapContext(c, (context, db) => context.Response.WriteAsJsonAsync(db.Users.First().ToString())));
 
 app.Run();
 
 return;
 
-static Task WrapContext(HttpContext context, TrelaneRequestHandler handler) => handler(context, context.RequestServices.GetService(typeof(TrelaneDatabaseContext)) as TrelaneDatabaseContext ?? throw new ArgumentNullException());
+static Task WrapContext(HttpContext context, TrelaneRequestHandler handler)
+{
+    try
+    {
+        return handler(context, context.RequestServices.GetService(typeof(TrelaneDatabaseContext)) as TrelaneDatabaseContext ?? throw new ArgumentNullException());
+    }
+    catch (Exception e)
+    {
+        // Don't want to crash the server
+        context.Response.StatusCode = 500;
+        return context.Response.WriteAsJsonAsync(e.Message);
+    }
+}

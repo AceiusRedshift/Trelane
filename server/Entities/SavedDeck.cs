@@ -7,5 +7,5 @@ public class SavedDeck
     [Key]
     public string Id { get; set; }
     
-    public Deck InnerDeck { get; private set; }
+    public Deck InnerDeck { get; set; }
 }

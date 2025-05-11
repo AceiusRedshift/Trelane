@@ -8,6 +8,7 @@ import {
 } from "./constants";
 import {Toolbar} from "./toolbar";
 import {DeckMeta} from "./deckmeta";
+import m from "mithril";
 
 /**
  * Handles saving data to local storage. For now, only one deck can be saved at a time.
@@ -59,7 +60,7 @@ export const Storage = {
      * @returns {DeckMeta} The metadata of the deck.
      */
     getMeta: (number) => {
-        let meta = JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY))[number];
+        let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY))[number];
         return new DeckMeta(meta.sync, meta.isPublic, meta.created, meta.updated);
     },
 
@@ -148,7 +149,43 @@ export const Storage = {
         for (let i = 0; i < decks.length; i++) {
             if (decks[i].name === deck.name) {
                 console.log("Autosaving deck " + deck.name + " to index " + i);
+
                 Storage.setDeck(i, deck);
+                
+                let willSync = Storage.getMeta(i).sync;
+                
+                if (willSync) {
+                    if (!Storage.hasAccount()) {
+                        Toolbar.statusText = "No account - Saved locally at " + new Date().toLocaleTimeString();
+                        return;
+                    }
+                    
+                    Toolbar.statusText = "Saving to cloud...";
+                    
+                    m.request({
+                        method: "POST",
+                        url: `${Storage.getServerUrl()}/set-deck`,
+                        body: {
+                            username: Storage.getUsername(),
+                            password: Storage.getPassword(),
+                            deck: deck,
+                        },
+                        timeout: 5000,
+                        withCredentials: true
+                    }).then((response) => {
+                        Toolbar.statusText = "Saved to cloud at " + new Date().toLocaleTimeString();
+                        console.log(Toolbar.statusText)
+                    }).catch((error) => {
+                        Toolbar.statusText = "Error: " + error.message;
+
+                        if (error.message === "Request timed out") {
+                            Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline - Saved locally at " + new Date().toLocaleTimeString();
+                        }
+                    });
+                } else {
+                    Toolbar.statusText = "Saved at " + new Date().toLocaleTimeString();
+                }
+                
                 return;
             }
         }

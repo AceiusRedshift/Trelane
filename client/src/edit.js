@@ -122,7 +122,7 @@ export let Edit = {
                     })
                 ]),
             ]),
-            m("p", [
+            Storage.hasAccount() && m("p", [
                 m("label", [
                     `Save to cloud? `,
                     m("input", {

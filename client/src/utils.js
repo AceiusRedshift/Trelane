@@ -1,5 +1,9 @@
 import m from "mithril";
 import {Toolbar} from "./toolbar";
+import {Storage, Storage as storage} from "./storage";
+import {Deck} from "./deck";
+import {Card} from "./card";
+import {EDITOR_PATH} from "./constants";
 
 export const button = (text, onclick, css = "", tooltip = "") => m(
     "button",
@@ -69,3 +73,23 @@ export const validateAccount = (server, username, password) => {
 const guidSegment = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 
 export const guid = () => `${guidSegment() + guidSegment()}-${guidSegment()}-${guidSegment()}-${guidSegment()}-${guidSegment()}${guidSegment()}${guidSegment()}`;
+
+export const FileActions = {
+    newDeck() {
+        if (storage.hasActiveDeck() && !confirm("Are you sure you want to create a new deck? One is already loaded, so this will overwrite it.")) {
+            return;
+        }
+
+        Storage.setActiveDeck(new Deck("Untitled Deck", "You!", [new Card("", "")]));
+        m.route.set(EDITOR_PATH);
+    },
+    
+    loadDeck(index) {
+        if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+            return;
+        }
+
+        Storage.setActiveDeck(storage.getDeck(index));
+        m.route.set(EDITOR_PATH);
+    }
+}

@@ -42,7 +42,7 @@ a:visited {
     color: var(--visited);
 }
 
-button,
+button:not(.link-button),
 input[type="file"] {
     background: var(--back);
     color: var(--text);
@@ -53,7 +53,7 @@ input[type="file"] {
     cursor: pointer;
 }
 
-button:hover {
+button:not(.link-button):hover {
     background: var(--text);
     color: var(--back);
 }
@@ -248,6 +248,29 @@ h2, .heading.subtitle {
 
 .dropdown:hover .dropdown-content {
     display: block;
+}
+
+.row-2 {
+    display: flex;
+    
+    .column {
+        flex: 50%;
+    }
+}
+
+.link-button {
+    background: transparent;
+    color: var(--link);
+    
+    font-size: inherit;
+    
+    text-decoration: underline;
+    cursor: pointer;
+    border:0;
+}
+
+.splash {
+    width: calc(var(--width) / 2);
 }
 
 #wrap {

@@ -10,7 +10,7 @@ import {
     LOCAL_SERVER,
     REVIEW_PATH
 } from "./constants";
-import {download, isValidDeck, validateAccount} from "./utils";
+import {download, FileActions, isValidDeck, validateAccount} from "./utils";
 
 /**
  * Special toolbar button
@@ -102,14 +102,7 @@ let Loader = {
         m("br"),
         (!Saver.hasAccount() || (Saver.hasAccount() && loaderTab === 0)) && (
             Storage.getDecks().length === 0 ? m("p", "No decks saved :c") : m("table", Storage.getDecks().map((deck, i, decks) => {
-                const loadDeck = () => {
-                    if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
-                        return;
-                    }
-
-                    Storage.setActiveDeck(storage.getDeck(i));
-                    m.route.set(EDITOR_PATH);
-                }
+                const loadDeck = () => FileActions.loadDeck(i);
 
                 return m("tr.load-table", [
                     m("td", {onclick: loadDeck}, deck.name),
@@ -275,19 +268,13 @@ let About = {
 
 export let Toolbar = {
     statusText: "Loading...",
+    showLoader: () => showLoader = true,
     view: () => [
         m(".toolbar", [
             m(".dropdown", [
                 m(".dropdown-button", "File"),
                 m(".dropdown-content", [
-                    button("New", () => {
-                        if (storage.hasActiveDeck() && !confirm("Are you sure you want to create a new deck? One is already loaded, so this will overwrite it.")) {
-                            return;
-                        }
-
-                        Storage.setActiveDeck(new Deck("New Deck", "You!", [new Card("", "")]));
-                        m.route.set(EDITOR_PATH);
-                    }),
+                    button("New", FileActions.newDeck),
                     button("Open", () => showLoader = true),
                     button("Save to file", () => download(JSON.stringify(Saver.getActiveDeck()), Saver.getActiveDeck().name + ".json", "application/json"), () => !Saver.hasActiveDeck()),
                     button("Export to CSV", () => download(convertDeckToCsv(Saver.getActiveDeck()), Saver.getActiveDeck().name + ".csv", "text/csv"), () => !Saver.hasActiveDeck()),

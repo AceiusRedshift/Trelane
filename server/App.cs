@@ -6,18 +6,13 @@ namespace Trelane.Server;
 
 static class App
 {
-    public static Task Dash(HttpContext context, TrelaneDatabaseContext db)
-    {
-        int timesVisited = context.Session.GetInt32("v") ?? 0;
-        timesVisited++;
-        context.Session.SetInt32("v", timesVisited);
-
-        return context.Response.WriteAsJsonAsync("acs");
-    }
-
-    //TODO context.Response.WriteAsJsonAsync(db.Decks.Take(5));
-    public static Task Explore(HttpContext context, TrelaneDatabaseContext db) => context.Response
-        .WriteAsJsonAsync(db.Set<SavedDeck>().Where(deck => deck.Public).TakeLast(100).OrderBy(deck => deck.Upvotes).TakeLast(10));
+    public static Task Explore(HttpContext context, TrelaneDatabaseContext db) => context.Response.WriteAsJsonAsync(
+        db.Set<SavedDeck>()
+            .Where(deck => deck.Public)
+            .TakeLast(100)
+            .OrderBy(deck => deck.Upvotes)
+            .TakeLast(10)
+    );
 
     public static Task ValidateAccount(HttpContext context, TrelaneDatabaseContext db)
     {

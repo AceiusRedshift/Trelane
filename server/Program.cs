@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Trelane.Server;
 using static Trelane.Server.App;
@@ -14,10 +15,9 @@ builder.Services.Configure<KestrelServerOptions>(options => options.AllowSynchro
 
 var app = builder.Build();
 app.UseSession();
-app.MapGet("/", () => "Hello World!");
-app.MapGet("/-", c => WrapContext(c, Dash));
+app.MapGet("/", () => Assembly.GetCallingAssembly().GetName().Version);
 app.MapGet("/explore", c => WrapContext(c, Explore));
-app.MapPost("/validate-account", c => WrapContext(c, ValidateAccount));
+app.MapPost("/get-account", c => WrapContext(c, ValidateAccount));
 app.MapPost("/set-deck", c => WrapContext(c, SetDeck));
 app.MapPost("/get-decks", c => WrapContext(c, GetDecks));
 

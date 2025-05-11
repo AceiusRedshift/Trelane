@@ -46,7 +46,7 @@ export const validateAccount = (server, username, password) => {
 
     m.request({
         method: "POST",
-        url: `${server}/validate-account`,
+        url: `${server}/get-account`,
         body: {
             username: username,
             password: password,

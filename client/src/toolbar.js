@@ -53,69 +53,143 @@ function convertDeckToLogseq(deck) {
 }
 
 let showLoader = false;
+let loaderTab = 0;
 let selectedFormat = null;
+let remoteDecks = [];
 let Loader = {
+    fetchRemoteDecks() {
+        m.request({
+            method: "POST",
+            url: `${Saver.getServerUrl()}/get-decks`,
+            body: {
+                username: Saver.getUsername(),
+                password: Saver.getPassword(),
+            },
+            timeout: 5000,
+            withCredentials: true
+        }).then((response) => {
+            remoteDecks = response;
+            console.log(response);
+        }).catch((error) => {
+            Toolbar.statusText = "Load Error: " + error.message;
+
+            if (error.message === "Request timed out") {
+                Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline."
+            }
+        });
+    },
+
+    oninit: () => {
+        Loader.fetchRemoteDecks();
+    },
     view: () => m(".modal", m(".content", [
         m(".heading", [
             m("h1.title", "Load"),
             m("h2.subtitle", "Restore or import a deck."),
         ]),
-        Storage.getDecks().length === 0 ? m("p", "No decks saved :c") : m("table", Storage.getDecks().map((deck, i, decks) => {
-            const loadDeck = () => {
-                if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
-                    return;
-                }
-
-                Storage.setActiveDeck(storage.getDeck(i));
-                m.route.set(EDITOR_PATH);
-            }
-
-            return m("tr.load-table", [
-                m("td", {onclick: loadDeck}, deck.name),
-                m("td", {onclick: loadDeck}, deck.author),
-                m("td", {onclick: loadDeck}, deck.cards.length + " cards"),
-                m("td.load-table-solid", [
-                    m("a", {onclick: loadDeck}, "Load"),
-                    " ",
-                    m("a", {
-                        onclick: () => {
-                            if (confirm("Are you sure you want to delete this deck?")) {
-                                Storage.removeDeck(i);
-                            }
-                        }
-                    }, "Delete")
-                ])
-            ]);
-        })),
-        m("p", [
-            m("label", {for: "load-file-select"}, "Import from file: "),
-            m("select#load-file-select", {
-                value: selectedFormat || "",
-                onchange: (e) => selectedFormat = e.target.value
-            }, [
-                m("option", {value: "", disabled: true, selected: selectedFormat == null}, "Select file format..."),
-                m("option", {value: "json", selected: selectedFormat === "json"}, "Trelane JSON"),
-                m("option", {value: "csv", selected: selectedFormat === "csv"}, "Generic CSV")
-            ]),
-        ]),
-        selectedFormat && m("p", m("input", {
-            type: "file",
-            accept: selectedFormat === "json" ? ".json" : ".csv",
-            onchange: e => e.target.files[0].text().then(text => {
-                try {
-                    let potentialDeck = selectedFormat === "json" ? JSON.parse(text.toString()) : convertCsvToDeck(text);
-
-                    if (isValidDeck(potentialDeck)) {
-                        Saver.setActiveDeck(potentialDeck);
-                        m.route.set(EDITOR_PATH);
-                    } else {
-                        alert("Malformed deck file.");
+        Saver.hasAccount() && m(".buttons", [
+            m("button", {className: loaderTab === 0 ? "primary" : "", onclick: () => loaderTab = 0}, "Local Decks"),
+            m("button", {
+                className: loaderTab === 1 ? "primary" : "", onclick: () => {
+                    if (loaderTab !== 1) {
+                        Loader.fetchRemoteDecks();
+                        loaderTab = 1;
                     }
-                } catch (e) {
-                    alert("Error parsing deck file: " + e.toString().replace("\n", ""));
                 }
-            })
-        })),
+            }, "Cloud Decks"),
+            m("button", {className: loaderTab === 2 ? "primary" : "", onclick: () => loaderTab = 2}, "Import")
+        ]),
+        m("br"),
+        (!Saver.hasAccount() || (Saver.hasAccount() && loaderTab === 0)) && (
+            Storage.getDecks().length === 0 ? m("p", "No decks saved :c") : m("table", Storage.getDecks().map((deck, i, decks) => {
+                const loadDeck = () => {
+                    if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+                        return;
+                    }
+
+                    Storage.setActiveDeck(storage.getDeck(i));
+                    m.route.set(EDITOR_PATH);
+                }
+
+                return m("tr.load-table", [
+                    m("td", {onclick: loadDeck}, deck.name),
+                    m("td", {onclick: loadDeck}, deck.author),
+                    m("td", {onclick: loadDeck}, deck.cards.length + " cards"),
+                    m("td.load-table-solid", [
+                        m("a", {onclick: loadDeck}, "Load"),
+                        " ",
+                        m("a", {
+                            onclick: () => {
+                                if (confirm("Are you sure you want to delete this deck?")) {
+                                    Storage.removeDeck(i);
+                                }
+                            }
+                        }, "Delete")
+                    ])
+                ]);
+            }))
+        ),
+        (Saver.hasAccount() && loaderTab === 1) && (
+            remoteDecks.length === 0 ? m("p", "No decks on cloud :c") : m("table", remoteDecks.map((deck, i, decks) => {
+                const loadDeck = () => {
+                    if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+                        return;
+                    }
+
+                    Storage.setActiveDeck(storage.getDeck(i));
+                    m.route.set(EDITOR_PATH);
+                }
+
+                return m("tr.load-table", [
+                    m("td", {onclick: loadDeck}, deck.name),
+                    m("td", {onclick: loadDeck}, deck.author),
+                    m("td", {onclick: loadDeck}, deck.cards.length + " cards"),
+                    m("td.load-table-solid", [
+                        m("a", {onclick: loadDeck}, "Load"),
+                        " ",
+                        m("a", {
+                            onclick: () => {
+                                if (confirm("Are you sure you want to delete this deck?")) {
+                                    Storage.removeDeck(i);
+                                }
+                            }
+                        }, "Delete")
+                    ])
+                ]);
+            }))
+        ),
+        (Saver.hasAccount() && loaderTab === 2) && [
+            m("p", [
+                m("label", {for: "load-file-select"}, "Import from file: "),
+                m("select#load-file-select", {
+                    value: selectedFormat || "",
+                    onchange: (e) => selectedFormat = e.target.value
+                }, [
+                    m("option", {value: "", disabled: true, selected: selectedFormat == null}, "Select file format..."),
+                    m("option", {value: "json", selected: selectedFormat === "json"}, "Trelane JSON"),
+                    m("option", {value: "csv", selected: selectedFormat === "csv"}, "Generic CSV")
+                ]),
+            ]),
+            selectedFormat && m("p", m("input", {
+                type: "file",
+                accept: selectedFormat === "json" ? ".json" : ".csv",
+                onchange: e => e.target.files[0].text().then(text => {
+                    try {
+                        let potentialDeck = selectedFormat === "json" ? JSON.parse(text.toString()) : convertCsvToDeck(text);
+
+                        if (isValidDeck(potentialDeck)) {
+                            Saver.setActiveDeck(potentialDeck);
+                            m.route.set(EDITOR_PATH);
+                        } else {
+                            alert("Malformed deck file.");
+                        }
+                    } catch (e) {
+                        alert("Error parsing deck file: " + e.toString().replace("\n", ""));
+                    }
+                })
+            }))
+        ],
+        m("br"),
         m(".buttons", button("Back", () => showLoader = false))
     ]))
 }

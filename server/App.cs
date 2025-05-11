@@ -16,42 +16,8 @@ static class App
     }
 
     //TODO context.Response.WriteAsJsonAsync(db.Decks.Take(5));
-    public static Task Explore(HttpContext context, TrelaneDatabaseContext db) => context.Response.WriteAsJsonAsync("");
-
-    public static Task Upload(HttpContext context, TrelaneDatabaseContext db)
-    {
-        try
-        {
-            using StreamReader reader = new(context.Request.Body);
-
-            Deck deck = JsonSerializer.Deserialize<Deck>(reader.ReadToEnd(), JsonSerializerOptions.Web) ?? throw new NullReferenceException();
-            deck.Id = Guid.NewGuid().ToString();
-
-            foreach (Card deckCard in deck.Cards)
-            {
-                deckCard.Id = Guid.NewGuid().ToString();
-            }
-
-            db.Add(deck);
-            db.SaveChanges();
-
-            return context.Response.WriteAsJsonAsync(deck);
-        }
-        catch (NullReferenceException e)
-        {
-            Console.Error.WriteLine(e);
-
-            context.Response.StatusCode = 400;
-            return context.Response.WriteAsync(e.Message);
-        }
-        catch (Exception e)
-        {
-            Console.Error.WriteLine(e);
-
-            context.Response.StatusCode = 500;
-            return context.Response.WriteAsync(e.ToString());
-        }
-    }
+    public static Task Explore(HttpContext context, TrelaneDatabaseContext db) => context.Response
+        .WriteAsJsonAsync(db.Set<SavedDeck>().Where(deck => deck.Public).TakeLast(100).OrderBy(deck => deck.Upvotes).TakeLast(10));
 
     public static Task ValidateAccount(HttpContext context, TrelaneDatabaseContext db)
     {
@@ -66,7 +32,7 @@ static class App
         return context.Response.WriteAsJsonAsync(response);
     }
 
-    internal record SetDeckRequest(string Username, string Password, Deck Deck);
+    internal record SetDeckRequest(string Username, string Password, Deck Deck, bool Public);
 
     public static Task SetDeck(HttpContext context, TrelaneDatabaseContext db)
     {
@@ -97,9 +63,30 @@ static class App
                 innerDeckCard.Id = Guid.NewGuid().ToString();
             }
 
+            deckToEdit.Public = body.Public;
+
             db.SaveChanges();
 
             return context.Response.WriteAsJsonAsync(body.Deck);
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+            return context.Response.WriteAsJsonAsync("Unauthorized");
+        }
+    }
+
+    internal record GetDecksRequest(string Username, string Password);
+
+    public static Task GetDecks(HttpContext context, TrelaneDatabaseContext db)
+    {
+        using StreamReader reader = new(context.Request.Body);
+
+        GetDecksRequest body = JsonSerializer.Deserialize<GetDecksRequest>(reader.ReadToEnd(), JsonSerializerOptions.Web) ?? throw new NullReferenceException();
+        if (db.CredentialsValid(body.Username, body.Password))
+        {
+            var decks = db.Users.Include(user => user.Decks).First(user => user.Username == body.Username).Decks.Select(deck => deck.InnerDeck);
+            return context.Response.WriteAsync(string.Join(',', decks) + "acs");
         }
         else
         {

@@ -17,10 +17,9 @@ app.UseSession();
 app.MapGet("/", () => "Hello World!");
 app.MapGet("/-", c => WrapContext(c, Dash));
 app.MapGet("/explore", c => WrapContext(c, Explore));
-app.MapPost("/new", c => WrapContext(c, Upload));
 app.MapPost("/validate-account", c => WrapContext(c, ValidateAccount));
 app.MapPost("/set-deck", c => WrapContext(c, SetDeck));
-app.MapGet("/u1", c => WrapContext(c, (context, db) => context.Response.WriteAsJsonAsync(db.Users.First().ToString())));
+app.MapGet("/get-decks", c => WrapContext(c, GetDecks));
 
 app.Run();
 

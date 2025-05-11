@@ -58,7 +58,7 @@ export const validateAccount = (server, username, password) => {
 
         console.log(Toolbar.statusText)
     }).catch((error) => {
-        Toolbar.statusText = "Error: " + error.message;
+        Toolbar.statusText = "Login Error: " + error.message;
 
         if (error.message === "Request timed out") {
             Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline."

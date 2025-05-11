@@ -60,7 +60,6 @@ button:hover {
 
 table {
     border: var(--border);
-    width: var(--width);
 
     td {
         padding: var(--spacing);
@@ -175,6 +174,10 @@ h2, .heading.subtitle {
 
 .load-table-solid {
     background-color: var(--back);
+}
+
+.edit-table {
+    width: var(--width);
 }
 
 .toolbar {

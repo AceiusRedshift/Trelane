@@ -176,7 +176,7 @@ export const Storage = {
                         Toolbar.statusText = "Saved to cloud at " + new Date().toLocaleTimeString();
                         console.log(Toolbar.statusText)
                     }).catch((error) => {
-                        Toolbar.statusText = "Error: " + error.message;
+                        Toolbar.statusText = "Save Error: " + error.message;
 
                         if (error.message === "Request timed out") {
                             Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline - Saved locally at " + new Date().toLocaleTimeString();

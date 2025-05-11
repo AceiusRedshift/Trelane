@@ -263,6 +263,10 @@ let About = {
             " Trelane"
         ]),
         m("p", "Trelane is a FOSS memorization tool with optional cloud sync functionality."),
+        m("p", [
+            "Powered by ",
+            m("a", {href: "https://mithril.js.org"}, "Mithril.js"),
+        ]),
         m(".buttons", [
             button("Close", () => showAbout = false)
         ])

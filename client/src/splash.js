@@ -8,7 +8,7 @@ import {Toolbar} from "./toolbar";
 import {Edit} from "./edit";
 
 export let Splash = {
-    view: () => m(".splash", [
+    view: () => m("#splash", [
         m("header", [
             m("h1.title", "Trelane"),
             m("h2.subtitle", "A semi-competent memorization tool."),

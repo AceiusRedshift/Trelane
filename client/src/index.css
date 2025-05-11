@@ -1,3 +1,5 @@
+/* Main */
+
 :root {
     --back: #222;
     --text: #eee;
@@ -29,17 +31,19 @@ body {
     margin: var(--spacing);
 }
 
+/* Elements */
+
 a {
     color: var(--link);
     cursor: pointer;
 }
 
-a:not([href]) {
-    color: var(--text);
-}
-
 a:visited {
     color: var(--visited);
+}
+
+a:not([href]) {
+    color: var(--text);
 }
 
 button:not(.link-button),
@@ -90,12 +94,14 @@ input[type="file"] {
     padding: calc(var(--spacing) / 2);
 }
 
-.primary {
+/* Modifiers */
+
+button.primary {
     border-color: var(--link);
     color: var(--link);
 }
 
-.disabled {
+*:disabled, .disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
@@ -104,6 +110,18 @@ input[type="file"] {
     cursor: auto;
     border: 0;
 }
+
+/* Layout */
+
+.row-2 {
+    display: flex;
+
+    .column {
+        flex: 50%;
+    }
+}
+
+/* Generic Components */
 
 .heading {
     text-align: center;
@@ -164,41 +182,6 @@ h2, .heading.subtitle {
     }
 }
 
-.load-table * {
-    cursor: pointer;
-}
-
-.load-table * a:hover {
-    text-decoration: underline;
-}
-
-.load-table-solid {
-    background-color: var(--back);
-}
-
-.edit-table {
-    width: var(--width);
-}
-
-.toolbar {
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 100vw;
-
-    font-size: calc(var(--spacing) * 2);
-
-    background: var(--toolbar);
-
-    .status {
-        display: inline-block;
-
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
-}
 
 .dropdown, .status {
     display: inline-block;
@@ -250,14 +233,6 @@ h2, .heading.subtitle {
     display: block;
 }
 
-.row-2 {
-    display: flex;
-
-    .column {
-        flex: 50%;
-    }
-}
-
 .link-button {
     background: transparent;
     color: var(--link);
@@ -271,7 +246,47 @@ h2, .heading.subtitle {
     padding: 0;
 }
 
-.splash {
+/* Specific Components */
+
+.load-table * {
+    cursor: pointer;
+}
+
+.load-table * a:hover {
+    text-decoration: underline;
+}
+
+.load-table-solid {
+    background-color: var(--back);
+}
+
+.edit-table {
+    width: var(--width);
+}
+
+.toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+
+    font-size: calc(var(--spacing) * 2);
+
+    background: var(--toolbar);
+
+    .status {
+        display: inline-block;
+
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}
+
+/* Specific Elements */
+
+#splash {
     width: calc(var(--width) / 2);
 }
 

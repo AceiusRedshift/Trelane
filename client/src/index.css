@@ -252,7 +252,7 @@ h2, .heading.subtitle {
 
 .row-2 {
     display: flex;
-    
+
     .column {
         flex: 50%;
     }
@@ -261,12 +261,14 @@ h2, .heading.subtitle {
 .link-button {
     background: transparent;
     color: var(--link);
-    
+
     font-size: inherit;
-    
+
     text-decoration: underline;
     cursor: pointer;
-    border:0;
+
+    border: 0;
+    padding: 0;
 }
 
 .splash {

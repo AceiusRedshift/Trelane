@@ -15,36 +15,25 @@ export let Splash = {
         ]),
         m(".row-2.max-width", [
             m(".column", [
-                m("h3", "Quick Start"),
+                m("h3", "Quick Actions"),
                 m("ul", [
                     m("li", m("button.link-button", {onclick: FileActions.newDeck}, "New Deck")),
-                    m("li", m("button.link-button", {onclick: Toolbar.showLoader}, "Open Deck"))
+                    m("li", m("button.link-button", {onclick: Toolbar.showLoader}, "Open Deck")),
+                    m("li", m("button.link-button", {onclick: () => m.route.set(HELP_PATH)}, "Help"))
                 ])
             ]),
             Storage.getDecks().length > 0 && m(".column", [
                 m("h3", "Recent"),
                 m("ul", [
                     Storage.hasActiveDeck() && m("li", [
-                        "Currently Editing: ",
-                        m("button.link-button", {onclick: () => m.route.set(EDITOR_PATH)}, Storage.getActiveDeck().name)
+                        m("button.link-button", {onclick: () => m.route.set(EDITOR_PATH)}, Storage.getActiveDeck().name),
+                        " (Currently editing)"
                     ]),
                     Storage.getDecks().slice(-Math.min(Storage.getDecks().length, 5) + (Storage.hasActiveDeck() ? 1 : 0)).map((deck, i, _) => {
                         return m("li", m("button.link-button", {onclick: () => FileActions.loadDeck(i)}, deck.name));
                     })
                 ])
             ])
-        ]),
-        m(".buttons", [
-            Storage.hasActiveDeck() && button("Continue Editing", () => m.route.set(EDITOR_PATH), "primary"),
-            button("New Deck", () => {
-                if (storage.hasActiveDeck() && !confirm("Are you sure you want to create a new deck? One is already loaded, so this will overwrite it.")) {
-                    return;
-                }
-
-                Storage.setActiveDeck(new Deck("New Deck", "You!", [new Card("", "")]));
-                m.route.set(EDITOR_PATH);
-            }, Storage.hasActiveDeck() ? "" : "primary"),
-            button("Help", () => m.route.set(HELP_PATH))
         ])
     ])
 }

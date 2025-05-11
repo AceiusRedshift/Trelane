@@ -19,7 +19,7 @@ app.MapGet("/-", c => WrapContext(c, Dash));
 app.MapGet("/explore", c => WrapContext(c, Explore));
 app.MapPost("/validate-account", c => WrapContext(c, ValidateAccount));
 app.MapPost("/set-deck", c => WrapContext(c, SetDeck));
-app.MapGet("/get-decks", c => WrapContext(c, GetDecks));
+app.MapPost("/get-decks", c => WrapContext(c, GetDecks));
 
 app.Run();
 

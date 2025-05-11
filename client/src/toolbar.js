@@ -130,7 +130,7 @@ let Loader = {
             }))
         ),
         (Saver.hasAccount() && loaderTab === 1) && (
-            remoteDecks.length === 0 ? m("p", "No decks on cloud :c") : m("table", remoteDecks.map((deck, i, decks) => {
+            (remoteDecks == null || remoteDecks.length === 0) ? m("p", "No decks on cloud :c") : m("table", remoteDecks.map((deck, i, decks) => {
                 const loadDeck = () => {
                     if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
                         return;

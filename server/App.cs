@@ -86,7 +86,7 @@ static class App
         if (db.CredentialsValid(body.Username, body.Password))
         {
             var decks = db.Users.Include(user => user.Decks).First(user => user.Username == body.Username).Decks.Select(deck => deck.InnerDeck);
-            return context.Response.WriteAsync(string.Join(',', decks) + "acs");
+            return context.Response.WriteAsJsonAsync(decks);
         }
         else
         {

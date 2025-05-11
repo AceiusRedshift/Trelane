@@ -9,6 +9,7 @@ static class App
     public static Task Explore(HttpContext context, TrelaneDatabaseContext db) => context.Response.WriteAsJsonAsync(
         db.Set<SavedDeck>()
             .Where(deck => deck.Public)
+            .AsEnumerable()
             .TakeLast(100)
             .OrderBy(deck => deck.Upvotes)
             .TakeLast(10)

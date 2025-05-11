@@ -87,9 +87,9 @@ let Loader = {
             m("h1.title", "Load"),
             m("h2.subtitle", "Restore or import a deck."),
         ]),
-        Saver.hasAccount() && m(".buttons", [
+        m(".buttons", [
             m("button", {className: loaderTab === 0 ? "primary" : "", onclick: () => loaderTab = 0}, "Local Decks"),
-            m("button", {
+            Saver.hasAccount() && m("button", {
                 className: loaderTab === 1 ? "primary" : "", onclick: () => {
                     if (loaderTab !== 1) {
                         Loader.fetchRemoteDecks();
@@ -100,7 +100,7 @@ let Loader = {
             m("button", {className: loaderTab === 2 ? "primary" : "", onclick: () => loaderTab = 2}, "Import")
         ]),
         m("br"),
-        (!Saver.hasAccount() || (Saver.hasAccount() && loaderTab === 0)) && (
+        loaderTab === 0 && (
             Storage.getDecks().length === 0 ? m("p", "No decks saved :c") : m("table", Storage.getDecks().map((deck, i, decks) => {
                 const loadDeck = () => FileActions.loadDeck(i);
 
@@ -122,7 +122,7 @@ let Loader = {
                 ]);
             }))
         ),
-        (Saver.hasAccount() && loaderTab === 1) && (
+        loaderTab === 1 && (
             (remoteDecks == null || remoteDecks.length === 0) ? m("p", "No decks on cloud :c") : m("table", remoteDecks.map((deck, i, decks) => {
                 const loadDeck = () => {
                     if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
@@ -151,7 +151,7 @@ let Loader = {
                 ]);
             }))
         ),
-        (Saver.hasAccount() && loaderTab === 2) && [
+        loaderTab === 2 && [
             m("p", [
                 m("label", {for: "load-file-select"}, "Import from file: "),
                 m("select#load-file-select", {

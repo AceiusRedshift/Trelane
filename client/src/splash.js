@@ -19,17 +19,50 @@ let Explore = {
             exploreDecks = response;
             console.log(response);
         }).catch((error) => {
-            Toolbar.statusText = "Load Error: " + error.message;
+            Toolbar.statusText = "Explore Error: " + error.message;
 
             if (error.message === "Request timed out") {
                 Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline."
             }
         });
     },
-    oninit: () => Explore.fetchDecks(),
-    view: () => {
-        m("p", "explore");
-    }
+    view: () => m(".modal", m(".content", [
+        m(".heading", [
+            m("h1.title", "Explore"),
+            m("h2.subtitle", `Discover popular decks from ${Storage.getServerUrl()}.`),
+        ]),
+        m("br"),
+        (exploreDecks == null || exploreDecks.length === 0) ? m("p", "No decks on cloud :c") :
+            m("table", exploreDecks.map((deck, i, _) => {
+                const loadDeck = () => {
+                    if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+                        return;
+                    }
+
+                    Storage.setActiveDeck(storage.getDeck(i));
+                    m.route.set(EDITOR_PATH);
+                }
+
+                return m("tr.load-table", [
+                    m("td", {onclick: loadDeck}, deck.name),
+                    m("td", {onclick: loadDeck}, deck.author),
+                    m("td", {onclick: loadDeck}, deck.cards.length + " cards"),
+                    m("td.load-table-solid", [
+                        m("a", {onclick: loadDeck}, "Load"),
+                        " ",
+                        m("a", {
+                            onclick: () => {
+                                if (confirm("Are you sure you want to delete this deck?")) {
+                                    Storage.removeDeck(i);
+                                }
+                            }
+                        }, "Delete")
+                    ])
+                ]);
+            })),
+        m("br"),
+        m(".buttons", button("Back", () => showExplore = false))
+    ]))
 }
 
 export let Splash = {
@@ -61,7 +94,10 @@ export let Splash = {
             ])
         ]),
         m(".buttons", [
-            button("Explore Decks Online", () => showExplore = true, "", "Discover decks published by other users of Trelane.")
+            button("Explore Decks Online", () => {
+                showExplore = true;
+                Explore.fetchDecks();
+            }, "", "Discover decks published by other users of Trelane.")
         ]),
         showExplore && m(Explore),
     ])

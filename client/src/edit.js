@@ -4,8 +4,6 @@ import {button, download} from "./utils";
 import {Storage} from "./storage";
 import {LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
-let showExportModal = false;
-
 function makeTable() {
     let deck = Storage.getActiveDeck();
     let table = [];
@@ -85,9 +83,6 @@ function addNewCard() {
 }
 
 export let Edit = {
-    oninit: () => {
-        showExportModal = false;
-    },
     view: () => {
         let deck;
 
@@ -122,6 +117,18 @@ export let Edit = {
                     })
                 ]),
             ]),
+            m(".buttons", [
+                button("Learn Terms", () => {
+                    Storage.setActiveDeck(deck);
+                    m.route.set(LEARN_PATH);
+                }),
+                button("Review Flashcards", () => {
+                    Storage.setActiveDeck(deck);
+                    m.route.set(REVIEW_PATH);
+                }),
+                button("Close Deck", () => m.route.set(SPLASH_PATH))
+            ]),
+            m("br"),
             Storage.hasAccount() && m("p", [
                 m("label", [
                     `Save to cloud? `,
@@ -154,20 +161,7 @@ export let Edit = {
             content,
             m("br"),
             m(".buttons", [
-                button("New Card", addNewCard, "primary"),
-                button("Learn Deck", () => {
-                    Storage.setActiveDeck(deck);
-                    m.route.set(LEARN_PATH);
-                }),
-                button("Review Deck", () => {
-                    Storage.setActiveDeck(deck);
-                    m.route.set(REVIEW_PATH);
-                }),
-                button("Save/Export", () => {
-                    Storage.setActiveDeck(deck);
-                    showExportModal = true;
-                }),
-                button("Back", () => m.route.set(SPLASH_PATH))
+                button("New Card", addNewCard, "primary")
             ]),
         ]
     }

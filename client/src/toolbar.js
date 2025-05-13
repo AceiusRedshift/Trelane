@@ -131,6 +131,7 @@ let Loader = {
 
                     Storage.setActiveDeck(storage.getDeck(i));
                     m.route.set(EDITOR_PATH);
+                    showLoader = false;
                 }
 
                 return m("tr.load-table", [
@@ -173,6 +174,7 @@ let Loader = {
                         if (isValidDeck(potentialDeck)) {
                             Saver.setActiveDeck(potentialDeck);
                             m.route.set(EDITOR_PATH);
+                            showLoader = false;
                         } else {
                             alert("Malformed deck file.");
                         }

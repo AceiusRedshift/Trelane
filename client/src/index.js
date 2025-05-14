@@ -11,7 +11,7 @@ import {validateAccount} from "./utils";
 
 const root = document.getElementById("app");
 
-try {
+const buildRoutes = () => {
     let routes = {};
 
     routes[SPLASH_PATH] = Splash;
@@ -19,7 +19,30 @@ try {
     routes[REVIEW_PATH] = Review;
     routes[LEARN_PATH] = Learn;
     routes[HELP_PATH] = Help;
+    
+    return routes;
+}
 
+const initServiceWorker = async () => {
+    if ("serviceWorker" in navigator) {
+        try {
+            const registration = await navigator.serviceWorker.register("/sw.js", {
+                scope: "/",
+            });
+            if (registration.installing) {
+                console.log("Service worker installing");
+            } else if (registration.waiting) {
+                console.log("Service worker installed");
+            } else if (registration.active) {
+                console.log("Service worker active");
+            }
+        } catch (error) {
+            console.error(`Service worker regisration failed with ${error}`);
+        }
+    }
+};
+
+try {
     Storage.init();
     
     if (Storage.hasAccount()) {
@@ -27,7 +50,9 @@ try {
     }
 
     m.mount(document.getElementById("toolbar"), Toolbar);
-    m.route(root, Storage.hasActiveDeck() ? EDITOR_PATH : SPLASH_PATH, routes);
+    m.route(root, Storage.hasActiveDeck() ? EDITOR_PATH : SPLASH_PATH, buildRoutes());
+
+    initServiceWorker();
 } catch (e) {
     m.render(root, m("p", e.toString()));
     throw e;

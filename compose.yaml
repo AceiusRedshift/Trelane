@@ -1,0 +1,13 @@
+﻿services:
+  trelane.server.gothos:
+    image: trelane.server.gothos
+    build:
+      context: .
+      dockerfile: server2/Trelane.Server.Gothos/Dockerfile
+
+  trelane.server.gothos-1:
+    image: trelane.server.gothos-1
+    build:
+      context: .
+      dockerfile: Trelane.Server.Gothos/Dockerfile
+

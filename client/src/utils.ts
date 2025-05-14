@@ -1,11 +1,11 @@
 import m from "mithril";
 import {Toolbar} from "./toolbar";
-import {Storage, Storage as storage} from "./storage";
+import {Storage} from "./storage";
 import {Deck} from "./deck";
 import {Card} from "./card";
 import {EDITOR_PATH} from "./constants";
 
-export const button = (text, onclick, css = "", tooltip = "") => m(
+export const button = (text: string, onclick: Function, css = "", tooltip = "") => m(
     "button",
     {
         className: css,
@@ -14,11 +14,11 @@ export const button = (text, onclick, css = "", tooltip = "") => m(
     text
 );
 
-export const isString = (value) => typeof value === 'string' || value instanceof String;
+export const isString = (value: any) => typeof value === 'string' || value instanceof String;
 
-export const isValidDeck = (deck) => isString(deck.name) && isString(deck.author) && Array.isArray(deck.cards);
+export const isValidDeck = (deck: any) => isString(deck.name) && isString(deck.author) && Array.isArray(deck.cards);
 
-export const download = (content, fileName, contentType) => {
+export const download = (content: any, fileName: string, contentType: string) => {
     let a = document.createElement("a");
 
     a.href = URL.createObjectURL(new Blob([content], {type: contentType}));
@@ -26,7 +26,7 @@ export const download = (content, fileName, contentType) => {
     a.click();
 }
 
-export const shuffle = (array) => {
+export const shuffle = (array: any[]) => {
     let currentIndex = array.length;
 
     while (currentIndex !== 0) {
@@ -39,7 +39,7 @@ export const shuffle = (array) => {
 
 export const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-export const validateAccount = (server, username, password) => {
+export const validateAccount = (server: string, username: string, password: string) => {
     console.log(`Attempting to login to ${server} as ${username}...`);
 
     Toolbar.statusText = "Logging in...";
@@ -53,7 +53,7 @@ export const validateAccount = (server, username, password) => {
         },
         timeout: 5000,
         withCredentials: true
-    }).then((response) => {
+    }).then((response: any) => {
         if (response.exists) {
             Toolbar.statusText = "Login succeeded.";
         } else {
@@ -61,7 +61,7 @@ export const validateAccount = (server, username, password) => {
         }
 
         console.log(Toolbar.statusText)
-    }).catch((error) => {
+    }).catch((error: Error) => {
         Toolbar.statusText = "Login Error: " + error.message;
 
         if (error.message === "Request timed out") {
@@ -76,20 +76,20 @@ export const guid = () => `${guidSegment() + guidSegment()}-${guidSegment()}-${g
 
 export const FileActions = {
     newDeck() {
-        if (storage.hasActiveDeck() && !confirm("Are you sure you want to create a new deck? One is already loaded, so this will overwrite it.")) {
+        if (Storage.hasActiveDeck() && !confirm("Are you sure you want to create a new deck? One is already loaded, so this will overwrite it.")) {
             return;
         }
 
         Storage.setActiveDeck(new Deck("Untitled Deck", "You!", [new Card("", "")]));
         m.route.set(EDITOR_PATH);
     },
-    
-    loadDeck(index) {
+
+    loadDeck(index: number) {
         if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
             return;
         }
 
-        Storage.setActiveDeck(storage.getDeck(index));
+        Storage.setActiveDeck(Storage.getDeck(index));
         m.route.set(EDITOR_PATH);
     }
 }

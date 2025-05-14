@@ -43,36 +43,54 @@ export const Storage = {
      * Get all stored decks from local storage.
      * @returns {Deck[]} The stored decks.
      */
-    getDecks: () => JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY)),
+    getDecks(): Deck[] {
+        let decks = localStorage.getItem(STORAGE_MAIN_KEY);
+
+        if (decks == null) {
+            throw new Error("Local storage decks were null.");
+        } else {
+            return JSON.parse(decks);
+        }
+    },
 
     /**
      * Retrieve a deck from local storage.
-     * @param {number} number The deck index to retrieve.
+     * @param {number} deckNumber The deck index to retrieve.
      */
-    getDeck: (number) => {
-        let deck = JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY))[number];
-        return new Deck(deck.name, deck.author, deck.cards);
+    getDeck(deckNumber: number) {
+        return this.getDecks()[deckNumber];
     },
 
     /**
      * Retrieve the metadata of a deck from local storage.
-     * @param {number} number The deck index to retrieve metadata for.
+     * @param {number} deckNumber The deck index to retrieve metadata for.
      * @returns {DeckMeta} The metadata of the deck.
      */
-    getMeta: (number) => {
-        let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY))[number];
-        return new DeckMeta(meta.sync, meta.isPublic, meta.created, meta.updated);
+    getMeta(deckNumber: number): DeckMeta {
+        let metas = localStorage.getItem(STORAGE_META_KEY);
+
+        if (metas == null) {
+            throw new Error("Local storage deck metadata was null");
+        } else {
+            return JSON.parse(metas)[deckNumber];
+        }
     },
 
     /**
      * Update the metadata of a deck.
-     * @param {number} number The deck index to update.
+     * @param {number} deckNumber The deck index to update.
      * @param {DeckMeta} metaData The metadata to apply.
      */
-    setMeta: (number, metaData) => {
-        let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
+    setMeta: (deckNumber: number, metaData: DeckMeta) => {
+        let metas = localStorage.getItem(STORAGE_META_KEY);
 
-        meta[number] = metaData;
+        if (metas == null) {
+            throw new Error("Local storage deck metadata was null");
+        }
+        
+        let meta = JSON.parse(metas);
+
+        meta[deckNumber] = metaData;
 
         localStorage.setItem(STORAGE_META_KEY, JSON.stringify(meta));
     },
@@ -102,7 +120,7 @@ export const Storage = {
         let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
 
         let dm = new DeckMeta(false, false, Date.now(), Date.now());
-        
+
         stored.push(deck);
         meta.push(dm);
 
@@ -151,17 +169,17 @@ export const Storage = {
                 console.log("Autosaving deck " + deck.name + " to index " + i);
 
                 Storage.setDeck(i, deck);
-                
+
                 let willSync = Storage.getMeta(i).sync;
-                
+
                 if (willSync) {
                     if (!Storage.hasAccount()) {
                         Toolbar.statusText = "No account - Saved locally at " + new Date().toLocaleTimeString();
                         return;
                     }
-                    
+
                     Toolbar.statusText = "Saving to cloud...";
-                    
+
                     m.request({
                         method: "POST",
                         url: `${Storage.getServerUrl()}/set-deck`,
@@ -185,7 +203,7 @@ export const Storage = {
                 } else {
                     Toolbar.statusText = "Saved at " + new Date().toLocaleTimeString();
                 }
-                
+
                 return;
             }
         }
@@ -233,8 +251,12 @@ export const Storage = {
 
     hasAccount: () => !(Storage.getUsername() == null || Storage.getUsername() === "") && !(Storage.getPassword() == null || Storage.getPassword() === ""),
 
-    getUsername: () => localStorage.getItem(STORAGE_USERNAME_KEY),
-    setUsername: (name) => localStorage.setItem(STORAGE_USERNAME_KEY, name),
+    getUsername() {
+        return localStorage.getItem(STORAGE_USERNAME_KEY)
+    },
+    setUsername(name) {
+        localStorage.setItem(STORAGE_USERNAME_KEY, name)
+    },
 
     getPassword: () => localStorage.getItem(STORAGE_PASSWORD_KEY),
     setPassword: (password) => localStorage.setItem(STORAGE_PASSWORD_KEY, password),

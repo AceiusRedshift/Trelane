@@ -74,7 +74,7 @@ table {
     }
 }
 
-input {
+input, select {
     border: 0;
     border-bottom: var(--border);
     background: transparent;
@@ -84,14 +84,23 @@ input {
     width: fit-content;
 }
 
-input.card-input {
-    width: 100%;
-    font-size: calc(var(--spacing) * 1.75);
-    border: 0;
-}
-
 input[type="file"] {
     padding: calc(var(--spacing) / 2);
+}
+
+input[type="file"]::file-selector-button {
+    background: var(--back);
+    color: var(--text);
+
+    padding: var(--spacing);
+    border: var(--border);
+
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: var(--text);
+    color: var(--back);
 }
 
 /* Modifiers */
@@ -248,6 +257,11 @@ h2, .heading.subtitle {
 
 /* Specific Components */
 
+.load-table {
+    width: var(--width);
+    margin: var(--spacing);
+}
+
 .load-table * {
     cursor: pointer;
 }
@@ -258,6 +272,12 @@ h2, .heading.subtitle {
 
 .load-table-solid {
     background-color: var(--back);
+}
+
+input.card-input {
+    width: 100%;
+    font-size: calc(var(--spacing) * 1.75);
+    border: 0;
 }
 
 .edit-table {
@@ -286,12 +306,12 @@ h2, .heading.subtitle {
 
 /* Specific Elements */
 
-.new-card-button {    
+.new-card-button {
     padding: 0;
     margin: 0;
-    
+
     font-size: 125%;
-    
+
     border-radius: var(--spacing);
 }
 

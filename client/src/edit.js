@@ -73,7 +73,7 @@ function makeTable() {
         );
     }
 
-    return m("table", table);
+    return m("table.load-table", table);
 }
 
 function addNewCard() {

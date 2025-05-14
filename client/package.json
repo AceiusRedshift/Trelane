@@ -4,8 +4,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "esbuild src/* --bundle --watch --sourcemap --outdir=bin --servedir=bin --loader:.html=copy --loader:.png=copy --inject:hotreload.js",
-    "build": "esbuild src/* --bundle --outdir=bin --loader:.html=copy --loader:.png=copy"
+    "start": "esbuild src/* --bundle --watch --sourcemap --outdir=bin --servedir=bin --loader:.html=copy --loader:.png=copy --loader:.json=copy --inject:hotreload.js",
+    "build": "esbuild src/* --bundle --outdir=bin --loader:.html=copy --loader:.png=copy --loader:.json=copy"
   },
   "repository": {
     "type": "git",

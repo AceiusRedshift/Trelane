@@ -327,7 +327,7 @@ input.card-input {
 }
 
 #app {
-    max-width: calc(var(--width) + (var(--spacing) * 2));
+    min-width: calc(var(--width) + (var(--spacing) * 2));
     max-height: 90vh;
 
     padding: var(--spacing);

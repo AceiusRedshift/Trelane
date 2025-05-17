@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "desktop",
+  "productName": "trelaneDesktop",
   "version": "0.1.0",
   "identifier": "us.acei.trelane",
   "build": {
@@ -13,7 +13,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "desktop",
+        "title": "Trelane",
         "width": 800,
         "height": 600
       }

@@ -123,7 +123,7 @@ button.close {
 
     padding: 0;
     margin: 0;
-    
+
     height: 32px;
     width: 32px;
 
@@ -219,9 +219,9 @@ h2, .heading.subtitle {
         position: absolute;
         left: 50%;
         top: 50%;
-        
+
         transform: translate(-50%, -50%);
-        
+
         margin: auto;
         padding: 20px;
 
@@ -242,7 +242,15 @@ h2, .heading.subtitle {
 
 .dropdown-button, .status {
     padding: calc(var(--spacing) / 2);
+    background: var(--toolbar) !important;
+
     margin: 0;
+    border: 0 solid transparent !important;
+}
+
+.dropdown-button:hover {
+    background: var(--back) !important;
+    color: var(--text) !important;
 }
 
 .dropdown-content {
@@ -253,6 +261,9 @@ h2, .heading.subtitle {
     z-index: 1;
 
     min-width: 100px;
+
+    margin: 0;
+    padding: 0;
 
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     border: var(--border);

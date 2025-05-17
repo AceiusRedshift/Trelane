@@ -23,7 +23,7 @@ import {version} from "../package.json";
 const button = (text: string, click: () => any, disabled = () => false): m.Vnode<any, any> => m("button", {
     // @ts-ignore
     onclick: !disabled() && click,
-    className: disabled() && "disabled"
+    className: disabled() ? "disabled dropdown-button" : "dropdown-button"
 }, text);
 
 function convertCsvToDeck(text: string): Deck {

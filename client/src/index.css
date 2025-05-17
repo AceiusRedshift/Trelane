@@ -57,7 +57,7 @@ input[type="file"] {
     cursor: pointer;
 }
 
-button:not(.link-button):hover {
+button:not(.link-button):not(.none):hover {
     background: var(--text);
     color: var(--back);
 }
@@ -159,13 +159,15 @@ h2, .heading.subtitle {
     background: var(--back);
     color: var(--text);
 
-    padding: calc(var(--spacing) * 10);
-
     border: var(--border);
-    border-radius: var(--spacing);
+    padding: calc(var(--spacing) * 10);
 
     text-align: center;
     cursor: pointer;
+    
+    p {
+        font-size: 18pt;
+    }
 }
 
 .modal {

@@ -1,6 +1,6 @@
 import m from "mithril";
-import { button } from "./utils";
-import { Storage } from "./storage";
+import {button} from "./utils";
+import {Storage} from "./storage";
 import {EDITOR_PATH, SPLASH_PATH} from "./constants";
 
 let cardNumber = 0;
@@ -30,11 +30,6 @@ export let Review = {
             backText = card.back === "" ? "No back text... :c" : card.back;
         }
 
-        let content = [m("h1.title", frontText)];
-        if (showAnswer) {
-            content.push(m("h2.subtitle", backText))
-        }
-
         let backButton = button("Back", () => {
             showAnswer = false;
             cardNumber = Math.max(0, cardNumber - 1);
@@ -48,7 +43,7 @@ export let Review = {
         let finishButton = button("Finish", () => m.route.set(EDITOR_PATH), "primary");
 
         return [
-            m(".card", { onclick: () => showAnswer = !showAnswer }, content),
+            m(".card", {onclick: () => showAnswer = !showAnswer}, showAnswer ? m("p", backText) : m("p", frontText)),
             m("br"),
             m(".buttons", [
                 cardNumber === 0 ? editorButton : backButton,

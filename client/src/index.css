@@ -1,8 +1,8 @@
 /* Main */
 
-:root {
+:root {    
     --back: #222;
-    --text: #eee;
+    --text: #fff;
     --link: #4F79F7FF;
     --visited: #86c;
     --toolbar: #111;
@@ -57,7 +57,7 @@ input[type="file"] {
     cursor: pointer;
 }
 
-button:not(.link-button):not(.none):hover {
+button:not(.link-button):not(.none):not(.primary):hover {
     background: var(--text);
     color: var(--back);
 }
@@ -106,8 +106,14 @@ input[type="file"]::file-selector-button:hover {
 /* Modifiers */
 
 button.primary {
-    border-color: var(--link);
-    color: var(--link);
+    background: var(--link);
+    color: #fff;
+    
+    border-color: #fff;
+}
+
+button.primary:hover {
+    opacity: 75%;
 }
 
 *:disabled, .disabled {

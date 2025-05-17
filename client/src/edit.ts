@@ -126,7 +126,6 @@ export let Edit = {
                 }),
                 button("Close Deck", () => m.route.set(SPLASH_PATH))
             ]),
-            m("br"),
             Storage.hasAccount() && m("p", [
                 m("label", [
                     `Save to cloud? `,
@@ -157,7 +156,6 @@ export let Edit = {
                 ]),
             ]),
             content,
-            m("br"),
             m(".buttons", [
                 button("New Card", addNewCard, "primary")
             ]),

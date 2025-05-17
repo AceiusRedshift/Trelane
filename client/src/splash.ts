@@ -80,10 +80,6 @@ export let Splash = {
             Storage.getDecks().length > 0 && m(".column", [
                 m("h3", "Recent"),
                 m("ul", [
-                    Storage.hasActiveDeck() && m("li", [
-                        m("button.link-button", {onclick: () => m.route.set(EDITOR_PATH)}, Storage.getActiveDeck().name),
-                        " (Currently editing)"
-                    ]),
                     Storage.getDecks().slice(-Math.min(Storage.getDecks().length, 5) + (Storage.hasActiveDeck() ? 1 : 0)).map((deck, i, _) => {
                         return m("li", m("button.link-button", {onclick: () => FileActions.loadDeck(i)}, deck.name));
                     })
@@ -94,7 +90,8 @@ export let Splash = {
             button("Explore Decks Online", () => {
                 showExplore = true;
                 Explore.fetchDecks();
-            }, "", "Discover decks published by other users of Trelane.")
+            }, "", "Discover decks published by other users of Trelane."),
+            Storage.hasActiveDeck() && button(`Continue Editing '${Storage.getActiveDeck().name}'`, () => m.route.set(EDITOR_PATH)),
         ]),
         showExplore && m(Explore),
     ])

@@ -19,24 +19,21 @@ import {download, FileActions, isValidDeck, validateAccount} from "./utils";
  * @param disabled When true, this button is disabled
  * @returns {m.Vnode<any, any>} A button virtual node
  */
-const button = (text, click, disabled = () => false) => m("button", {
+const button = (text: string, click: () => any, disabled = () => false): m.Vnode<any, any> => m("button", {
+    // @ts-ignore
     onclick: !disabled() && click,
     className: disabled() && "disabled"
 }, text);
 
-function convertCsvToDeck(text) {
+function convertCsvToDeck(text: string): Deck {
     const lines = text.split("\n");
-    return {
-        name: "Imported Deck",
-        author: "Unknown",
-        cards: lines.map(line => {
-            const [front, back] = line.split(",").map(s => s.trim());
-            return {front, back};
-        }).filter(card => card.front && card.back)
-    };
+    return new Deck("Imported Deck", "Unknown", lines.map(line => {
+        const [front, back] = line.split(",").map(s => s.trim());
+        return {front, back};
+    }).filter(card => card.front && card.back));
 }
 
-function convertDeckToCsv(deck) {
+function convertDeckToCsv(deck: Deck) {
     let string = "";
 
     deck.cards.forEach(card => string += `${card.front}, ${card.back}\n`);
@@ -44,7 +41,7 @@ function convertDeckToCsv(deck) {
     return string;
 }
 
-function convertDeckToLogseq(deck) {
+function convertDeckToLogseq(deck: Deck) {
     let string = `- # ${deck.name}\n- **Author:** ${deck.author}\n`;
 
     deck.cards.forEach(card => string += `- ${card.front} #card\n	- ${card.back}\n`);
@@ -54,8 +51,8 @@ function convertDeckToLogseq(deck) {
 
 let showLoader = false;
 let loaderTab = 0;
-let selectedFormat = null;
-let remoteDecks = [];
+let selectedFormat: string | null = null;
+let remoteDecks: Deck[] = [];
 let Loader = {
     fetchRemoteDecks() {
         m.request({
@@ -68,7 +65,7 @@ let Loader = {
             timeout: 5000,
             withCredentials: true
         }).then((response) => {
-            remoteDecks = response;
+            remoteDecks = <Deck[]>response;
             console.log(response);
         }).catch((error) => {
             Toolbar.statusText = "Load Error: " + error.message;
@@ -167,7 +164,9 @@ let Loader = {
             selectedFormat && m("p", m("input", {
                 type: "file",
                 accept: selectedFormat === "json" ? ".json" : ".csv",
-                onchange: e => e.target.files[0].text().then(text => {
+                onchange: e => e.target.files[0].text().then(t => {
+                    let text = <string>t;
+                    
                     try {
                         let potentialDeck = selectedFormat === "json" ? JSON.parse(text.toString()) : convertCsvToDeck(text);
 

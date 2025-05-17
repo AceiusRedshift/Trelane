@@ -2,13 +2,14 @@ import m from "mithril";
 import { button, isValidDeck, shuffle } from "./utils";
 import { Storage } from "./storage";
 import { EDITOR_PATH, LEARN_PATH, REVIEW_PATH, SPLASH_PATH } from "./constants";
+import { Deck } from "./deck";
 
 let cardNumber = 0;
 let score = 0;
 let totalAnswered = 0;
 let quizCompleted = false;
 let startTime = Date.now();
-let deck;
+let deck: Deck | null;
 
 function resetValues() {
     cardNumber = 0;
@@ -21,7 +22,7 @@ function resetValues() {
         deck = Storage.getActiveDeck();
         shuffle(deck.cards);
     } else {
-        deck = -1;
+        deck = null;
     }
 }
 
@@ -50,11 +51,11 @@ export let Learn = {
             ];
         }
 
-        if (deck === -1 || deck == null || !isValidDeck(deck)) {
+        if (deck == null || !isValidDeck(deck)) {
             resetValues();
         }
 
-        if (deck === -1 || deck == null || !isValidDeck(deck)) {
+        if (deck == null || !isValidDeck(deck)) {
             return [
                 m("p", "No deck loaded."),
                 button("Back", () => m.route.set(SPLASH_PATH))
@@ -93,6 +94,7 @@ export let Learn = {
                     if (answer === card.front) {
                         score++;
                     }
+                    // @ts-ignore There is a null check above
                     if (cardNumber < deck.cards.length - 1) {
                         cardNumber++;
                     } else {

@@ -7,9 +7,7 @@ import {LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 function makeTable() {
     let deck = Storage.getActiveDeck();
     let table = [];
-
-    deck.cards = deck.cards.filter(card => card !== null);
-
+    
     for (const index in deck.cards) {
         const i = Number(index);
         let card = deck.cards[i];

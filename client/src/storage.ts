@@ -44,13 +44,7 @@ export const Storage = {
      * @returns {Deck[]} The stored decks.
      */
     getDecks(): Deck[] {
-        let decks = localStorage.getItem(STORAGE_MAIN_KEY);
-
-        if (decks == null) {
-            throw new Error("Local storage decks were null.");
-        } else {
-            return JSON.parse(decks);
-        }
+        return JSON.parse(<string>localStorage.getItem(STORAGE_MAIN_KEY));
     },
 
     /**
@@ -87,7 +81,7 @@ export const Storage = {
         if (metas == null) {
             throw new Error("Local storage deck metadata was null");
         }
-        
+
         let meta = JSON.parse(metas);
 
         meta[deckNumber] = metaData;
@@ -100,9 +94,9 @@ export const Storage = {
      * @param {number} number The deck index to overwrite.
      * @param {Deck} deck The deck object to save.
      */
-    setDeck: (number, deck) => {
-        let stored = JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY));
-        let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
+    setDeck: (number: number, deck: Deck) => {
+        let stored = JSON.parse(<string>localStorage.getItem(STORAGE_MAIN_KEY));
+        let meta = JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY));
 
         stored[number] = deck;
         meta[number].updated = Date.now();
@@ -115,9 +109,9 @@ export const Storage = {
      * Add a deck to local storage.
      * @param {Deck} deck The deck object to add.
      */
-    addDeck: (deck) => {
-        let stored = JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY));
-        let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
+    addDeck: (deck: Deck) => {
+        let stored = JSON.parse(<string>localStorage.getItem(STORAGE_MAIN_KEY));
+        let meta = JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY));
 
         let dm = new DeckMeta(false, false, Date.now(), Date.now());
 
@@ -132,9 +126,9 @@ export const Storage = {
      * Remove a deck from local storage.
      * @param {number} number The deck index to remove.
      */
-    removeDeck: (number) => {
-        let stored = JSON.parse(localStorage.getItem(STORAGE_MAIN_KEY));
-        let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
+    removeDeck: (number: number) => {
+        let stored = JSON.parse(<string>localStorage.getItem(STORAGE_MAIN_KEY));
+        let meta = JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY));
 
         stored.splice(number, 1);
         meta.splice(number, 1);
@@ -147,19 +141,19 @@ export const Storage = {
      * Check if a deck is saved in local storage.
      * @returns {boolean} True if a deck is saved, false otherwise.
      */
-    hasActiveDeck: () => localStorage.getItem(STORAGE_DECK_KEY) != null,
+    hasActiveDeck: (): boolean => localStorage.getItem(STORAGE_DECK_KEY) != null,
 
     /**
      * Get the active deck from local storage.
      * @returns {Deck}
      */
-    getActiveDeck: () => JSON.parse(localStorage.getItem(STORAGE_DECK_KEY)),
+    getActiveDeck: (): Deck => JSON.parse(<string>localStorage.getItem(STORAGE_DECK_KEY)),
 
     /**
      * Set the active deck in local storage, and autosave.
      * @param {Deck} deck
      */
-    setActiveDeck: (deck) => {
+    setActiveDeck: (deck: Deck) => {
         localStorage.setItem(STORAGE_DECK_KEY, JSON.stringify(deck));
 
         let decks = Storage.getDecks();
@@ -208,7 +202,7 @@ export const Storage = {
             }
         }
 
-        // ok, if we havent returned by now we must add the deck
+        // ok, if we have not returned by now we must add the deck
         Storage.addDeck(deck);
     },
 
@@ -216,10 +210,10 @@ export const Storage = {
      * Get the active deck metadata from local storage.
      * @returns {DeckMeta}
      */
-    getActiveDeckMeta: () => {
+    getActiveDeckMeta: (): DeckMeta => {
         let decks = Storage.getDecks();
         let activeDeck = Storage.getActiveDeck();
-        let meta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
+        let meta = JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY));
 
         for (let i = 0; i < decks.length; i++) {
             if (decks[i].name === activeDeck.name) {
@@ -234,10 +228,10 @@ export const Storage = {
      * Set the active deck metadata in local storage.
      * @param {DeckMeta} meta
      */
-    setActiveDeckMeta: (meta) => {
+    setActiveDeckMeta: (meta: DeckMeta) => {
         let decks = Storage.getDecks();
         let activeDeck = Storage.getActiveDeck();
-        let storedMeta = JSON.parse(localStorage.getItem(STORAGE_META_KEY));
+        let storedMeta = JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY));
 
         for (let i = 0; i < decks.length; i++) {
             if (decks[i].name === activeDeck.name) {
@@ -252,17 +246,21 @@ export const Storage = {
     hasAccount: () => !(Storage.getUsername() == null || Storage.getUsername() === "") && !(Storage.getPassword() == null || Storage.getPassword() === ""),
 
     getUsername() {
-        return localStorage.getItem(STORAGE_USERNAME_KEY)
+        return <string>localStorage.getItem(STORAGE_USERNAME_KEY)
     },
-    setUsername(name) {
+    setUsername(name: string) {
         localStorage.setItem(STORAGE_USERNAME_KEY, name)
     },
 
-    getPassword: () => localStorage.getItem(STORAGE_PASSWORD_KEY),
-    setPassword: (password) => localStorage.setItem(STORAGE_PASSWORD_KEY, password),
+    getPassword(): string {
+        return <string>localStorage.getItem(STORAGE_PASSWORD_KEY);
+    },
+    setPassword: (password: string) => localStorage.setItem(STORAGE_PASSWORD_KEY, password),
 
-    getServerUrl: () => localStorage.getItem(STORAGE_SERVER_KEY),
-    setServerUrl: (url) => localStorage.setItem(STORAGE_SERVER_KEY, url),
+    getServerUrl(): string {
+        return <string>localStorage.getItem(STORAGE_SERVER_KEY)
+    },
+    setServerUrl: (url: string) => localStorage.setItem(STORAGE_SERVER_KEY, url),
 
     dump() {
         console.log("Dumping storage");
@@ -276,7 +274,7 @@ export const Storage = {
         for (let i = 0; i < decks.length; i++) {
             console.log(`${i}. ${decks[i].name}`);
             console.log(decks[i]);
-            console.log(JSON.parse(localStorage.getItem(STORAGE_META_KEY)[i]));
+            console.log(JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY))[i]);
         }
     }
 }

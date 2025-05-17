@@ -1,18 +1,17 @@
 import m from "mithril";
 import {Storage as Saver, Storage, Storage as storage} from "./storage";
 import {Deck} from "./deck";
-import {Card} from "./card";
 import {
-    MAIN_SERVER,
     EDITOR_PATH,
     HELP_PATH,
     LEARN_PATH,
-    LOCAL_SERVER,
     REVIEW_PATH
 } from "./constants";
 import {closeButton, download, FileActions, isValidDeck, validateAccount} from "./utils";
 import {Network} from "./network";
 import {Settings} from "./settings";
+// @ts-ignore
+import {version} from "../package.json";
 
 /**
  * Special toolbar button
@@ -183,7 +182,7 @@ let About = {
         closeButton(() => showAbout = false),
         m("h1", [
             m("img", {src: "favicon.png", width: 24, height: 24}),
-            " Trelane"
+            " Trelane " + version
         ]),
         m("p", "Trelane is a FOSS memorization tool with optional cloud sync functionality."),
         m("p", [

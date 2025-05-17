@@ -41,3 +41,6 @@ obj/
 package-lock.json
 
 server/Trelane.db*
+
+# Remember, we are copying the trelane client into the desktop host 
+desktop/src/

@@ -42,7 +42,7 @@ export let Review = {
         });
         let finishButton = button("Finish", () => m.route.set(EDITOR_PATH), "primary");
 
-        return [
+        return m("div", [
             m(".card", {onclick: () => showAnswer = !showAnswer}, showAnswer ? m("p", backText) : m("p", frontText)),
             m("br"),
             m(".buttons", [
@@ -51,6 +51,6 @@ export let Review = {
                 }, "none"),
                 cardNumber === deck.cards.length - 1 ? finishButton : nextButton
             ])
-        ]
+        ]);
     }
 }

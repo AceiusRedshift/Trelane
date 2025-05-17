@@ -4,6 +4,7 @@ import {Storage} from "./storage";
 import {Deck} from "./deck";
 import {Card} from "./card";
 import {EDITOR_PATH} from "./constants";
+import {Network} from "./network";
 
 export const button = (text: string, onclick: Function, css = "", tooltip = "") => m(
     "button",
@@ -44,16 +45,7 @@ export const validateAccount = (server: string, username: string, password: stri
 
     Toolbar.statusText = "Logging in...";
 
-    m.request({
-        method: "POST",
-        url: `${server}/get-account`,
-        body: {
-            username: username,
-            password: password,
-        },
-        timeout: 5000,
-        withCredentials: true
-    }).then((response: any) => {
+    Network.validateAccount().then((response: any) => {
         if (response.exists) {
             Toolbar.statusText = "Login succeeded.";
         } else {

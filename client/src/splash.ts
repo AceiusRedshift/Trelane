@@ -6,16 +6,13 @@ import {button, FileActions, isValidDeck} from "./utils";
 import {EDITOR_PATH, HELP_PATH} from "./constants";
 import {Toolbar} from "./toolbar";
 import {Edit} from "./edit";
+import {Network} from "./network";
 
 let showExplore = false;
-let exploreDecks = [];
+let exploreDecks: Deck[] | null = [];
 let Explore = {
     fetchDecks: () => {
-        m.request({
-            method: "GET",
-            url: `${Saver.getServerUrl()}/explore`,
-            timeout: 5000,
-        }).then((response) => {
+        Network.exploreDecks().then((response) => {
             exploreDecks = response;
             console.log(response);
         }).catch((error) => {

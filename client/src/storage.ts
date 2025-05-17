@@ -9,6 +9,7 @@ import {
 import {Toolbar} from "./toolbar";
 import {DeckMeta} from "./deckmeta";
 import m from "mithril";
+import {Network} from "./network";
 
 /**
  * Handles saving data to local storage. For now, only one deck can be saved at a time.
@@ -174,17 +175,7 @@ export const Storage = {
 
                     Toolbar.statusText = "Saving to cloud...";
 
-                    m.request({
-                        method: "POST",
-                        url: `${Storage.getServerUrl()}/set-deck`,
-                        body: {
-                            username: Storage.getUsername(),
-                            password: Storage.getPassword(),
-                            deck: deck,
-                        },
-                        timeout: 5000,
-                        withCredentials: true
-                    }).then((response) => {
+                    Network.uploadDeck(deck).then((response) => {
                         Toolbar.statusText = "Saved to cloud at " + new Date().toLocaleTimeString();
                         console.log(Toolbar.statusText)
                     }).catch((error) => {

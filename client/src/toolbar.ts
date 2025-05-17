@@ -11,6 +11,7 @@ import {
     REVIEW_PATH
 } from "./constants";
 import {download, FileActions, isValidDeck, validateAccount} from "./utils";
+import {Network} from "./network";
 
 /**
  * Special toolbar button
@@ -55,16 +56,7 @@ let selectedFormat: string | null = null;
 let remoteDecks: Deck[] = [];
 let Loader = {
     fetchRemoteDecks() {
-        m.request({
-            method: "POST",
-            url: `${Saver.getServerUrl()}/get-decks`,
-            body: {
-                username: Saver.getUsername(),
-                password: Saver.getPassword(),
-            },
-            timeout: 5000,
-            withCredentials: true
-        }).then((response) => {
+        Network.downloadDecks().then((response) => {
             remoteDecks = <Deck[]>response;
             console.log(response);
         }).catch((error) => {

@@ -4,9 +4,6 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
     "tauri": "tauri",
     "copy-client": "rm -dr src/*; cp -r ../client/bin/* src/"
   },

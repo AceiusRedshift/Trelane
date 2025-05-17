@@ -10,7 +10,7 @@ import {
     LOCAL_SERVER,
     REVIEW_PATH
 } from "./constants";
-import {download, FileActions, isValidDeck, validateAccount} from "./utils";
+import {closeButton, download, FileActions, isValidDeck, validateAccount} from "./utils";
 import {Network} from "./network";
 import {Settings} from "./settings";
 
@@ -73,10 +73,6 @@ let Loader = {
         Loader.fetchRemoteDecks();
     },
     view: () => m(".modal", m(".content", [
-        m(".heading", [
-            m("h1.title", "Load"),
-            m("h2.subtitle", "Restore or import a deck."),
-        ]),
         m(".buttons", [
             m("button", {className: loaderTab === 0 ? "primary" : "", onclick: () => loaderTab = 0}, "Local Decks"),
             Saver.hasAccount() && m("button", {
@@ -157,7 +153,9 @@ let Loader = {
             selectedFormat && m("p", m("input", {
                 type: "file",
                 accept: selectedFormat === "json" ? ".json" : ".csv",
-                onchange: (e: { target: { files: { text: () => Promise<string>; }[]; }; }) => e.target.files[0].text().then(text => {
+                onchange: (e: {
+                    target: { files: { text: () => Promise<string>; }[]; };
+                }) => e.target.files[0].text().then(text => {
                     try {
                         let potentialDeck = selectedFormat === "json" ? JSON.parse(text.toString()) : convertCsvToDeck(text);
 
@@ -175,14 +173,14 @@ let Loader = {
                 })
             }))
         ],
-        m("br"),
-        m(".buttons", button("Back", () => showLoader = false))
+        closeButton(() => showLoader = false)
     ]))
 }
 
 let showAbout = false;
 let About = {
     view: () => m(".modal", m(".content", [
+        closeButton(() => showAbout = false),
         m("h1", [
             m("img", {src: "favicon.png", width: 24, height: 24}),
             " Trelane"
@@ -192,9 +190,6 @@ let About = {
             "Powered by ",
             m("a", {href: "https://mithril.js.org"}, "Mithril.js"),
         ]),
-        m(".buttons", [
-            button("Close", () => showAbout = false)
-        ])
     ]))
 }
 

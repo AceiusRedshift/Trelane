@@ -233,7 +233,7 @@ export const Storage = {
     },
 
 
-    hasAccount: () => !(Storage.getUsername() == null || Storage.getUsername() === "") && !(Storage.getPassword() == null || Storage.getPassword() === ""),
+    hasAccount: () => Storage.getCloudFeaturesEnabled() && !(Storage.getUsername() == null || Storage.getUsername() === "") && !(Storage.getPassword() == null || Storage.getPassword() === ""),
 
     getUsername() {
         return <string>localStorage.getItem(STORAGE_USERNAME_KEY)

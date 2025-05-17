@@ -1,25 +1,14 @@
 import m from "mithril";
 import {Storage, Storage as Saver} from "./storage";
-import {button, validateAccount} from "./utils";
+import {button, closeButton, validateAccount} from "./utils";
 import {CUSTOM_SERVER, LOCAL_SERVER, MAIN_SERVER} from "./constants";
 import {Toolbar} from "./toolbar";
 
-export let Settings = {
+let showAccountModal = false;
+let AccountModal = {
     view: () => m(".modal", m(".content", [
-        m(".heading", [
-            m("h1.title", "Settings"),
-            m("h2.subtitle", "Configure Trelane."),
-        ]),
-        m("label", [
-            `Enable cloud features?`,
-            m("input", {
-                checked: Storage.getActiveDeckMeta().sync,
-                type: "checkbox", oninput: (e: { target: { checked: boolean; }; }) => {
-                    Storage.setCloudFeaturesEnabled(e.target.checked);
-                }
-            })
-        ]),
-       Saver.getCloudFeaturesEnabled() && [
+        [
+            closeButton(() => showAccountModal = false),
             m("p", [
                 m("label", {for: "load-file-select"}, [
                     "Server URL: ",
@@ -31,7 +20,10 @@ export let Settings = {
                         },
                     }, [
                         m("option", {value: MAIN_SERVER, selected: Saver.getServerUrl() === MAIN_SERVER}, "Aceius.org"),
-                        m("option", {value: LOCAL_SERVER, selected: Saver.getServerUrl() === LOCAL_SERVER}, "Localhost"),
+                        m("option", {
+                            value: LOCAL_SERVER,
+                            selected: Saver.getServerUrl() === LOCAL_SERVER
+                        }, "Localhost"),
                         m("option", {
                             value: CUSTOM_SERVER,
                             selected: Saver.getServerUrl() !== MAIN_SERVER && Saver.getServerUrl() !== LOCAL_SERVER
@@ -71,10 +63,30 @@ export let Settings = {
                     }),
                 ])
             ),
-        ],
-        m("p", Toolbar.statusText),
-        m(".buttons", [
-            button("Close", () => Toolbar.hideSettings())
-        ])
+            m("p", Toolbar.statusText),
+        ]
     ]))
+}
+
+export let Settings = {
+    view: () => [
+        m(".modal", m(".content", [
+            closeButton(() => Toolbar.hideSettings()),
+            m("p",
+                m("label", [
+                    `Enable cloud features?`,
+                    m("input", {
+                        checked: Storage.getCloudFeaturesEnabled(),
+                        type: "checkbox", oninput: (e: { target: { checked: boolean; }; }) => {
+                            Storage.setCloudFeaturesEnabled(e.target.checked);
+                        }
+                    })
+                ])
+            ),
+            Saver.getCloudFeaturesEnabled() && m(".buttons", [
+                button("Sign in", () => showAccountModal = true),
+            ]),
+        ])),
+        showAccountModal && m(AccountModal)
+    ]
 }

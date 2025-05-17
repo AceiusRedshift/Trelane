@@ -85,3 +85,5 @@ export const FileActions = {
         m.route.set(EDITOR_PATH);
     }
 }
+
+export const closeButton = (onclick: Function) => button("×", onclick, "close")

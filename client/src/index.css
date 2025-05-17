@@ -1,9 +1,10 @@
 /* Main */
 
-:root {    
+:root {
     --back: #222;
     --text: #fff;
     --link: #4F79F7FF;
+    --close: #f55;
     --visited: #86c;
     --toolbar: #111;
     --spacing: 8px;
@@ -108,8 +109,32 @@ input[type="file"]::file-selector-button:hover {
 button.primary {
     background: var(--link);
     color: #fff;
-    
+
     border-color: #fff;
+}
+
+button.close {
+    background: transparent;
+    border-color: transparent;
+    color: var(--text);
+
+    font-size: 18px;
+    font-weight: bold;
+
+    padding: 0;
+    margin: 0;
+    
+    height: 32px;
+    width: 32px;
+
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+button.close:hover {
+    background: transparent !important;
+    color: var(--text) !important;
 }
 
 button.primary:hover {
@@ -170,7 +195,7 @@ h2, .heading.subtitle {
 
     text-align: center;
     cursor: pointer;
-    
+
     p {
         font-size: 18pt;
     }
@@ -191,6 +216,12 @@ h2, .heading.subtitle {
         background-color: var(--back);
         color: var(--text);
 
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        
+        transform: translate(-50%, -50%);
+        
         margin: auto;
         padding: 20px;
 

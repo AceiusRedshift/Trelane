@@ -317,6 +317,7 @@ input.card-input {
 
 #splash {
     width: calc(var(--width) / 2);
+    margin: auto;
 }
 
 #wrap {

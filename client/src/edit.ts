@@ -1,6 +1,6 @@
 import m from "mithril";
 import {Card} from "./card";
-import {button, download} from "./utils";
+import {button} from "./utils";
 import {Storage} from "./storage";
 import {LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
@@ -17,7 +17,7 @@ function makeTable() {
                 m("td", m("input.card-input", {
                     value: card.front,
                     placeholder: `Term ${Number(i) + 1}`,
-                    oninput: e => {
+                    oninput: (e: { target: { value: string; }; }) => {
                         deck.cards[i].front = e.target.value;
                         Storage.setActiveDeck(deck);
                     }
@@ -25,11 +25,11 @@ function makeTable() {
                 m("td", m("input.card-input", {
                     value: card.back,
                     placeholder: `Definition ${Number(i) + 1}`,
-                    oninput: e => {
+                    oninput: (e: { target: { value: string; }; }) => {
                         deck.cards[i].back = e.target.value;
                         Storage.setActiveDeck(deck);
                     },
-                    onkeypress: e => {
+                    onkeypress: (e: { code: any; key: any; }) => {
                         let keyCode = e.code || e.key;
                         let validKeyCode = keyCode == "Enter";
                         if (validKeyCode && i === deck.cards.length - 1) {
@@ -98,7 +98,7 @@ export let Edit = {
                 m("h1.title", m("input", {
                     value: deck.name,
                     placeholder: `Deck Name`,
-                    onfocusout: e => {
+                    onfocusout: (e: { target: { value: string; }; }) => {
                         deck.name = e.target.value;
                         Storage.setActiveDeck(deck);
                     }
@@ -108,7 +108,7 @@ export let Edit = {
                     m("input", {
                         value: deck.author,
                         placeholder: `Author`,
-                        onfocusout: e => {
+                        onfocusout: (e: { target: { value: string; }; }) => {
                             deck.author = e.target.value;
                             Storage.setActiveDeck(deck);
                         }
@@ -132,7 +132,7 @@ export let Edit = {
                     `Save to cloud? `,
                     m("input", {
                         checked: Storage.getActiveDeckMeta().sync,
-                        type: "checkbox", oninput: e => {
+                        type: "checkbox", oninput: (e: { target: { checked: boolean; }; }) => {
                             let meta = Storage.getActiveDeckMeta();
 
                             meta.sync = e.target.checked;
@@ -146,7 +146,7 @@ export let Edit = {
                     m("input", {
                         checked: Storage.getActiveDeckMeta().isPublic,
                         type: "checkbox",
-                        oninput: e => {
+                        oninput: (e: { target: { checked: boolean; }; }) => {
                             let meta = Storage.getActiveDeckMeta();
 
                             meta.isPublic = e.target.checked;

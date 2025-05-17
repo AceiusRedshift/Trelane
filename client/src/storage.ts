@@ -1,6 +1,6 @@
 import {Deck} from "./deck";
 import {
-    STORAGE_DECK_KEY,
+    STORAGE_DECK_KEY, STORAGE_ENABLE_CLOUD_KEY,
     STORAGE_MAIN_KEY, STORAGE_META_KEY,
     STORAGE_PASSWORD_KEY,
     STORAGE_SERVER_KEY,
@@ -8,7 +8,6 @@ import {
 } from "./constants";
 import {Toolbar} from "./toolbar";
 import {DeckMeta} from "./deckmeta";
-import m from "mithril";
 import {Network} from "./network";
 
 /**
@@ -267,5 +266,13 @@ export const Storage = {
             console.log(decks[i]);
             console.log(JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY))[i]);
         }
+    },
+
+    getCloudFeaturesEnabled() {
+        return localStorage.getItem(STORAGE_ENABLE_CLOUD_KEY) === "yes";
+    },
+
+    setCloudFeaturesEnabled(enabled: boolean) {
+        localStorage.setItem(STORAGE_ENABLE_CLOUD_KEY, enabled ? "yes" : "no");
     }
 }

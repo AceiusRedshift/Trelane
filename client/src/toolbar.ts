@@ -12,6 +12,7 @@ import {
 } from "./constants";
 import {download, FileActions, isValidDeck, validateAccount} from "./utils";
 import {Network} from "./network";
+import {Settings} from "./settings";
 
 /**
  * Special toolbar button
@@ -146,7 +147,7 @@ let Loader = {
                 m("label", {for: "load-file-select"}, "Import from file: "),
                 m("select#load-file-select", {
                     value: selectedFormat || "",
-                    onchange: (e) => selectedFormat = e.target.value
+                    onchange: (e: { target: { value: string | null; }; }) => selectedFormat = e.target.value
                 }, [
                     m("option", {value: "", disabled: true, selected: selectedFormat == null}, "Select file format..."),
                     m("option", {value: "json", selected: selectedFormat === "json"}, "Trelane JSON"),
@@ -156,9 +157,7 @@ let Loader = {
             selectedFormat && m("p", m("input", {
                 type: "file",
                 accept: selectedFormat === "json" ? ".json" : ".csv",
-                onchange: e => e.target.files[0].text().then(t => {
-                    let text = <string>t;
-                    
+                onchange: (e: { target: { files: { text: () => Promise<string>; }[]; }; }) => e.target.files[0].text().then(text => {
                     try {
                         let potentialDeck = selectedFormat === "json" ? JSON.parse(text.toString()) : convertCsvToDeck(text);
 
@@ -170,74 +169,14 @@ let Loader = {
                             alert("Malformed deck file.");
                         }
                     } catch (e) {
-                        alert("Error parsing deck file: " + e.toString().replace("\n", ""));
+                        // @ts-ignore
+                        alert(`Error parsing deck file: ${e.toString().replace("\n", "")}`);
                     }
                 })
             }))
         ],
         m("br"),
         m(".buttons", button("Back", () => showLoader = false))
-    ]))
-}
-
-let showSettings = false;
-let Settings = {
-    view: () => m(".modal", m(".content", [
-        m(".heading", [
-            m("h1.title", "Settings"),
-            m("h2.subtitle", "Configure Trelane."),
-        ]),
-        m("p", [
-            m("label", {for: "load-file-select"}, [
-                "Server URL: ",
-                m("select", {
-                    value: Saver.getServerUrl(),
-                    onchange: (e) => {
-                        Saver.setServerUrl(e.target.value);
-                        validateAccount(e.target.value, Saver.getUsername(), Saver.getPassword());
-                    },
-                }, [
-                    m("option", {value: LOCAL_SERVER, selected: Saver.getServerUrl() === LOCAL_SERVER}, "Localhost"),
-                    m("option", {value: MAIN_SERVER, selected: Saver.getServerUrl() === MAIN_SERVER}, "Aceius.org")
-                ])
-            ])
-        ]),
-        m("p",
-            m("label", [
-                "Username: ",
-                m("input", {
-                    type: "text",
-                    value: Saver.getUsername(),
-                    onfocusout: (e) => {
-                        Saver.setUsername(e.target.value);
-
-                        if (Saver.getPassword() !== "" && Saver.hasAccount()) {
-                            validateAccount(Saver.getServerUrl(), e.target.value, Saver.getPassword());
-                        }
-                    },
-                }),
-            ])
-        ),
-        m("p",
-            m("label", [
-                "Password: ",
-                m("input", {
-                    type: "password",
-                    value: Saver.getPassword(),
-                    onfocusout: (e) => {
-                        Saver.setPassword(e.target.value);
-
-                        if (Saver.getUsername() !== "" && Saver.hasAccount()) {
-                            validateAccount(Saver.getServerUrl(), Saver.getUsername(), e.target.value);
-                        }
-                    },
-                }),
-            ])
-        ),
-        m("p", Toolbar.statusText),
-        m(".buttons", [
-            button("Close", () => showSettings = false)
-        ])
     ]))
 }
 
@@ -259,9 +198,11 @@ let About = {
     ]))
 }
 
+let showSettings = false;
 export let Toolbar = {
     statusText: "Loading...",
     showLoader: () => showLoader = true,
+    hideSettings: () => showSettings = false,
     view: () => [
         m(".toolbar", [
             m(".dropdown", [

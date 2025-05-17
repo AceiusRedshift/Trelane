@@ -25,3 +25,4 @@ You must have a npm compatible package manager installed.
 ## Resources
 - [Mithril Docs](https://mithril.js.org/)
 - [Run a development server with live reload](https://til.jakelazaroff.com/esbuild/run-a-development-server-with-live-reload/)
+- [Esbuild TS config](https://eisenbergeffect.medium.com/an-esbuild-setup-for-typescript-3b24852479fe)

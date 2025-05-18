@@ -17,3 +17,13 @@ export const STORAGE_THEME_KEY = "trelane-theme";
 export const LOCAL_SERVER = "http://localhost:5226";
 export const MAIN_SERVER = "https://trelane.aceius.org";
 export const CUSTOM_SERVER = "CUSTOM";
+
+export const KAOMOJI_LIST = [
+    "ʕ•ᴥ•ʔ",
+    "ᕕ( ᐛ )ᕗ",
+    "(^∇^)",
+    "(ﾉ◕ヮ◕)ﾉ",
+    "(˶ᵔ ᵕ ᵔ˶)",
+    "◝(ᵔᗜᵔ)◜",
+    "٩(๑>◡<๑)۶"
+];

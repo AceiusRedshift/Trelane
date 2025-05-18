@@ -1,11 +1,11 @@
 import m from "mithril";
-import { Splash } from "./splash";
-import { Edit } from "./edit";
-import { Storage } from "./storage";
-import { Review } from "./review";
-import { Help } from "./help";
-import { Learn } from "./learn";
-import { EDITOR_PATH, HELP_PATH, LEARN_PATH, REVIEW_PATH, SPLASH_PATH } from "./constants";
+import {Splash} from "./splash";
+import {Edit} from "./edit";
+import {Storage} from "./storage";
+import {Review} from "./review";
+import {Help} from "./help";
+import {Learn} from "./learn";
+import {EDITOR_PATH, HELP_PATH, KAOMOJI_LIST, LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 import {Toolbar} from "./toolbar";
 import {validateAccount} from "./utils";
 
@@ -19,7 +19,7 @@ const buildRoutes = () => {
     routes[REVIEW_PATH] = Review;
     routes[LEARN_PATH] = Learn;
     routes[HELP_PATH] = Help;
-    
+
     return routes;
 }
 
@@ -44,12 +44,15 @@ const initServiceWorker = async () => {
 
 try {
     Storage.init();
-    
+
     if (Storage.hasAccount()) {
         validateAccount(Storage.getServerUrl(), Storage.getUsername(), Storage.getPassword());
     }
-    
+
     document.body.setAttribute("data-theme", Storage.getActiveTheme().toString().toLowerCase());
+
+    //majik
+    Toolbar.statusText = KAOMOJI_LIST[Math.floor(Math.random() * KAOMOJI_LIST.length)];
 
     m.mount(document.getElementById("toolbar"), Toolbar);
     m.route(root, Storage.hasActiveDeck() ? EDITOR_PATH : SPLASH_PATH, buildRoutes());

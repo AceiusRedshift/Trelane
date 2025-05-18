@@ -10,6 +10,7 @@ import {Toolbar} from "./toolbar";
 import {DeckMeta} from "./deckmeta";
 import {Network} from "./network";
 import {isDarkMode} from "./utils";
+import {Theme} from "./theme";
 
 /**
  * Handles saving data to local storage. For now, only one deck can be saved at a time.
@@ -34,9 +35,9 @@ export const Storage = {
         if (!Storage.hasAccount()) {
             Toolbar.statusText = "";
         }
-        
-        if (localStorage.getItem(STORAGE_THEME_KEY)){
-            localStorage.setItem(STORAGE_THEME_KEY, JSON.stringify(isDarkMode() ? Theme.Dark : Theme.Light));
+
+        if (localStorage.getItem(STORAGE_THEME_KEY) == null) {
+            Storage.setUserTheme(Theme.System);
         }
 
         if (Storage.getServerUrl() == null) {
@@ -292,7 +293,7 @@ export const Storage = {
         if (userTheme == Theme.System) {
             return isDarkMode() ? Theme.Dark : Theme.Light;
         }
-        
+
         return userTheme;
     }
 }

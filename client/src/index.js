@@ -42,20 +42,20 @@ const initServiceWorker = async () => {
     }
 };
 
-//try {
+try {
     Storage.init();
     
     if (Storage.hasAccount()) {
         validateAccount(Storage.getServerUrl(), Storage.getUsername(), Storage.getPassword());
     }
     
-    document.body.setAttribute("data-theme", Storage.getActiveTheme().toString());
+    document.body.setAttribute("data-theme", Storage.getActiveTheme().toString().toLowerCase());
 
     m.mount(document.getElementById("toolbar"), Toolbar);
     m.route(root, Storage.hasActiveDeck() ? EDITOR_PATH : SPLASH_PATH, buildRoutes());
 
     initServiceWorker();
-//} catch (e) {
-//    m.render(root, m("p", e.toString()));
-//    throw e;
-//}
+} catch (e) {
+    m.render(root, m("p", e.toString()));
+    throw e;
+}

@@ -3,6 +3,7 @@ import {Storage, Storage as Saver} from "./storage";
 import {button, closeButton, validateAccount} from "./utils";
 import {CUSTOM_SERVER, LOCAL_SERVER, MAIN_SERVER} from "./constants";
 import {Toolbar} from "./toolbar";
+import {Theme} from "./theme";
 
 let showAccountModal = false;
 let AccountModal = {
@@ -68,19 +69,47 @@ let AccountModal = {
     ]))
 }
 
+let userTheme: Theme;
 export let Settings = {
+    oninit: () => {
+        userTheme = Storage.getUserTheme();
+    },
     view: () => [
         m(".modal", m(".content", [
             closeButton(() => Toolbar.hideSettings()),
             m("p",
                 m("label", [
-                    `Enable cloud features?`,
+                    `Cloud Features: `,
                     m("input", {
                         checked: Storage.getCloudFeaturesEnabled(),
                         type: "checkbox", oninput: (e: { target: { checked: boolean; }; }) => {
                             Storage.setCloudFeaturesEnabled(e.target.checked);
                         }
                     })
+                ])
+            ),
+            m("p",
+                m("label", [
+                    "Theme: ",
+                    m(
+                        "select",
+                        {
+                            // value: selectedFormat || "",
+                            onchange: (e: {
+                                target: { value: string | null; };
+                            }) => {
+                                let theme = <Theme>e.target.value;
+                                userTheme = theme;
+
+                                Storage.setUserTheme(theme);
+                                document.body.setAttribute("data-theme", userTheme.toString().toLowerCase());
+                            }
+                        },
+                        Object.keys(Theme).map((key: string) => m("option", {
+                            value: key.toLowerCase(),
+                            selected: userTheme.toString().toLowerCase() == key.toLowerCase()
+                        }, key))
+                    ),
                 ])
             ),
             Saver.getCloudFeaturesEnabled() && m(".buttons", [

@@ -3,12 +3,13 @@ import {
     STORAGE_DECK_KEY, STORAGE_ENABLE_CLOUD_KEY,
     STORAGE_MAIN_KEY, STORAGE_META_KEY,
     STORAGE_PASSWORD_KEY,
-    STORAGE_SERVER_KEY,
+    STORAGE_SERVER_KEY, STORAGE_THEME_KEY,
     STORAGE_USERNAME_KEY
 } from "./constants";
 import {Toolbar} from "./toolbar";
 import {DeckMeta} from "./deckmeta";
 import {Network} from "./network";
+import {isDarkMode} from "./utils";
 
 /**
  * Handles saving data to local storage. For now, only one deck can be saved at a time.
@@ -32,6 +33,10 @@ export const Storage = {
 
         if (!Storage.hasAccount()) {
             Toolbar.statusText = "";
+        }
+        
+        if (localStorage.getItem(STORAGE_THEME_KEY)){
+            localStorage.setItem(STORAGE_THEME_KEY, JSON.stringify(isDarkMode() ? Theme.Dark : Theme.Light));
         }
 
         if (Storage.getServerUrl() == null) {
@@ -271,8 +276,23 @@ export const Storage = {
     getCloudFeaturesEnabled() {
         return localStorage.getItem(STORAGE_ENABLE_CLOUD_KEY) === "yes";
     },
-
     setCloudFeaturesEnabled(enabled: boolean) {
         localStorage.setItem(STORAGE_ENABLE_CLOUD_KEY, enabled ? "yes" : "no");
+    },
+
+    getUserTheme() {
+        return <Theme>JSON.parse(<string>localStorage.getItem(STORAGE_THEME_KEY));
+    },
+    setUserTheme(theme: Theme) {
+        localStorage.setItem(STORAGE_THEME_KEY, JSON.stringify(theme));
+    },
+    getActiveTheme() {
+        let userTheme = this.getUserTheme();
+
+        if (userTheme == Theme.System) {
+            return isDarkMode() ? Theme.Dark : Theme.Light;
+        }
+        
+        return userTheme;
     }
 }

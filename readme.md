@@ -18,6 +18,8 @@ which is very similar to how I write UI code for my custom game engine, so it fe
 - [x] Loading Decks from CSV
 - [x] Loading Multiple Decks from Memory
 - [x] Learn Mode
+- [ ] Arrow Keys
+- [ ] Fixed card aspect ratios
 
 ## Building
 ### Client

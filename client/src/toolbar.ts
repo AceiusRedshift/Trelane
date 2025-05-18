@@ -187,7 +187,7 @@ let About = {
         m("p", "Trelane is a FOSS memorization tool with optional cloud sync functionality."),
         m("p", [
             "Powered by ",
-            m("a", {href: "https://mithril.js.org"}, "Mithril.js"),
+            m("a", {href: "https://mithril.js.org", target: "_blank"}, "Mithril.js"),
         ]),
     ]))
 }

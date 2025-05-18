@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "tauri": "tauri",
-    "copy-client": "rm -dr src/*; cp -r ../client/bin/* src/"
+    "build": "",
+    "dev": ""
   },
   "dependencies": {
     "@tauri-apps/api": "^2",

@@ -12,7 +12,7 @@ const buildContext = await esbuild.context(
 await buildContext.watch();
 
 buildContext.serve({
-    port: 8000, 
+    port: 1420, 
     servedir: 'bin', 
     fallback: "bin/index.html"
 }).then((result) => {

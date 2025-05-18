@@ -1,33 +1,37 @@
 /* Main */
 
 :root {
-    --back: #222;
+    --background: #222;
+    --toolbar: #111;
     --text: #fff;
-    --link: #4F79F7FF;
+    
+    --primary: #4F79F7FF;
+    --link: var(--primary);
     --close: #f55;
     --visited: #86c;
-    --toolbar: #111;
-    --spacing: 8px;
+    
     --border: 1px solid #444;
+    --spacing: 8px;
     --width: 80vw;
 }
 
 [data-theme="light"] {
-    --back: #fff;
-    --text: #222;
+    --background: #fff;
     --toolbar: #ddd;
+    --text: #222;
+    
     --border: 1px solid #ccc;
 }
 
 [data-theme="quadrant"] {
-    --back: #1d1e35;
-    --text: #f5f5f5;
+    --background: #1d1e35;
     --toolbar: #002;
-    --border: 0;
+    --text: #f5f5f5;
     
-    * {
-        border-radius: 8px;
-    }
+    --primary: #ccc;
+    --link: #4F79F7FF;
+    
+    --border: 1px dotted white;
 }
 
 body {
@@ -35,7 +39,7 @@ body {
     font-size: calc(var(--spacing) * 2);
     font-weight: normal;
 
-    background: var(--back);
+    background: var(--background);
     color: var(--text);
 
     margin: var(--spacing);
@@ -58,7 +62,7 @@ a:not([href]) {
 
 button:not(.link-button),
 input[type="file"] {
-    background: var(--back);
+    background: var(--background);
     color: var(--text);
 
     padding: var(--spacing);
@@ -69,7 +73,7 @@ input[type="file"] {
 
 button:not(.link-button):not(.none):not(.primary):hover {
     background: var(--text);
-    color: var(--back);
+    color: var(--background);
 }
 
 table {
@@ -99,7 +103,7 @@ input[type="file"] {
 }
 
 input[type="file"]::file-selector-button {
-    background: var(--back);
+    background: var(--background);
     color: var(--text);
 
     padding: var(--spacing);
@@ -110,7 +114,7 @@ input[type="file"]::file-selector-button {
 
 input[type="file"]::file-selector-button:hover {
     background: var(--text);
-    color: var(--back);
+    color: var(--background);
 }
 
 select {
@@ -200,7 +204,7 @@ h2, .heading.subtitle {
 }
 
 .card {
-    background: var(--back);
+    background: var(--background);
     color: var(--text);
 
     border: var(--border);
@@ -226,7 +230,7 @@ h2, .heading.subtitle {
     background-color: rgba(0, 0, 0, 0.4);
 
     .content {
-        background-color: var(--back);
+        background-color: var(--background);
         color: var(--text);
 
         position: absolute;
@@ -262,8 +266,12 @@ h2, .heading.subtitle {
 }
 
 .dropdown-button:hover {
-    background: var(--back) !important;
+    background: var(--background) !important;
     color: var(--text) !important;
+}
+
+div.dropdown-button {
+    background: transparent !important;
 }
 
 .dropdown-content {
@@ -298,7 +306,7 @@ h2, .heading.subtitle {
 
 .dropdown-content *:not(.disabled):hover {
     background-color: var(--text);
-    color: var(--back);
+    color: var(--background);
 }
 
 .dropdown:hover .dropdown-content {
@@ -334,7 +342,7 @@ h2, .heading.subtitle {
 }
 
 .load-table-solid {
-    background-color: var(--back);
+    background-color: var(--background);
 }
 
 input.card-input {
@@ -356,8 +364,8 @@ input.card-input {
 
     font-size: calc(var(--spacing) * 2);
 
-    background: var(--toolbar);
-
+    background: linear-gradient(to right, var(--primary), var(--toolbar) 10%);
+    
     .status {
         display: inline-block;
 

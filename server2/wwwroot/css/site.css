@@ -1,5 +1,5 @@
 :root {
-    --back: #222;
+    --background: #222;
     --text: #eee;
     --toolbar: #111;
     --border: 1px solid #444;
@@ -7,7 +7,7 @@
 
 @media (prefers-color-scheme: light) {
     :root {
-        --back: #fff;
+        --background: #fff;
         --text: #222;
         --toolbar: #ddd;
         --border: 1px solid #ccc;
@@ -15,7 +15,7 @@
 }
 
 .one {
-    background: var(--back);
+    background: var(--background);
     color: var(--text);
 }
 

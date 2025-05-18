@@ -1,7 +1,7 @@
 [package]
 name = "Trelane"
 version = "0.1.0"
-description = "Trelane desktop client"
+description = "The desktop client for Trelane, a semi-competant memorization app."
 authors = ["Aceius"]
 edition = "2021"
 

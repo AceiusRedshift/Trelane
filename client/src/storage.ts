@@ -4,7 +4,7 @@ import {
     STORAGE_MAIN_KEY, STORAGE_META_KEY,
     STORAGE_PASSWORD_KEY,
     STORAGE_SERVER_KEY, STORAGE_THEME_KEY,
-    STORAGE_USERNAME_KEY
+    STORAGE_EMAIL_KEY
 } from "./constants";
 import {Toolbar} from "./toolbar";
 import {DeckMeta} from "./deckmeta";
@@ -30,10 +30,6 @@ export const Storage = {
         let storedMeta = localStorage.getItem(STORAGE_META_KEY);
         if (storedMeta == null || Array.isArray(storedMeta)) {
             localStorage.setItem(STORAGE_META_KEY, JSON.stringify([]));
-        }
-
-        if (!Storage.hasAccount()) {
-            Toolbar.statusText = "";
         }
 
         if (localStorage.getItem(STORAGE_THEME_KEY) == null) {
@@ -239,13 +235,13 @@ export const Storage = {
     },
 
 
-    hasAccount: () => Storage.getCloudFeaturesEnabled() && !(Storage.getUsername() == null || Storage.getUsername() === "") && !(Storage.getPassword() == null || Storage.getPassword() === ""),
+    hasAccount: () => Storage.getCloudFeaturesEnabled() && !(Storage.getEmail() == null || Storage.getEmail() === "") && !(Storage.getPassword() == null || Storage.getPassword() === ""),
 
-    getUsername() {
-        return <string>localStorage.getItem(STORAGE_USERNAME_KEY)
+    getEmail() {
+        return <string>localStorage.getItem(STORAGE_EMAIL_KEY)
     },
-    setUsername(name: string) {
-        localStorage.setItem(STORAGE_USERNAME_KEY, name)
+    setEmail(name: string) {
+        localStorage.setItem(STORAGE_EMAIL_KEY, name)
     },
 
     getPassword(): string {

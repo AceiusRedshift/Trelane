@@ -46,13 +46,10 @@ try {
     Storage.init();
 
     if (Storage.hasAccount()) {
-        validateAccount(Storage.getServerUrl(), Storage.getUsername(), Storage.getPassword());
+        validateAccount(Storage.getServerUrl(), Storage.getEmail(), Storage.getPassword());
     }
 
     document.body.setAttribute("data-theme", Storage.getActiveTheme().toString().toLowerCase());
-
-    //majik
-    Toolbar.statusText = KAOMOJI_LIST[Math.floor(Math.random() * KAOMOJI_LIST.length)];
 
     m.mount(document.getElementById("toolbar"), Toolbar);
     m.route(root, Storage.hasActiveDeck() ? EDITOR_PATH : SPLASH_PATH, buildRoutes());

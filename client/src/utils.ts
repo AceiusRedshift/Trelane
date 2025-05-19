@@ -3,7 +3,7 @@ import {Toolbar} from "./toolbar";
 import {Storage} from "./storage";
 import {Deck} from "./deck";
 import {Card} from "./card";
-import {EDITOR_PATH} from "./constants";
+import {EDITOR_PATH, KAOMOJI_LIST} from "./constants";
 import {Network} from "./network";
 
 export const button = (text: string, onclick: Function, css = "", tooltip = "") => m(
@@ -40,26 +40,23 @@ export const shuffle = (array: any[]) => {
 
 export const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-export const validateAccount = (server: string, username: string, password: string) => {
-    console.log(`Attempting to login to ${server} as ${username}...`);
+export const validateAccount = () => {
+    console.log(`Attempting to login as ${Storage.getEmail()}...`);
 
+    console.log("gguf");
     Toolbar.statusText = "Logging in...";
 
-    Network.validateAccount().then((response: any) => {
-        if (response.exists) {
-            Toolbar.statusText = "Login succeeded.";
-        } else {
-            Toolbar.statusText = "Login failed."
-        }
+    Network.signIn().then((response) => {
+        Toolbar.statusText = "Welcome back! " + getRandomKaomoji();
+        m.redraw();
 
-        console.log(Toolbar.statusText)
-    }).catch((error: Error) => {
-        Toolbar.statusText = "Login Error: " + error.message;
+        console.log(response);
+    }).catch((error) => {
+        Toolbar.statusText = "Login failed: " + error;
+        m.redraw();
 
-        if (error.message === "Request timed out") {
-            Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline."
-        }
-    });
+        console.log(error);
+    })
 }
 
 const guidSegment = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -87,3 +84,5 @@ export const FileActions = {
 }
 
 export const closeButton = (onclick: Function) => button("×", onclick, "close")
+
+export const getRandomKaomoji=()=> KAOMOJI_LIST[Math.floor(Math.random() * KAOMOJI_LIST.length)];

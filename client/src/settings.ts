@@ -17,7 +17,7 @@ let AccountModal = {
                         value: Saver.getServerUrl(),
                         onchange: (e: { target: { value: string; }; }) => {
                             Saver.setServerUrl(e.target.value);
-                            validateAccount(e.target.value, Saver.getUsername(), Saver.getPassword());
+                            validateAccount(e.target.value, Saver.getEmail(), Saver.getPassword());
                         },
                     }, [
                         m("option", {value: MAIN_SERVER, selected: Saver.getServerUrl() === MAIN_SERVER}, "Aceius.org"),
@@ -37,9 +37,9 @@ let AccountModal = {
                     "Username: ",
                     m("input", {
                         type: "text",
-                        value: Saver.getUsername(),
+                        value: Saver.getEmail(),
                         onfocusout: (e: { target: { value: string; }; }) => {
-                            Saver.setUsername(e.target.value);
+                            Saver.setEmail(e.target.value);
 
                             if (Saver.getPassword() !== "" && Saver.hasAccount()) {
                                 validateAccount(Saver.getServerUrl(), e.target.value, Saver.getPassword());
@@ -57,8 +57,8 @@ let AccountModal = {
                         onfocusout: (e: { target: { value: string; }; }) => {
                             Saver.setPassword(e.target.value);
 
-                            if (Saver.getUsername() !== "" && Saver.hasAccount()) {
-                                validateAccount(Saver.getServerUrl(), Saver.getUsername(), e.target.value);
+                            if (Saver.getEmail() !== "" && Saver.hasAccount()) {
+                                validateAccount(Saver.getServerUrl(), Saver.getEmail(), e.target.value);
                             }
                         },
                     }),

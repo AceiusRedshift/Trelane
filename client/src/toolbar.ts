@@ -3,7 +3,7 @@ import {Storage as Saver, Storage, Storage as storage} from "./storage";
 import {Deck} from "./deck";
 import {
     EDITOR_PATH,
-    HELP_PATH,
+    HELP_PATH, KAOMOJI_LIST,
     LEARN_PATH,
     REVIEW_PATH
 } from "./constants";

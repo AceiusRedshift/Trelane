@@ -8,7 +8,7 @@ export const STORAGE_MAIN_KEY = "trelane-deck";
 
 export const STORAGE_META_KEY = "trelane-deck-meta";
 export const STORAGE_DECK_KEY = "trelane-current-deck";
-export const STORAGE_USERNAME_KEY = "trelane-username";
+export const STORAGE_EMAIL_KEY = "trelane-username";
 export const STORAGE_PASSWORD_KEY = "trelane-password";
 export const STORAGE_SERVER_KEY = "trelane-server-key";
 export const STORAGE_ENABLE_CLOUD_KEY = "trelane-enable-cloud";
@@ -17,6 +17,9 @@ export const STORAGE_THEME_KEY = "trelane-theme";
 export const LOCAL_SERVER = "http://localhost:5226";
 export const MAIN_SERVER = "https://trelane.aceius.org";
 export const CUSTOM_SERVER = "CUSTOM";
+
+export const SUPABASE_URL = "https://reacobnpwlcddmkjzwrj.supabase.co";
+export const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYWNvYm5wd2xjZGRta2p6d3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MTA4MzUsImV4cCI6MjA2MzE4NjgzNX0.vmMeWBeTEl2Q28E4WcocIJXH5fhvQZwUVOElGfIos9M";
 
 export const KAOMOJI_LIST = [
     "ʕ•ᴥ•ʔ",

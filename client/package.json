@@ -19,6 +19,7 @@
   "homepage": "https://gitlab.com/Aceius/trelane#readme",
   "description": "",
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
     "mithril": "^2.2.15"
   },
   "type": "module",

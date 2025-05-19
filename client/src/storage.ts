@@ -35,10 +35,6 @@ export const Storage = {
         if (localStorage.getItem(STORAGE_THEME_KEY) == null) {
             Storage.setUserTheme(Theme.System);
         }
-
-        if (Storage.getServerUrl() == null) {
-            Storage.setServerUrl("http://localhost:5226");
-        }
     },
 
     /**
@@ -176,15 +172,9 @@ export const Storage = {
 
                     Toolbar.statusText = "Saving to cloud...";
 
-                    Network.uploadDeck(deck).then((response) => {
+                    Network.addOrUpdateDeck(deck).then((response) => {
                         Toolbar.statusText = "Saved to cloud at " + new Date().toLocaleTimeString();
                         console.log(Toolbar.statusText)
-                    }).catch((error) => {
-                        Toolbar.statusText = "Save Error: " + error.message;
-
-                        if (error.message === "Request timed out") {
-                            Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline - Saved locally at " + new Date().toLocaleTimeString();
-                        }
                     });
                 } else {
                     Toolbar.statusText = "Saved at " + new Date().toLocaleTimeString();
@@ -248,11 +238,6 @@ export const Storage = {
         return <string>localStorage.getItem(STORAGE_PASSWORD_KEY);
     },
     setPassword: (password: string) => localStorage.setItem(STORAGE_PASSWORD_KEY, password),
-
-    getServerUrl(): string {
-        return <string>localStorage.getItem(STORAGE_SERVER_KEY)
-    },
-    setServerUrl: (url: string) => localStorage.setItem(STORAGE_SERVER_KEY, url),
 
     dump() {
         console.log("Dumping storage");

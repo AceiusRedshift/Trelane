@@ -1,7 +1,6 @@
 import m from "mithril";
 import {Storage, Storage as Saver} from "./storage";
 import {button, closeButton, validateAccount} from "./utils";
-import {CUSTOM_SERVER, LOCAL_SERVER, MAIN_SERVER} from "./constants";
 import {Toolbar} from "./toolbar";
 import {Theme} from "./theme";
 
@@ -10,28 +9,6 @@ let AccountModal = {
     view: () => m(".modal", m(".content", [
         [
             closeButton(() => showAccountModal = false),
-            m("p", [
-                m("label", {for: "load-file-select"}, [
-                    "Server URL: ",
-                    m("select", {
-                        value: Saver.getServerUrl(),
-                        onchange: (e: { target: { value: string; }; }) => {
-                            Saver.setServerUrl(e.target.value);
-                            validateAccount(e.target.value, Saver.getEmail(), Saver.getPassword());
-                        },
-                    }, [
-                        m("option", {value: MAIN_SERVER, selected: Saver.getServerUrl() === MAIN_SERVER}, "Aceius.org"),
-                        m("option", {
-                            value: LOCAL_SERVER,
-                            selected: Saver.getServerUrl() === LOCAL_SERVER
-                        }, "Localhost"),
-                        m("option", {
-                            value: CUSTOM_SERVER,
-                            selected: Saver.getServerUrl() !== MAIN_SERVER && Saver.getServerUrl() !== LOCAL_SERVER
-                        }, "Custom")
-                    ])
-                ])
-            ]),
             m("p",
                 m("label", [
                     "Username: ",
@@ -42,7 +19,7 @@ let AccountModal = {
                             Saver.setEmail(e.target.value);
 
                             if (Saver.getPassword() !== "" && Saver.hasAccount()) {
-                                validateAccount(Saver.getServerUrl(), e.target.value, Saver.getPassword());
+                                validateAccount();
                             }
                         },
                     }),
@@ -58,7 +35,7 @@ let AccountModal = {
                             Saver.setPassword(e.target.value);
 
                             if (Saver.getEmail() !== "" && Saver.hasAccount()) {
-                                validateAccount(Saver.getServerUrl(), Saver.getEmail(), e.target.value);
+                                validateAccount();
                             }
                         },
                     }),

@@ -46,7 +46,7 @@ try {
     Storage.init();
 
     if (Storage.hasAccount()) {
-        validateAccount(Storage.getServerUrl(), Storage.getEmail(), Storage.getPassword());
+        validateAccount();
     }
 
     document.body.setAttribute("data-theme", Storage.getActiveTheme().toString().toLowerCase());

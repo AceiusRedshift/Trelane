@@ -7,43 +7,39 @@ import {SUPABASE_KEY, SUPABASE_URL} from "./constants";
 export class Network {
     private static readonly supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    public static getSupabaseInstance() {
-        return this.supabase;
-    }
-
     static exploreDecks(): Promise<Deck[]> {
-        return m.request({
-            method: "GET",
-            url: `${Storage.getServerUrl()}/explore`,
-            timeout: 5000,
+        return <Promise<Deck[]>>this.supabase.from("decks").select().eq("public", true).then(response => {
+            if (response.data == null) {
+                console.warn("null server response");
+                return [];
+            }
+            return response.data.map(col => <Deck>col.inner);
         });
     }
 
-    static uploadDeck(deck: Deck): Promise<void> {
-        return m.request({
-            method: "POST",
-            url: `${Storage.getServerUrl()}/set-deck`,
-            body: {
-                username: Storage.getEmail(),
-                password: Storage.getPassword(),
-                deck: deck,
-            },
-            timeout: 5000,
-            withCredentials: true
+    static addOrUpdateDeck(deck: Deck) {
+        return this.supabase.from("decks").select().eq("name", deck.name).then(response => {
+            if (response.data != null && response.data.length > 0) {
+                return this.supabase.from("decks").update({
+                    inner: deck,
+                    public: Storage.getActiveDeckMeta().isPublic
+                }).eq("name", deck.name);
+            } else {
+                return this.supabase.from("decks").insert({
+                    inner: deck,
+                    public: Storage.getActiveDeckMeta().isPublic
+                })
+            }
         });
     }
 
-    static downloadDecks(): Promise<Deck[]> {
-        return m.request({
-            method: "POST",
-            url: `${Saver.getServerUrl()}/get-decks`,
-            body: {
-                username: Saver.getEmail(),
-                password: Saver.getPassword(),
-            },
-            timeout: 5000,
-            withCredentials: true
-        });
+    static downloadMyDecks(): Promise<Deck[]> {
+        return this.supabase.auth.getUser().then(response => {
+            return <Promise<Deck[]>>this.supabase.from("decks").select().eq("owner", response.data.user?.id).then(response => {
+                if (response.data == null) return [];
+                return response.data.map(col => <Deck>col.inner);
+            });
+        })
     }
 
     static signIn() {

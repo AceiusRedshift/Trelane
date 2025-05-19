@@ -14,19 +14,18 @@ let Explore = {
     fetchDecks: () => {
         Network.exploreDecks().then((response) => {
             exploreDecks = response;
-            console.log(response);
         }).catch((error) => {
             Toolbar.statusText = "Explore Error: " + error.message;
 
             if (error.message === "Request timed out") {
                 Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline."
             }
-        });
+        }).finally(() => m.redraw());
     },
     view: () => m(".modal", m(".content", [
         m(".heading", [
             m("h1.title", "Explore"),
-            m("h2.subtitle", `Discover popular decks from ${Storage.getServerUrl()}.`),
+            m("h2.subtitle", `Decks from Fellow Students :D`),
         ]),
         m("br"),
         (exploreDecks == null || exploreDecks.length === 0) ? m("p", "No decks on cloud :c") :

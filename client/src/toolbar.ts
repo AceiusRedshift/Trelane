@@ -56,7 +56,7 @@ let selectedFormat: string | null = null;
 let remoteDecks: Deck[] = [];
 let Loader = {
     fetchRemoteDecks() {
-        Network.downloadDecks().then((response) => {
+        Network.downloadMyDecks().then((response) => {
             remoteDecks = <Deck[]>response;
             console.log(response);
         }).catch((error) => {

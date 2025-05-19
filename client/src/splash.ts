@@ -2,11 +2,94 @@ import m from "mithril";
 import {Deck} from "./deck";
 import {Card} from "./card";
 import {Storage as storage, Storage as Saver, Storage} from "./storage";
-import {button, FileActions, isValidDeck} from "./utils";
+import {button, closeButton, FileActions, getRandomKaomoji, isValidDeck} from "./utils";
 import {EDITOR_PATH, HELP_PATH} from "./constants";
 import {Toolbar} from "./toolbar";
 import {Edit} from "./edit";
 import {Network} from "./network";
+
+let onboardingShowStatus = false;
+let Onboarding = {
+    view: () => m(".modal.login-modal", m(".content", [
+        [
+            closeButton(() => Storage.confirmVisit()),
+            m("h1.title", "Hiii! ヾ(*ﾟ▽ﾟ)ﾉ"),
+            m("p", [
+                "It looks like this is your first time using Trelane on this browser.",
+                m("br"),
+                "Welcome! "
+            ]),
+            m("p.hint", "(You don't have to sign up... but if you do you can back up your decks to the cloud!)"),
+            m("p",
+                m("label", [
+                    "Username: ",
+                    m("input", {
+                        type: "text",
+                        value: Saver.getEmail(),
+                        onfocusout: (e: { target: { value: string; }; }) => Saver.setEmail(e.target.value),
+                    }),
+                ])
+            ),
+            m("p",
+                m("label", [
+                    "Password: ",
+                    m("input", {
+                        type: "password",
+                        value: Saver.getPassword(),
+                        onfocusout: (e: { target: { value: string; }; }) => Saver.setPassword(e.target.value),
+                    }),
+                ])
+            ),
+            m(".buttons", [
+                button("Sign in", () =>
+                    Network.signIn().then((response) => {
+                        if (response.error != null) {
+                            Toolbar.statusText = response.error.message + " :(";
+                        } else {
+                            Toolbar.statusText = "Welcome back! " + getRandomKaomoji();
+                        }
+
+                        console.log(response);
+                    }).catch((error) => {
+                        Toolbar.statusText = "Login failed: " + error;
+                        console.log(error);
+                    }).finally(() => {
+                        m.redraw()
+                        onboardingShowStatus = true;
+                    })
+                ),
+                button("Sign up", () =>
+                    Network.signUp().then((response) => {
+                        if (response.error != null) {
+                            Toolbar.statusText = response.error.message + " :(";
+                        } else {
+                            Toolbar.statusText = "Welcome to Trelane! " + getRandomKaomoji();
+                        }
+
+                        console.log(response);
+                    }).catch((error) => {
+                        Toolbar.statusText = "Signup failed: " + error;
+                        console.log(error);
+                    }).finally(() => {
+                        m.redraw()
+                        onboardingShowStatus = true;
+                    })
+                )
+            ]),
+            onboardingShowStatus ? m("p", {style: "text-align: center;"}, Toolbar.statusText) : [
+                m("br"),
+                m("details.hint", [
+                    m("summary", "The fine print"),
+                    [
+                        m("p", "I haven't written a terms of service yet, but if I notice you doing any of the following I will delete your account:"),
+                        m("p", "Spam, bigotry, bullying, NSFW, XSS"),
+                        m("p", "I may also send you emails when Trelane gets big updates.")
+                    ]
+                ]),
+            ]
+        ]
+    ]))
+}
 
 let showExplore = false;
 let exploreDecks: Deck[] | null = [];
@@ -35,7 +118,7 @@ let Explore = {
                         return;
                     }
 
-                    Storage.setActiveDeck(storage.getDeck(i));
+                    Storage.setActiveDeck(deck);
                     m.route.set(EDITOR_PATH);
                 }
 
@@ -45,14 +128,14 @@ let Explore = {
                     m("td", {onclick: loadDeck}, deck.cards.length + " cards"),
                     m("td.load-table-solid", [
                         m("a", {onclick: loadDeck}, "Load"),
-                        " ",
-                        m("a", {
-                            onclick: () => {
-                                if (confirm("Are you sure you want to delete this deck?")) {
-                                    Storage.removeDeck(i);
-                                }
-                            }
-                        }, "Delete")
+                        // " ",
+                        // m("a", {
+                        //     onclick: () => {
+                        //         if (confirm("Are you sure you want to delete this deck?")) {
+                        //             Storage.removeDeck(i);
+                        //         }
+                        //     }
+                        // }, "Delete")
                     ])
                 ]);
             })),
@@ -93,5 +176,8 @@ export let Splash = {
             Storage.hasActiveDeck() && button(`Continue Editing '${Storage.getActiveDeck().name}'`, () => m.route.set(EDITOR_PATH)),
         ]),
         showExplore && m(Explore),
+        Storage.isFirstVisit() && m(Onboarding)
     ])
 }
+
+console.log(Storage.isFirstVisit())

@@ -326,6 +326,13 @@ div.dropdown-button {
     padding: 0;
 }
 
+.hint{
+    font-style: italic;
+    text-align: center;
+    opacity: 75%;
+    font-size: 75%;
+}
+
 /* Specific Components */
 
 .load-table {
@@ -376,6 +383,10 @@ input.card-input {
 }
 
 /* Specific Elements */
+
+.login-modal input {
+    width: 100%;
+}
 
 .new-card-button {
     padding: 0;

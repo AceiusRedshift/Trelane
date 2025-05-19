@@ -48,4 +48,11 @@ export class Network {
             password: Saver.getPassword()
         });
     }
+
+    static signUp() {
+        return this.supabase.auth.signUp({
+            email: Saver.getEmail(),
+            password: Saver.getPassword()
+        });
+    }
 }

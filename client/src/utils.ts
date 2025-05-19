@@ -47,16 +47,17 @@ export const validateAccount = () => {
     Toolbar.statusText = "Logging in...";
 
     Network.signIn().then((response) => {
-        Toolbar.statusText = "Welcome back! " + getRandomKaomoji();
-        m.redraw();
+        if (response.error != null) {
+            Toolbar.statusText = response.error.message + " :(";
+        } else {
+            Toolbar.statusText = "Welcome back! " + getRandomKaomoji();
+        }
 
         console.log(response);
     }).catch((error) => {
         Toolbar.statusText = "Login failed: " + error;
-        m.redraw();
-
         console.log(error);
-    })
+    }).finally(() => m.redraw());
 }
 
 const guidSegment = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -85,4 +86,4 @@ export const FileActions = {
 
 export const closeButton = (onclick: Function) => button("×", onclick, "close")
 
-export const getRandomKaomoji=()=> KAOMOJI_LIST[Math.floor(Math.random() * KAOMOJI_LIST.length)];
+export const getRandomKaomoji = () => KAOMOJI_LIST[Math.floor(Math.random() * KAOMOJI_LIST.length)];

@@ -276,5 +276,12 @@ export const Storage = {
         }
 
         return userTheme;
+    },
+
+    isFirstVisit() {
+        return localStorage.getItem("VISITED_BEFORE") !== "yes";
+    },
+    confirmVisit() {
+        localStorage.setItem("VISITED_BEFORE", "yes");
     }
 }

@@ -55,4 +55,10 @@ export class Network {
             password: Saver.getPassword()
         });
     }
+    
+    static hasAccount() {
+        return this.supabase.auth.getUser().then(response => {
+            return response.data.user == null;
+        })
+    }
 }

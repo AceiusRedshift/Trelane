@@ -74,7 +74,7 @@ let Loader = {
     view: () => m(".modal", m(".content", [
         m(".buttons", [
             m("button", {className: loaderTab === 0 ? "primary" : "", onclick: () => loaderTab = 0}, "Local Decks"),
-            Saver.hasAccount() && m("button", {
+            Saver.hasCredentials() && m("button", {
                 className: loaderTab === 1 ? "primary" : "", onclick: () => {
                     if (loaderTab !== 1) {
                         Loader.fetchRemoteDecks();

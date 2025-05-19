@@ -126,7 +126,7 @@ export let Edit = {
                 }),
                 button("Close Deck", () => m.route.set(SPLASH_PATH))
             ]),
-            Storage.hasAccount() && m("p", [
+            Storage.hasCredentials() && m("p", [
                 m("label", [
                     `Save to cloud? `,
                     m("input", {
@@ -146,11 +146,14 @@ export let Edit = {
                         checked: Storage.getActiveDeckMeta().isPublic,
                         type: "checkbox",
                         oninput: (e: { target: { checked: boolean; }; }) => {
+                            let deck = Storage.getActiveDeck();
                             let meta = Storage.getActiveDeckMeta();
 
+                            deck.author = Storage.getEmail();
                             meta.isPublic = e.target.checked;
 
                             Storage.setActiveDeckMeta(meta);
+                            Storage.setActiveDeck(deck);
                         }
                     })
                 ]),

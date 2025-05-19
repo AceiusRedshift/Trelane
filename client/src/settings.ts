@@ -75,17 +75,6 @@ export let Settings = {
             closeButton(() => Toolbar.hideSettings()),
             m("p",
                 m("label", [
-                    `Cloud Features: `,
-                    m("input", {
-                        checked: Storage.getCloudFeaturesEnabled(),
-                        type: "checkbox", oninput: (e: { target: { checked: boolean; }; }) => {
-                            Storage.setCloudFeaturesEnabled(e.target.checked);
-                        }
-                    })
-                ])
-            ),
-            m("p",
-                m("label", [
                     "Theme: ",
                     m(
                         "select",
@@ -108,8 +97,8 @@ export let Settings = {
                     ),
                 ])
             ),
-            Saver.getCloudFeaturesEnabled() && m(".buttons", [
-                button("Sign in", () => showAccountModal = true),
+            m(".buttons", [
+                button("Account Switcher", () => showAccountModal = true),
             ]),
         ])),
         showAccountModal && m(AccountModal)

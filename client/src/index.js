@@ -45,7 +45,7 @@ const initServiceWorker = async () => {
 try {
     Storage.init();
 
-    if (Storage.hasAccount()) {
+    if (Storage.hasCredentials()) {
         validateAccount();
     }
 

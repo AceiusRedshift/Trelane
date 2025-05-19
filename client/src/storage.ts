@@ -165,7 +165,7 @@ export const Storage = {
                 let willSync = Storage.getMeta(i).sync;
 
                 if (willSync) {
-                    if (!Storage.hasAccount()) {
+                    if (!Storage.hasCredentials()) {
                         Toolbar.statusText = "No account - Saved locally at " + new Date().toLocaleTimeString();
                         return;
                     }
@@ -225,7 +225,7 @@ export const Storage = {
     },
 
 
-    hasAccount: () => Storage.getCloudFeaturesEnabled() && !(Storage.getEmail() == null || Storage.getEmail() === "") && !(Storage.getPassword() == null || Storage.getPassword() === ""),
+    hasCredentials: () => !(Storage.getEmail() == null || Storage.getEmail() === "") && !(Storage.getPassword() == null || Storage.getPassword() === ""),
 
     getEmail() {
         return <string>localStorage.getItem(STORAGE_EMAIL_KEY)
@@ -253,13 +253,6 @@ export const Storage = {
             console.log(decks[i]);
             console.log(JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY))[i]);
         }
-    },
-
-    getCloudFeaturesEnabled() {
-        return localStorage.getItem(STORAGE_ENABLE_CLOUD_KEY) === "yes";
-    },
-    setCloudFeaturesEnabled(enabled: boolean) {
-        localStorage.setItem(STORAGE_ENABLE_CLOUD_KEY, enabled ? "yes" : "no");
     },
 
     getUserTheme() {

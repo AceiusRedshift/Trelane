@@ -11,8 +11,8 @@ export let Review = {
     view: () => {
         let deck;
 
-        if (Storage.hasActiveDeck()) {
-            deck = Storage.getActiveDeck();
+        if (Storage.activeDeck != null) {
+            deck = Storage.activeDeck.inner_deck;
         } else {
             m.route.set(SPLASH_PATH);
             return;

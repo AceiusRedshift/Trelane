@@ -1,9 +1,9 @@
-import m from "mithril";
-import {Storage, Storage as Saver} from "./storage";
-import {button, closeButton, getRandomKaomoji, validateAccount} from "./utils";
+import {button, closeButton, getRandomKaomoji} from "./utils";
+import {Storage} from "./storage";
 import {Toolbar} from "./toolbar";
-import {Theme} from "./theme";
 import {Network} from "./network";
+import {Theme} from "./theme";
+import m from "mithril";
 
 let showAccountModal = false;
 let AccountModal = {
@@ -15,8 +15,8 @@ let AccountModal = {
                     "Username: ",
                     m("input", {
                         type: "text",
-                        value: Saver.getEmail(),
-                        onfocusout: (e: { target: { value: string; }; }) => Saver.setEmail(e.target.value),
+                        value: Storage.email,
+                        onfocusout: (e: { target: { value: string; }; }) => Storage.email = e.target.value,
                     }),
                 ])
             ),
@@ -25,14 +25,14 @@ let AccountModal = {
                     "Password: ",
                     m("input", {
                         type: "password",
-                        value: Saver.getPassword(),
-                        onfocusout: (e: { target: { value: string; }; }) => Saver.setPassword(e.target.value),
+                        value: Storage.password,
+                        onfocusout: (e: { target: { value: string; }; }) => Storage.password = e.target.value,
                     }),
                 ])
             ),
             m(".buttons", [
                 button("Sign in", () =>
-                    Network.signIn().then((response) => {
+                    Network.signIn().then(response => {
                         if (response.error != null) {
                             Toolbar.statusText = response.error.message + " :(";
                         } else {
@@ -40,13 +40,13 @@ let AccountModal = {
                         }
 
                         console.log(response);
-                    }).catch((error) => {
+                    }).catch(error => {
                         Toolbar.statusText = "Login failed: " + error;
                         console.log(error);
                     }).finally(() => m.redraw())
                 ),
                 button("Sign up", () =>
-                    Network.signUp().then((response) => {
+                    Network.signUp().then(response => {
                         if (response.error != null) {
                             Toolbar.statusText = response.error.message + " :(";
                         } else {
@@ -54,7 +54,7 @@ let AccountModal = {
                         }
 
                         console.log(response);
-                    }).catch((error) => {
+                    }).catch(error => {
                         Toolbar.statusText = "Signup failed: " + error;
                         console.log(error);
                     }).finally(() => m.redraw())
@@ -65,11 +65,7 @@ let AccountModal = {
     ]))
 }
 
-let userTheme: Theme;
 export let Settings = {
-    oninit: () => {
-        userTheme = Storage.getUserTheme();
-    },
     view: () => [
         m(".modal", m(".content", [
             closeButton(() => Toolbar.hideSettings()),
@@ -84,15 +80,15 @@ export let Settings = {
                                 target: { value: string | null; };
                             }) => {
                                 let theme = <Theme>e.target.value;
-                                userTheme = theme;
+                                Storage.userTheme = theme;
 
-                                Storage.setUserTheme(theme);
-                                document.body.setAttribute("data-theme", userTheme.toString().toLowerCase());
+                                Storage.userTheme = theme;
+                                document.body.setAttribute("data-theme", Storage.userTheme.toString().toLowerCase());
                             }
                         },
                         Object.keys(Theme).map((key: string) => m("option", {
                             value: key.toLowerCase(),
-                            selected: userTheme.toString().toLowerCase() == key.toLowerCase()
+                            selected: Storage.userTheme.toString().toLowerCase() == key.toLowerCase()
                         }, key))
                     ),
                 ])

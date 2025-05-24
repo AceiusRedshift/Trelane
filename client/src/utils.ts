@@ -1,10 +1,11 @@
-import m from "mithril";
-import {Toolbar} from "./toolbar";
-import {Storage} from "./storage";
-import {InnerDeck} from "./innerDeck";
-import {Card} from "./card";
 import {EDITOR_PATH, KAOMOJI_LIST} from "./constants";
+import {InnerDeck} from "./innerDeck";
+import {Storage} from "./storage";
 import {Network} from "./network";
+import {Toolbar} from "./toolbar";
+import {Card} from "./card";
+import m from "mithril";
+import {Deck} from "./deck";
 
 export const button = (text: string, onclick: Function, css = "", tooltip = "") => m(
     "button",
@@ -41,12 +42,12 @@ export const shuffle = (array: any[]) => {
 export const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 export const validateAccount = () => {
-    console.log(`Attempting to login as ${Storage.getEmail()}...`);
+    console.log(`Attempting to login as ${Storage.email}...`);
 
     console.log("gguf");
     Toolbar.statusText = "Logging in...";
 
-    Network.signIn().then((response) => {
+    Network.signIn().then(response => {
         if (response.error != null) {
             Toolbar.statusText = response.error.message + " :(";
         } else {
@@ -54,32 +55,32 @@ export const validateAccount = () => {
         }
 
         console.log(response);
-    }).catch((error) => {
+    }).catch(error => {
         Toolbar.statusText = "Login failed: " + error;
         console.log(error);
     }).finally(() => m.redraw());
 }
 
-const guidSegment = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+const guidSegment = () => ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
 
 export const guid = () => `${guidSegment() + guidSegment()}-${guidSegment()}-${guidSegment()}-${guidSegment()}-${guidSegment()}${guidSegment()}${guidSegment()}`;
 
 export const FileActions = {
     newDeck() {
-        if (Storage.hasActiveDeck() && !confirm("Are you sure you want to create a new deck? One is already loaded, so this will overwrite it.")) {
+        if (Storage.activeDeck != null && !confirm("Are you sure you want to create a new deck? One is already loaded, so this will overwrite it.")) {
             return;
         }
 
-        Storage.setActiveDeck(new InnerDeck("Untitled Deck", "You!", [new Card("", "")]));
+        Storage.activeDeck = new Deck(new InnerDeck("Untitled Deck", "You!", [new Card("", "")]));
         m.route.set(EDITOR_PATH);
     },
 
     loadDeck(index: number) {
-        if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+        if (Storage.activeDeck != null && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
             return;
         }
 
-        Storage.setActiveDeck(Storage.getDeck(index));
+        Storage.activeDeck = Storage.decks[(index)];
         m.route.set(EDITOR_PATH);
     }
 }

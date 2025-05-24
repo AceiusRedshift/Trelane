@@ -2,19 +2,20 @@ import {Storage} from "./storage";
 import {InnerDeck} from "./innerDeck";
 import {createClient} from "@supabase/supabase-js";
 import {SUPABASE_KEY, SUPABASE_URL} from "./constants";
+import {Deck} from "./deck";
 
 export class Network {
     private static readonly supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    static exploreDecks(): Promise<InnerDeck[]> {
-        return new Promise<InnerDeck[]>((resolve, reject) => this.supabase
+    static exploreDecks(): Promise<Deck[]> {
+        return new Promise<Deck[]>((resolve, reject) => this.supabase
             .from("decks")
             .select()
             .eq("is_public", true)
-            .then(response => response.data != null ? resolve(response.data.map(col => <InnerDeck>col.inner)) : reject(response.error)));
+            .then(response => response.data != null ? resolve(response.data) : reject(response.error)));
     }
 
-    static addOrUpdateDeck(deck: InnerDeck) {
+    static addOrUpdateDeck(deck: Deck) {
         return this.supabase
             .from("decks")
             .select()
@@ -22,13 +23,13 @@ export class Network {
             .then(response => {
                 if (response.data != null && response.data.length > 0) {
                     return this.supabase.from("decks").update({
-                        inner: deck,
-                        public: Storage.getActiveDeckMeta().isPublic
+                        inner: deck.inner_deck,
+                        is_public: deck.is_public
                     }).eq("name", deck.name);
                 } else {
                     return this.supabase.from("decks").insert({
-                        inner: deck,
-                        public: Storage.getActiveDeckMeta().isPublic
+                        inner: deck.inner_deck,
+                        is_public: deck.is_public
                     })
                 }
             });
@@ -50,15 +51,15 @@ export class Network {
 
     static signIn() {
         return this.supabase.auth.signInWithPassword({
-            email: Storage.getEmail(),
-            password: Storage.getPassword()
+            email: Storage.email,
+            password: Storage.password
         });
     }
 
     static signUp() {
         return this.supabase.auth.signUp({
-            email: Storage.getEmail(),
-            password: Storage.getPassword()
+            email: Storage.email,
+            password: Storage.password
         });
     }
 

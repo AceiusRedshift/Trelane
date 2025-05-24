@@ -1,12 +1,10 @@
-import m from "mithril";
-import {InnerDeck} from "./innerDeck";
-import {Card} from "./card";
-import {Storage as storage, Storage as Saver, Storage} from "./storage";
-import {button, closeButton, FileActions, getRandomKaomoji, isValidDeck} from "./utils";
+import {button, closeButton, FileActions, getRandomKaomoji} from "./utils";
 import {EDITOR_PATH, HELP_PATH} from "./constants";
-import {Toolbar} from "./toolbar";
-import {Edit} from "./edit";
+import {Storage} from "./storage";
 import {Network} from "./network";
+import {Toolbar} from "./toolbar";
+import {Deck} from "./deck";
+import m from "mithril";
 
 let onboardingShowStatus = false;
 let Onboarding = {
@@ -25,8 +23,8 @@ let Onboarding = {
                     "Username: ",
                     m("input", {
                         type: "text",
-                        value: Saver.getEmail(),
-                        onfocusout: (e: { target: { value: string; }; }) => Saver.setEmail(e.target.value),
+                        value: Storage.email,
+                        onfocusout: (e: { target: { value: string; }; }) => Storage.email = (e.target.value),
                     }),
                 ])
             ),
@@ -35,8 +33,8 @@ let Onboarding = {
                     "Password: ",
                     m("input", {
                         type: "password",
-                        value: Saver.getPassword(),
-                        onfocusout: (e: { target: { value: string; }; }) => Saver.setPassword(e.target.value),
+                        value: Storage.password,
+                        onfocusout: (e: { target: { value: string; }; }) => Storage.password = (e.target.value),
                     }),
                 ])
             ),
@@ -92,7 +90,7 @@ let Onboarding = {
 }
 
 let showExplore = false;
-let exploreDecks: InnerDeck[] | null = [];
+let exploreDecks: Deck[] | null = [];
 let Explore = {
     fetchDecks: () => {
         Network.exploreDecks().then((response) => {
@@ -114,18 +112,18 @@ let Explore = {
         (exploreDecks == null || exploreDecks.length === 0) ? m("p", "No decks on cloud :c") :
             m("table", exploreDecks.map((deck, i, _) => {
                 const loadDeck = () => {
-                    if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+                    if (Storage.activeDeck != null && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
                         return;
                     }
 
-                    Storage.setActiveDeck(deck);
+                    Storage.activeDeck = (deck);
                     m.route.set(EDITOR_PATH);
                 }
 
                 return m("tr.load-table", [
                     m("td", {onclick: loadDeck}, deck.name),
-                    m("td", {onclick: loadDeck}, deck.author),
-                    m("td", {onclick: loadDeck}, deck.cards.length + " cards"),
+                    m("td", {onclick: loadDeck}, deck.inner_deck.author),
+                    m("td", {onclick: loadDeck}, deck.inner_deck.cards.length + " cards"),
                     m("td.load-table-solid", [
                         m("a", {onclick: loadDeck}, "Load"),
                         // " ",
@@ -159,10 +157,10 @@ export let Splash = {
                     m("li", m("button.link-button", {onclick: () => m.route.set(HELP_PATH)}, "Help"))
                 ])
             ]),
-            Storage.getDecks().length > 0 && m(".column", [
+            Storage.decks.length > 0 && m(".column", [
                 m("h3", "Recent"),
                 m("ul", [
-                    Storage.getDecks().slice(-Math.min(Storage.getDecks().length, 5) + (Storage.hasActiveDeck() ? 1 : 0)).map((deck, i, _) => {
+                    Storage.decks.slice(-Math.min(Storage.decks.length, 5) + (Storage.activeDeck != null ? 1 : 0)).map((deck, i, _) => {
                         return m("li", m("button.link-button", {onclick: () => FileActions.loadDeck(i)}, deck.name));
                     })
                 ])
@@ -173,11 +171,9 @@ export let Splash = {
                 showExplore = true;
                 Explore.fetchDecks();
             }, "", "Discover decks published by other users of Trelane."),
-            Storage.hasActiveDeck() && button(`Continue Editing '${Storage.getActiveDeck().name}'`, () => m.route.set(EDITOR_PATH)),
+            Storage.activeDeck != null && button(`Continue Editing '${Storage.activeDeck.name}'`, () => m.route.set(EDITOR_PATH)),
         ]),
         showExplore && m(Explore),
         Storage.isFirstVisit() && m(Onboarding)
     ])
 }
-
-console.log(Storage.isFirstVisit())

@@ -18,8 +18,8 @@ function resetValues() {
     quizCompleted = false;
     startTime = Date.now();
 
-    if (Storage.hasActiveDeck()) {
-        deck = Storage.getActiveDeck();
+    if (Storage.activeDeck != null) {
+        deck = Storage.activeDeck.inner_deck;
         shuffle(deck.cards);
     } else {
         deck = null;

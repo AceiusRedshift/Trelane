@@ -1,15 +1,16 @@
-import m from "mithril";
-import {Storage as Saver, Storage, Storage as storage} from "./storage";
-import {InnerDeck} from "./innerDeck";
+import {closeButton, download, FileActions, isValidDeck} from "./utils";
 import {
     EDITOR_PATH,
-    HELP_PATH, KAOMOJI_LIST,
+    HELP_PATH,
     LEARN_PATH,
     REVIEW_PATH
 } from "./constants";
-import {closeButton, download, FileActions, isValidDeck, validateAccount} from "./utils";
-import {Network} from "./network";
+import {InnerDeck} from "./innerDeck";
 import {Settings} from "./settings";
+import {Network} from "./network";
+import {Storage} from "./storage";
+import m from "mithril";
+
 // @ts-ignore
 import {version} from "../package.json";
 
@@ -56,10 +57,10 @@ let selectedFormat: string | null = null;
 let remoteDecks: InnerDeck[] = [];
 let Loader = {
     fetchRemoteDecks() {
-        Network.downloadMyDecks().then((response) => {
+        Network.downloadMyDecks().then(response => {
             remoteDecks = <InnerDeck[]>response;
             console.log(response);
-        }).catch((error) => {
+        }).catch(error => {
             Toolbar.statusText = "Load Error: " + error.message;
 
             if (error.message === "Request timed out") {
@@ -74,7 +75,7 @@ let Loader = {
     view: () => m(".modal", m(".content", [
         m(".buttons", [
             m("button", {className: loaderTab === 0 ? "primary" : "", onclick: () => loaderTab = 0}, "Local Decks"),
-            Saver.hasCredentials() && m("button", {
+            Storage.hasCredentials() && m("button", {
                 className: loaderTab === 1 ? "primary" : "", onclick: () => {
                     if (loaderTab !== 1) {
                         Loader.fetchRemoteDecks();
@@ -86,7 +87,9 @@ let Loader = {
         ]),
         m("br"),
         loaderTab === 0 && (
-            Storage.getDecks().length === 0 ? m("p", "No decks saved :c") : m("table", Storage.getDecks().map((deck, i, decks) => {
+            Storage.decks.length === 0 ? m("p", "No decks saved :c") : m("table", Storage.decks.map((deckRecord, i, decks) => {
+                let deck = deckRecord.inner_deck;
+
                 const loadDeck = () => FileActions.loadDeck(i);
 
                 return m("tr.load-table", [
@@ -99,7 +102,7 @@ let Loader = {
                         m("a", {
                             onclick: () => {
                                 if (confirm("Are you sure you want to delete this deck?")) {
-                                    Storage.removeDeck(i);
+                                    Storage.decks.splice(i, 1);
                                 }
                             }
                         }, "Delete")
@@ -108,13 +111,13 @@ let Loader = {
             }))
         ),
         loaderTab === 1 && (
-            (remoteDecks == null || remoteDecks.length === 0) ? m("p", "No decks on cloud :c") : m("table", remoteDecks.map((deck, i, decks) => {
+            remoteDecks == null || remoteDecks.length === 0 ? m("p", "No decks on cloud :c") : m("table", remoteDecks.map((deck, i, decks) => {
                 const loadDeck = () => {
-                    if (Storage.hasActiveDeck() && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+                    if (Storage.activeDeck != null && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
                         return;
                     }
 
-                    Storage.setActiveDeck(storage.getDeck(i));
+                    Storage.activeDeck = Storage.decks[(i)];
                     m.route.set(EDITOR_PATH);
                     showLoader = false;
                 }
@@ -129,7 +132,7 @@ let Loader = {
                         m("a", {
                             onclick: () => {
                                 if (confirm("Are you sure you want to delete this deck?")) {
-                                    Storage.removeDeck(i);
+                                    Storage.decks.splice(i, 1);
                                 }
                             }
                         }, "Delete")
@@ -159,7 +162,7 @@ let Loader = {
                         let potentialDeck = selectedFormat === "json" ? JSON.parse(text.toString()) : convertCsvToDeck(text);
 
                         if (isValidDeck(potentialDeck)) {
-                            Saver.setActiveDeck(potentialDeck);
+                            Storage.activeDeck = potentialDeck;
                             m.route.set(EDITOR_PATH);
                             showLoader = false;
                         } else {
@@ -204,18 +207,18 @@ export let Toolbar = {
                 m(".dropdown-content", [
                     button("New", FileActions.newDeck),
                     button("Open", () => showLoader = true),
-                    button("Save to file", () => download(JSON.stringify(Saver.getActiveDeck()), Saver.getActiveDeck().name + ".json", "application/json"), () => !Saver.hasActiveDeck()),
-                    button("Export to CSV", () => download(convertDeckToCsv(Saver.getActiveDeck()), Saver.getActiveDeck().name + ".csv", "text/csv"), () => !Saver.hasActiveDeck()),
-                    button("Export to Logseq", () => download(convertDeckToLogseq(Saver.getActiveDeck()), Saver.getActiveDeck().name + ".md", "text/markdown"), () => !Saver.hasActiveDeck()),
+                    button("Save to file", () => download(JSON.stringify(Storage.activeDeck?.inner_deck), Storage.activeDeck?.name + ".json", "application/json"), () => Storage.activeDeck == null),
+                    button("Export to CSV", () => download(convertDeckToCsv(<InnerDeck>Storage.activeDeck?.inner_deck), Storage.activeDeck?.name + ".csv", "text/csv"), () => Storage.activeDeck == null),
+                    button("Export to Logseq", () => download(convertDeckToLogseq(<InnerDeck>Storage.activeDeck?.inner_deck), Storage.activeDeck?.name + ".md", "text/markdown"), () => Storage.activeDeck == null),
                     button("Settings", () => showSettings = true)
                 ]),
             ]),
             m(".dropdown", [
                 m(".dropdown-button", "Deck"),
                 m(".dropdown-content", [
-                    button("Edit", () => m.route.set(EDITOR_PATH), () => !Saver.hasActiveDeck()),
-                    button("Learn (Quiz)", () => m.route.set(LEARN_PATH), () => !Saver.hasActiveDeck()),
-                    button("Review (Flashcards)", () => m.route.set(REVIEW_PATH), () => !Saver.hasActiveDeck())
+                    button("Edit", () => m.route.set(EDITOR_PATH), () => Storage.activeDeck == null),
+                    button("Learn (Quiz)", () => m.route.set(LEARN_PATH), () => Storage.activeDeck == null),
+                    button("Review (Flashcards)", () => m.route.set(REVIEW_PATH), () => Storage.activeDeck == null)
                 ]),
             ]),
             m(".dropdown", [

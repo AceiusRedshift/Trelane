@@ -1,7 +1,7 @@
 import m from "mithril";
 import {Toolbar} from "./toolbar";
 import {Storage} from "./storage";
-import {Deck} from "./deck";
+import {InnerDeck} from "./innerDeck";
 import {Card} from "./card";
 import {EDITOR_PATH, KAOMOJI_LIST} from "./constants";
 import {Network} from "./network";
@@ -70,7 +70,7 @@ export const FileActions = {
             return;
         }
 
-        Storage.setActiveDeck(new Deck("Untitled Deck", "You!", [new Card("", "")]));
+        Storage.setActiveDeck(new InnerDeck("Untitled Deck", "You!", [new Card("", "")]));
         m.route.set(EDITOR_PATH);
     },
 

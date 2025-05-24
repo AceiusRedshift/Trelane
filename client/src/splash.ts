@@ -1,5 +1,5 @@
 import m from "mithril";
-import {Deck} from "./deck";
+import {InnerDeck} from "./innerDeck";
 import {Card} from "./card";
 import {Storage as storage, Storage as Saver, Storage} from "./storage";
 import {button, closeButton, FileActions, getRandomKaomoji, isValidDeck} from "./utils";
@@ -92,7 +92,7 @@ let Onboarding = {
 }
 
 let showExplore = false;
-let exploreDecks: Deck[] | null = [];
+let exploreDecks: InnerDeck[] | null = [];
 let Explore = {
     fetchDecks: () => {
         Network.exploreDecks().then((response) => {

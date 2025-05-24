@@ -1,20 +1,20 @@
 import {Storage} from "./storage";
-import {Deck} from "./deck";
+import {InnerDeck} from "./innerDeck";
 import {createClient} from "@supabase/supabase-js";
 import {SUPABASE_KEY, SUPABASE_URL} from "./constants";
 
 export class Network {
     private static readonly supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    static exploreDecks(): Promise<Deck[]> {
-        return new Promise<Deck[]>((resolve, reject) => this.supabase
+    static exploreDecks(): Promise<InnerDeck[]> {
+        return new Promise<InnerDeck[]>((resolve, reject) => this.supabase
             .from("decks")
             .select()
             .eq("is_public", true)
-            .then(response => response.data != null ? resolve(response.data.map(col => <Deck>col.inner)) : reject(response.error)));
+            .then(response => response.data != null ? resolve(response.data.map(col => <InnerDeck>col.inner)) : reject(response.error)));
     }
 
-    static addOrUpdateDeck(deck: Deck) {
+    static addOrUpdateDeck(deck: InnerDeck) {
         return this.supabase
             .from("decks")
             .select()
@@ -34,16 +34,16 @@ export class Network {
             });
     }
 
-    static downloadMyDecks(): Promise<Deck[]> {
+    static downloadMyDecks(): Promise<InnerDeck[]> {
         return this.supabase.auth
             .getUser()
-            .then(response => <Promise<Deck[]>>this.supabase
+            .then(response => <Promise<InnerDeck[]>>this.supabase
                 .from("decks")
                 .select()
                 .eq("owner", response.data.user?.id)
                 .then(response => {
                     if (response.data == null) return [];
-                    return response.data.map(col => <Deck>col.inner);
+                    return response.data.map(col => <InnerDeck>col.inner);
                 })
             );
     }

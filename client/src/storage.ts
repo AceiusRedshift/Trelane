@@ -1,4 +1,4 @@
-import {Deck} from "./deck";
+import {InnerDeck} from "./innerDeck";
 import {
     STORAGE_DECK_KEY, STORAGE_ENABLE_CLOUD_KEY,
     STORAGE_MAIN_KEY, STORAGE_META_KEY,
@@ -39,9 +39,9 @@ export const Storage = {
 
     /**
      * Get all stored decks from local storage.
-     * @returns {Deck[]} The stored decks.
+     * @returns {InnerDeck[]} The stored decks.
      */
-    getDecks(): Deck[] {
+    getDecks(): InnerDeck[] {
         return JSON.parse(<string>localStorage.getItem(STORAGE_MAIN_KEY));
     },
 
@@ -90,9 +90,9 @@ export const Storage = {
     /**
      * Save a deck object to local storage.
      * @param {number} number The deck index to overwrite.
-     * @param {Deck} deck The deck object to save.
+     * @param {InnerDeck} deck The deck object to save.
      */
-    setDeck: (number: number, deck: Deck) => {
+    setDeck: (number: number, deck: InnerDeck) => {
         let stored = JSON.parse(<string>localStorage.getItem(STORAGE_MAIN_KEY));
         let meta = JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY));
 
@@ -105,9 +105,9 @@ export const Storage = {
 
     /**
      * Add a deck to local storage.
-     * @param {Deck} deck The deck object to add.
+     * @param {InnerDeck} deck The deck object to add.
      */
-    addDeck: (deck: Deck) => {
+    addDeck: (deck: InnerDeck) => {
         let stored = JSON.parse(<string>localStorage.getItem(STORAGE_MAIN_KEY));
         let meta = JSON.parse(<string>localStorage.getItem(STORAGE_META_KEY));
 
@@ -143,15 +143,15 @@ export const Storage = {
 
     /**
      * Get the active deck from local storage.
-     * @returns {Deck}
+     * @returns {InnerDeck}
      */
-    getActiveDeck: (): Deck => JSON.parse(<string>localStorage.getItem(STORAGE_DECK_KEY)),
+    getActiveDeck: (): InnerDeck => JSON.parse(<string>localStorage.getItem(STORAGE_DECK_KEY)),
 
     /**
      * Set the active deck in local storage, and autosave.
-     * @param {Deck} deck
+     * @param {InnerDeck} deck
      */
-    setActiveDeck: (deck: Deck) => {
+    setActiveDeck: (deck: InnerDeck) => {
         localStorage.setItem(STORAGE_DECK_KEY, JSON.stringify(deck));
 
         let decks = Storage.getDecks();

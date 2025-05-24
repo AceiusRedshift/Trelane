@@ -1,6 +1,6 @@
 import m from "mithril";
 import {Storage as Saver, Storage, Storage as storage} from "./storage";
-import {Deck} from "./deck";
+import {InnerDeck} from "./innerDeck";
 import {
     EDITOR_PATH,
     HELP_PATH, KAOMOJI_LIST,
@@ -26,15 +26,15 @@ const button = (text: string, click: () => any, disabled = () => false): m.Vnode
     className: disabled() ? "disabled dropdown-button" : "dropdown-button"
 }, text);
 
-function convertCsvToDeck(text: string): Deck {
+function convertCsvToDeck(text: string): InnerDeck {
     const lines = text.split("\n");
-    return new Deck("Imported Deck", "Unknown", lines.map(line => {
+    return new InnerDeck("Imported Deck", "Unknown", lines.map(line => {
         const [front, back] = line.split(",").map(s => s.trim());
         return {front, back};
     }).filter(card => card.front && card.back));
 }
 
-function convertDeckToCsv(deck: Deck) {
+function convertDeckToCsv(deck: InnerDeck) {
     let string = "";
 
     deck.cards.forEach(card => string += `${card.front}, ${card.back}\n`);
@@ -42,7 +42,7 @@ function convertDeckToCsv(deck: Deck) {
     return string;
 }
 
-function convertDeckToLogseq(deck: Deck) {
+function convertDeckToLogseq(deck: InnerDeck) {
     let string = `- # ${deck.name}\n- **Author:** ${deck.author}\n`;
 
     deck.cards.forEach(card => string += `- ${card.front} #card\n	- ${card.back}\n`);
@@ -53,11 +53,11 @@ function convertDeckToLogseq(deck: Deck) {
 let showLoader = false;
 let loaderTab = 0;
 let selectedFormat: string | null = null;
-let remoteDecks: Deck[] = [];
+let remoteDecks: InnerDeck[] = [];
 let Loader = {
     fetchRemoteDecks() {
         Network.downloadMyDecks().then((response) => {
-            remoteDecks = <Deck[]>response;
+            remoteDecks = <InnerDeck[]>response;
             console.log(response);
         }).catch((error) => {
             Toolbar.statusText = "Load Error: " + error.message;

@@ -2,14 +2,14 @@ import m from "mithril";
 import { button, isValidDeck, shuffle } from "./utils";
 import { Storage } from "./storage";
 import { EDITOR_PATH, LEARN_PATH, REVIEW_PATH, SPLASH_PATH } from "./constants";
-import { Deck } from "./deck";
+import { InnerDeck } from "./innerDeck";
 
 let cardNumber = 0;
 let score = 0;
 let totalAnswered = 0;
 let quizCompleted = false;
 let startTime = Date.now();
-let deck: Deck | null;
+let deck: InnerDeck | null;
 
 function resetValues() {
     cardNumber = 0;

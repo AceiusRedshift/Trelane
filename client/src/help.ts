@@ -21,7 +21,7 @@ export let Help = {
         m("p",
             `You can sign up for a Trelane account (or sign into one) by going to File > Settings > Account Switcher.
             Once you have signed up for an account, you can share decks by ticking the publish box in the editor.
-            You may also share decks by exporting them to a file and distributing that file. Current supported formats are Trelane JSON, Generic 1CSV, and Logseq pages.`
+            You may also share decks by exporting them to a file and distributing that file. Current supported formats are Trelane JSON, Generic CSV, and Logseq pages.`
         ),
         m(".buttons", [
             button("Back", () => {

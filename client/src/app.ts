@@ -1,12 +1,12 @@
-import {Storage} from "./storage";
-import {validateAccount} from "./utils";
-import {EDITOR_PATH, SPLASH_PATH} from "./constants";
-import {Splash} from "./splash";
-import {Edit} from "./edit";
-import {Review} from "./review";
-import {Learn} from "./learn";
-import {Help} from "./help";
-import {Toolbar} from "./toolbar";
+import { EDITOR_PATH, SPLASH_PATH } from "./constants";
+import { validateAccount } from "./utils";
+import { Storage } from "./storage";
+import { Toolbar } from "./toolbar";
+import { Review } from "./review";
+import { Splash } from "./splash";
+import { Learn } from "./learn";
+import { Edit } from "./edit";
+import { Help } from "./help";
 import m from "mithril";
 
 export class App {

@@ -1,11 +1,11 @@
-import {EDITOR_PATH, KAOMOJI_LIST} from "./constants";
-import {InnerDeck} from "./innerDeck";
-import {Storage} from "./storage";
-import {Network} from "./network";
-import {Toolbar} from "./toolbar";
-import {Card} from "./card";
+import { EDITOR_PATH, KAOMOJI_LIST } from "./constants";
+import { InnerDeck } from "./innerDeck";
+import { Storage } from "./storage";
+import { Network } from "./network";
+import { Toolbar } from "./toolbar";
+import { Card } from "./card";
+import { Deck } from "./deck";
 import m from "mithril";
-import {Deck} from "./deck";
 
 export const button = (text: string, onclick: Function, css = "", tooltip = "") => m(
     "button",
@@ -23,7 +23,7 @@ export const isValidDeck = (deck: any) => isString(deck.name) && isString(deck.a
 export const download = (content: any, fileName: string, contentType: string) => {
     let a = document.createElement("a");
 
-    a.href = URL.createObjectURL(new Blob([content], {type: contentType}));
+    a.href = URL.createObjectURL(new Blob([content], { type: contentType }));
     a.download = fileName;
     a.click();
 }
@@ -45,16 +45,21 @@ export const validateAccount = () => {
     console.log(`Attempting to login as ${Storage.email}...`);
 
     Toolbar.statusText = "Logging in...";
-
-    Network.signIn().then(response => {
-        if (response.error != null) {
-            Toolbar.statusText = response.error.message + " :(";
+    Network.hasAccount().then(hasAccount => {
+        if (!hasAccount) {
+            Network.signIn().then(response => {
+                if (response.error != null) {
+                    Toolbar.statusText = response.error.message + " :(";
+                } else {
+                    Toolbar.statusText = "Welcome back! " + getRandomKaomoji();
+                }
+            }).catch(error => {
+                Toolbar.statusText = "Login failed: " + error;
+                console.log(error);
+            });
         } else {
             Toolbar.statusText = "Welcome back! " + getRandomKaomoji();
         }
-    }).catch(error => {
-        Toolbar.statusText = "Login failed: " + error;
-        console.log(error);
     });
 }
 

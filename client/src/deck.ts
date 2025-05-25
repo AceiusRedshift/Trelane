@@ -2,14 +2,15 @@ import {InnerDeck} from "./innerDeck";
 
 export class Deck {
     local: boolean;
+
     get name(): string {
-        this.inner_deck.name = this._name;
-        return this._name;
+        return this.inner_deck.name;
     }
+
     set name(value: string) {
-        this._name = value;
+        this.inner_deck.name = value;
     }
-    private _name: string;
+
     /**
      * Owner account GUID or null if local deck.
      */
@@ -18,10 +19,9 @@ export class Deck {
     inner_deck: InnerDeck;
     created_at: Date;
     updated_at: Date;
-    
+
     constructor(deck: InnerDeck) {
         this.local = false;
-        this._name = deck.name;
         this.owner = null;
         this.is_public = false;
         this.inner_deck = deck;

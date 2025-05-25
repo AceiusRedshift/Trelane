@@ -44,7 +44,6 @@ export const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers
 export const validateAccount = () => {
     console.log(`Attempting to login as ${Storage.email}...`);
 
-    console.log("gguf");
     Toolbar.statusText = "Logging in...";
 
     Network.signIn().then(response => {
@@ -53,8 +52,6 @@ export const validateAccount = () => {
         } else {
             Toolbar.statusText = "Welcome back! " + getRandomKaomoji();
         }
-
-        console.log(response);
     }).catch(error => {
         Toolbar.statusText = "Login failed: " + error;
         console.log(error);
@@ -80,7 +77,7 @@ export const FileActions = {
             return;
         }
 
-        Storage.activeDeck = Storage.decks[(index)];
+        Storage.activeDeck = Storage.decks[index];
         m.route.set(EDITOR_PATH);
     }
 }

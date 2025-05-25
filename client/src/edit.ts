@@ -90,9 +90,9 @@ class EditView {
             console.log("No active deck, returning to menu.")
             return [];
         }
-        console.log(record);
+        
         let deck = record.inner_deck;
-        console.log(deck);
+        
         let content = deck.cards.length === 0 ? m("p", "No cards in deck.") : this.buildTable();
 
         return [

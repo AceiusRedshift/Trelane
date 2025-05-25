@@ -16,35 +16,46 @@ export class Network {
     }
 
     static addOrUpdateDeck(deck: Deck) {
-        return this.supabase
-            .from("decks")
-            .select()
-            .eq("name", deck.name)
-            .then(response => {
-                if (response.data != null && response.data.length > 0) {
-                    return this.supabase.from("decks").update({
-                        inner: deck.inner_deck,
-                        is_public: deck.is_public
-                    }).eq("name", deck.name);
-                } else {
-                    return this.supabase.from("decks").insert({
-                        inner: deck.inner_deck,
-                        is_public: deck.is_public
-                    })
-                }
-            });
+        this.supabase.auth.getUser().then(user => {
+            if (user.data.user?.id == null) {
+                throw new Error("No user object");
+            }
+            
+            let userId = user.data.user.id;
+            return this.supabase
+                .from("decks")
+                .select()
+                .eq("name", deck.name)
+                .then(response => {
+                    if (response.data != null && response.data.length > 0) {
+                        return this.supabase.from("decks").update({
+                            is_public: deck.is_public,
+                            inner_deck: deck.inner_deck,
+                            updated_at: (new Date()).toISOString(),
+                        }).eq("name", deck.name);
+                    } else {
+                        return this.supabase.from("decks").insert({
+                            name: deck.inner_deck.name,
+                            is_public: deck.is_public,
+                            inner_deck: deck.inner_deck,
+                            updated_at: (new Date()).toISOString(),
+                            created_at: (new Date()).toISOString(),
+                        })
+                    }
+                });
+        })
     }
 
-    static downloadMyDecks(): Promise<InnerDeck[]> {
+    static downloadMyDecks(): Promise<Deck[]> {
         return this.supabase.auth
             .getUser()
-            .then(response => <Promise<InnerDeck[]>>this.supabase
+            .then(response => <Promise<Deck[]>>this.supabase
                 .from("decks")
                 .select()
                 .eq("owner", response.data.user?.id)
                 .then(response => {
                     if (response.data == null) return [];
-                    return response.data.map(col => <InnerDeck>col.inner);
+                    return response.data.map(col => <Deck>col);
                 })
             );
     }

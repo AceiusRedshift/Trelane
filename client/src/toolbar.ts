@@ -13,6 +13,7 @@ import m from "mithril";
 
 // @ts-ignore
 import {version} from "../package.json";
+import {Deck} from "./deck";
 
 /**
  * Special toolbar button
@@ -162,7 +163,7 @@ let Loader = {
                         let potentialDeck = selectedFormat === "json" ? JSON.parse(text.toString()) : convertCsvToDeck(text);
 
                         if (isValidDeck(potentialDeck)) {
-                            Storage.activeDeck = potentialDeck;
+                            Storage.activeDeck = new Deck(potentialDeck);
                             m.route.set(EDITOR_PATH);
                             showLoader = false;
                         } else {

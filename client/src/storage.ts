@@ -6,6 +6,7 @@ import {STORAGE_MAIN_KEY} from "./constants";
 // @ts-ignore
 import {version} from "../package.json";
 import {Deck} from "./deck";
+import m from "mithril";
 
 export class StorageData {
     public readonly layout_version = version;
@@ -45,31 +46,11 @@ export class StorageData {
 
         for (let i = 0; i < decks.length; i++) {
             if (decks[i].name === deck.name) {
-                console.log("Autosaving deck " + deck.name + " to index " + i);
-
                 this.decks[i] = deck;
-
-                if (!deck.local) {
-                    if (!this.hasCredentials()) {
-                        Toolbar.statusText = "No account - Saved locally at " + new Date().toLocaleTimeString();
-                        return;
-                    }
-
-                    Toolbar.statusText = "Saving to cloud...";
-
-                    Network.addOrUpdateDeck(deck).then((response) => {
-                        Toolbar.statusText = "Saved to cloud at " + new Date().toLocaleTimeString();
-                        console.log(Toolbar.statusText)
-                    });
-                } else {
-                    Toolbar.statusText = "Saved at " + new Date().toLocaleTimeString();
-                }
-
                 return;
             }
         }
 
-        // ok, if we have not returned by now we must add the deck
         this.decks.push(deck);
     }
 
@@ -117,5 +98,33 @@ function loadStorage(): StorageData {
     }
 }
 
+function sync() {
+    Network.hasAccount().then((hasAccount) => {
+        if (hasAccount) {
+            Toolbar.statusText = "Beginning sync...";
+            m.redraw();
+
+            console.debug("Downloading server decks");
+            Network.downloadMyDecks().then(serverDecks => {
+                console.debug(serverDecks);
+                for (const localDeck of Storage.decks) {
+                    if (localDeck.local) return;
+
+                    if (serverDecks.some(d => d.name === localDeck.name)) {
+                        console.debug("Found a local deck with a remote counterpart: " + localDeck.name);
+                        console.debug(localDeck);
+                    } else {
+                        console.debug("Adding or Updating " + localDeck.name);
+                        Network.addOrUpdateDeck(localDeck);
+                    }
+                }
+            });
+        }
+    });
+}
+
 export const Storage = loadStorage();
-setInterval(() => localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(Storage)), 1000);
+
+setInterval(() => localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(Storage)), 500);
+setInterval(() => document.hasFocus() && sync(), 3450);
+document.onblur = sync;

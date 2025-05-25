@@ -25,7 +25,7 @@ let Onboarding = {
                     m("input", {
                         type: "text",
                         value: Storage.email,
-                        onfocusout: (e: { target: { value: string; }; }) => Storage.email = (e.target.value),
+                        onfocusout: (e: { target: { value: string; }; }) => Storage.email = e.target.value,
                     }),
                 ])
             ),
@@ -35,13 +35,13 @@ let Onboarding = {
                     m("input", {
                         type: "password",
                         value: Storage.password,
-                        onfocusout: (e: { target: { value: string; }; }) => Storage.password = (e.target.value),
+                        onfocusout: (e: { target: { value: string; }; }) => Storage.password = e.target.value,
                     }),
                 ])
             ),
             m(".buttons", [
                 button("Sign in", () =>
-                    Network.signIn().then((response) => {
+                    Network.signIn().then(response => {
                         if (response.error != null) {
                             Toolbar.statusText = response.error.message + " :(";
                         } else {
@@ -49,7 +49,7 @@ let Onboarding = {
                         }
 
                         console.log(response);
-                    }).catch((error) => {
+                    }).catch(error => {
                         Toolbar.statusText = "Login failed: " + error;
                         console.log(error);
                     }).finally(() => {
@@ -58,7 +58,7 @@ let Onboarding = {
                     })
                 ),
                 button("Sign up", () =>
-                    Network.signUp().then((response) => {
+                    Network.signUp().then(response => {
                         if (response.error != null) {
                             Toolbar.statusText = response.error.message + " :(";
                         } else {
@@ -66,7 +66,7 @@ let Onboarding = {
                         }
 
                         console.log(response);
-                    }).catch((error) => {
+                    }).catch(error => {
                         Toolbar.statusText = "Signup failed: " + error;
                         console.log(error);
                     }).finally(() => {
@@ -94,9 +94,11 @@ let showExplore = false;
 let exploreDecks: Deck[] | null = [];
 let Explore = {
     fetchDecks: () => {
-        Network.exploreDecks().then((response) => {
+        Network.exploreDecks().then(response => {
+            console.log("Downloaded decks from server.");
+            console.debug(response);
             exploreDecks = response;
-        }).catch((error) => {
+        }).catch(error => {
             Toolbar.statusText = "Explore Error: " + error.message;
 
             if (error.message === "Request timed out") {
@@ -106,18 +108,18 @@ let Explore = {
     },
     view: () => m(".modal", m(".content", [
         m(".heading", [
-            m("h1.title", "Explore"),
-            m("h2.subtitle", `Decks from Fellow Students :D`),
+            m("h1.title", "Explore :D"),
+            m("h2.subtitle", `Decks from Fellow Students`),
         ]),
         m("br"),
-        (exploreDecks == null || exploreDecks.length === 0) ? m("p", "No decks on cloud :c") :
+        exploreDecks == null || exploreDecks.length === 0 ? m("p", "No decks on cloud :c") :
             m("table", exploreDecks.map((deck, i, _) => {
                 const loadDeck = () => {
                     if (Storage.activeDeck != null && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
                         return;
                     }
 
-                    Storage.activeDeck = (deck);
+                    Storage.activeDeck = deck;
                     m.route.set(EDITOR_PATH);
                 }
 

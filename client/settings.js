@@ -1,5 +1,3 @@
-import esbuildPluginTsc from 'esbuild-plugin-tsc';
-
 export function createBuildSettings(options) {
     return {
         entryPoints: [
@@ -16,11 +14,6 @@ export function createBuildSettings(options) {
         },
         outdir: 'bin',
         bundle: true,
-        // plugins: [
-        //     esbuildPluginTsc({
-        //         force: true
-        //     }),
-        // ],
         format: 'esm',
         treeShaking: true,
         ...options

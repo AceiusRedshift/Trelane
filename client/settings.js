@@ -16,11 +16,13 @@ export function createBuildSettings(options) {
         },
         outdir: 'bin',
         bundle: true,
-        plugins: [
-            esbuildPluginTsc({
-                force: true
-            }),
-        ],
+        // plugins: [
+        //     esbuildPluginTsc({
+        //         force: true
+        //     }),
+        // ],
+        format: 'esm',
+        treeShaking: true,
         ...options
     };
 }

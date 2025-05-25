@@ -55,7 +55,7 @@ export const validateAccount = () => {
     }).catch(error => {
         Toolbar.statusText = "Login failed: " + error;
         console.log(error);
-    }).finally(() => m.redraw());
+    });
 }
 
 const guidSegment = () => ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);

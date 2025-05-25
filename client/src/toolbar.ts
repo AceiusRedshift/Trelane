@@ -55,11 +55,11 @@ function convertDeckToLogseq(deck: InnerDeck) {
 let showLoader = false;
 let loaderTab = 0;
 let selectedFormat: string | null = null;
-let remoteDecks: InnerDeck[] = [];
+let remoteDecks: Deck[] = [];
 let Loader = {
     fetchRemoteDecks() {
         Network.downloadMyDecks().then(response => {
-            remoteDecks = <InnerDeck[]>response;
+            remoteDecks = <Deck[]>response;
             console.log(response);
         }).catch(error => {
             Toolbar.statusText = "Load Error: " + error.message;
@@ -87,16 +87,13 @@ let Loader = {
             m("button", {className: loaderTab === 2 ? "primary" : "", onclick: () => loaderTab = 2}, "Import")
         ]),
         m("br"),
-        loaderTab === 0 && (
-            Storage.decks.length === 0 ? m("p", "No decks saved :c") : m("table", Storage.decks.map((deckRecord, i, decks) => {
-                let deck = deckRecord.inner_deck;
-
+        loaderTab === 0 && m(".load-table-container", Storage.decks.length === 0 ? m("p", "No decks saved :c") : m("table.load-table", Storage.decks.map((deckRecord, i, decks) => {
                 const loadDeck = () => FileActions.loadDeck(i);
 
-                return m("tr.load-table", [
-                    m("td", {onclick: loadDeck}, deck.name),
-                    m("td", {onclick: loadDeck}, deck.author),
-                    m("td", {onclick: loadDeck}, deck.cards.length + " cards"),
+                return m("tr", [
+                    m("td", {onclick: loadDeck}, deckRecord.inner_deck.name),
+                    m("td", {onclick: loadDeck}, deckRecord.inner_deck.author),
+                    m("td", {onclick: loadDeck}, deckRecord.inner_deck.cards.length + " cards"),
                     m("td.load-table-solid", [
                         m("a", {onclick: loadDeck}, "Load"),
                         " ",
@@ -111,29 +108,29 @@ let Loader = {
                 ]);
             }))
         ),
-        loaderTab === 1 && (
-            remoteDecks == null || remoteDecks.length === 0 ? m("p", "No decks on cloud :c") : m("table", remoteDecks.map((deck, i, decks) => {
-                const loadDeck = () => {
-                    if (Storage.activeDeck != null && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
-                        return;
-                    }
-
-                    Storage.activeDeck = Storage.decks[(i)];
-                    m.route.set(EDITOR_PATH);
-                    showLoader = false;
-                }
-
-                return m("tr.load-table", [
-                    m("td", {onclick: loadDeck}, deck.name),
-                    m("td", {onclick: loadDeck}, deck.author),
-                    m("td", {onclick: loadDeck}, deck.cards.length + " cards"),
+        loaderTab === 1 && m(".load-table-container", remoteDecks == null || remoteDecks.length === 0 ? m("p", "No decks on cloud :c") : m("table.load-table", remoteDecks.map((deck, i, _) => {
+                console.log(i, deck)
+                return m("tr", [
+                    m("td", deck.inner_deck.name),
+                    m("td", deck.inner_deck.author),
+                    m("td", deck.inner_deck.cards.length + " cards"),
                     m("td.load-table-solid", [
-                        m("a", {onclick: loadDeck}, "Load"),
+                        m("a", {
+                            onclick: () => {
+                                if (Storage.activeDeck != null && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+                                    return;
+                                }
+
+                                Storage.activeDeck = Storage.decks[(i)];
+                                m.route.set(EDITOR_PATH);
+                                showLoader = false;
+                            }
+                        }, "Load"),
                         " ",
                         m("a", {
                             onclick: () => {
                                 if (confirm("Are you sure you want to delete this deck?")) {
-                                    Storage.decks.splice(i, 1);
+                                    Network.removeDeck(deck.inner_deck.name).then(Loader.fetchRemoteDecks);
                                 }
                             }
                         }, "Delete")
@@ -197,43 +194,66 @@ let About = {
 }
 
 let showSettings = false;
-export let Toolbar = {
-    statusText: "Loading...",
-    showLoader: () => showLoader = true,
-    hideSettings: () => showSettings = false,
-    view: () => [
-        m(".toolbar", [
-            m(".dropdown", [
-                m(".dropdown-button", "File"),
-                m(".dropdown-content", [
-                    button("New", FileActions.newDeck),
-                    button("Open", () => showLoader = true),
-                    button("Save to file", () => download(JSON.stringify(Storage.activeDeck?.inner_deck), Storage.activeDeck?.name + ".json", "application/json"), () => Storage.activeDeck == null),
-                    button("Export to CSV", () => download(convertDeckToCsv(<InnerDeck>Storage.activeDeck?.inner_deck), Storage.activeDeck?.name + ".csv", "text/csv"), () => Storage.activeDeck == null),
-                    button("Export to Logseq", () => download(convertDeckToLogseq(<InnerDeck>Storage.activeDeck?.inner_deck), Storage.activeDeck?.name + ".md", "text/markdown"), () => Storage.activeDeck == null),
-                    button("Settings", () => showSettings = true)
+
+class ToolbarView {
+    get statusText(): string {
+        return this._statusText;
+    }
+
+    set statusText(value: string) {
+        this._statusText = value;
+        
+        console.info(value);
+        m.redraw();
+    }
+    
+    private _statusText: string = "Loading...";
+
+    showLoader() {
+        showLoader = true
+    }
+
+    hideSettings() {
+        showSettings = false
+    }
+
+    view() {
+        return [
+            m(".toolbar", [
+                m(".dropdown", [
+                    m(".dropdown-button", "File"),
+                    m(".dropdown-content", [
+                        button("New", FileActions.newDeck),
+                        button("Open", () => showLoader = true),
+                        button("Save to file", () => download(JSON.stringify(Storage.activeDeck?.inner_deck), Storage.activeDeck?.inner_deck.name + ".json", "application/json"), () => Storage.activeDeck == null),
+                        button("Export to CSV", () => download(convertDeckToCsv(<InnerDeck>Storage.activeDeck?.inner_deck), Storage.activeDeck?.inner_deck.name + ".csv", "text/csv"), () => Storage.activeDeck == null),
+                        button("Export to Logseq", () => download(convertDeckToLogseq(<InnerDeck>Storage.activeDeck?.inner_deck), Storage.activeDeck?.inner_deck.name + ".md", "text/markdown"), () => Storage.activeDeck == null),
+                        button("Settings", () => showSettings = true)
+                    ]),
                 ]),
-            ]),
-            m(".dropdown", [
-                m(".dropdown-button", "Deck"),
-                m(".dropdown-content", [
-                    button("Edit", () => m.route.set(EDITOR_PATH), () => Storage.activeDeck == null),
-                    button("Learn (Quiz)", () => m.route.set(LEARN_PATH), () => Storage.activeDeck == null),
-                    button("Review (Flashcards)", () => m.route.set(REVIEW_PATH), () => Storage.activeDeck == null)
+                m(".dropdown", [
+                    m(".dropdown-button", "Deck"),
+                    m(".dropdown-content", [
+                        button("Edit", () => m.route.set(EDITOR_PATH), () => Storage.activeDeck == null),
+                        button("Learn (Quiz)", () => m.route.set(LEARN_PATH), () => Storage.activeDeck == null),
+                        button("Review (Flashcards)", () => m.route.set(REVIEW_PATH), () => Storage.activeDeck == null)
+                    ]),
                 ]),
-            ]),
-            m(".dropdown", [
-                m(".dropdown-button", "Help"),
-                m(".dropdown-content", [
-                    button("View Help", () => m.route.set(HELP_PATH)),
-                    button("Dump Data", () => Storage.dump()),
-                    button("About...", () => showAbout = true),
+                m(".dropdown", [
+                    m(".dropdown-button", "Help"),
+                    m(".dropdown-content", [
+                        button("View Help", () => m.route.set(HELP_PATH)),
+                        button("Dump Data", () => Storage.dump()),
+                        button("About...", () => showAbout = true),
+                    ]),
                 ]),
+                m(".status", Toolbar._statusText)
             ]),
-            m(".status", Toolbar.statusText)
-        ]),
-        showLoader && m(Loader),
-        showSettings && m(Settings),
-        showAbout && m(About)
-    ]
+            showLoader && m(Loader),
+            showSettings && m(Settings),
+            showAbout && m(About)
+        ];
+    }
 }
+
+export const Toolbar = new ToolbarView();

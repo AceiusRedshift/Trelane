@@ -19,6 +19,7 @@ export class StorageData {
     public password: string = "";
 
     public theme: Theme = Theme.System;
+    Storage: import("/home/aceius/Projects/Trelane/client/src/innerDeck").InnerDeck;
 
     /**
      * Set up local storage.
@@ -45,7 +46,7 @@ export class StorageData {
         let decks = this.decks;
 
         for (let i = 0; i < decks.length; i++) {
-            if (decks[i].name === deck.name) {
+            if (decks[i].inner_deck.name === deck.inner_deck.name) {
                 this.decks[i] = deck;
                 return;
             }
@@ -101,8 +102,7 @@ function loadStorage(): StorageData {
 function sync() {
     Network.hasAccount().then((hasAccount) => {
         if (hasAccount) {
-            Toolbar.statusText = "Beginning sync...";
-            m.redraw();
+            Toolbar.statusText = "Synchronization initialized...";
 
             console.debug("Downloading server decks");
             Network.downloadMyDecks().then(serverDecks => {
@@ -110,14 +110,20 @@ function sync() {
                 for (const localDeck of Storage.decks) {
                     if (localDeck.local) return;
 
-                    if (serverDecks.some(d => d.name === localDeck.name)) {
-                        console.debug("Found a local deck with a remote counterpart: " + localDeck.name);
+                    if (serverDecks.some(d => d.inner_deck.name === localDeck.inner_deck.name)) {
+                        console.debug("Found a local deck with a remote counterpart: " + localDeck.inner_deck.name);
                         console.debug(localDeck);
                     } else {
-                        console.debug("Adding or Updating " + localDeck.name);
+                        console.debug("Adding or Updating " + localDeck.inner_deck.name);
                         Network.addOrUpdateDeck(localDeck);
                     }
                 }
+
+                Toolbar.statusText = "Synchronization completed.";
+            }).catch(reason => {
+                Toolbar.statusText = "Synchronization error: " + reason;
+                
+                console.error(reason);
             });
         }
     });
@@ -126,5 +132,5 @@ function sync() {
 export const Storage = loadStorage();
 
 setInterval(() => localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(Storage)), 500);
-setInterval(() => document.hasFocus() && sync(), 3450);
+setInterval(() => document.hasFocus() && sync(), 10000);
 document.onblur = sync;

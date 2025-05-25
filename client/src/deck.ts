@@ -3,14 +3,6 @@ import {InnerDeck} from "./innerDeck";
 export class Deck {
     local: boolean;
 
-    get name(): string {
-        return this.inner_deck.name;
-    }
-
-    set name(value: string) {
-        this.inner_deck.name = value;
-    }
-
     /**
      * Owner account GUID or null if local deck.
      */

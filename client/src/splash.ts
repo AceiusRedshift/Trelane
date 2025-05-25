@@ -45,6 +45,7 @@ let Onboarding = {
                         if (response.error != null) {
                             Toolbar.statusText = response.error.message + " :(";
                         } else {
+                            Storage.first_visit = false;
                             Toolbar.statusText = "Welcome back! " + getRandomKaomoji();
                         }
 
@@ -53,7 +54,6 @@ let Onboarding = {
                         Toolbar.statusText = "Login failed: " + error;
                         console.log(error);
                     }).finally(() => {
-                        m.redraw()
                         onboardingShowStatus = true;
                     })
                 ),
@@ -62,6 +62,7 @@ let Onboarding = {
                         if (response.error != null) {
                             Toolbar.statusText = response.error.message + " :(";
                         } else {
+                            Storage.first_visit = false;
                             Toolbar.statusText = "Welcome to Trelane! " + getRandomKaomoji();
                         }
 
@@ -69,10 +70,7 @@ let Onboarding = {
                     }).catch(error => {
                         Toolbar.statusText = "Signup failed: " + error;
                         console.log(error);
-                    }).finally(() => {
-                        m.redraw()
-                        onboardingShowStatus = true;
-                    })
+                    }).finally(() => onboardingShowStatus = true)
                 )
             ]),
             onboardingShowStatus ? m("p", {style: "text-align: center;"}, Toolbar.statusText) : [
@@ -104,7 +102,7 @@ let Explore = {
             if (error.message === "Request timed out") {
                 Toolbar.statusText = (navigator.onLine ? "Server" : "You're") + " offline."
             }
-        }).finally(() => m.redraw());
+        });
     },
     view: () => m(".modal", m(".content", [
         m(".heading", [
@@ -124,7 +122,7 @@ let Explore = {
                 }
 
                 return m("tr.load-table", [
-                    m("td", {onclick: loadDeck}, deck.name),
+                    m("td", {onclick: loadDeck}, deck.inner_deck.name),
                     m("td", {onclick: loadDeck}, deck.inner_deck.author),
                     m("td", {onclick: loadDeck}, deck.inner_deck.cards.length + " cards"),
                     m("td.load-table-solid", [
@@ -164,7 +162,7 @@ export let Splash = {
                 m("h3", "Recent"),
                 m("ul", [
                     Storage.decks.slice(-Math.min(Storage.decks.length, 5) + (Storage.activeDeck != null ? 1 : 0)).map((deck, i, _) => {
-                        return m("li", m("button.link-button", {onclick: () => FileActions.loadDeck(i)}, deck.name));
+                        return m("li", m("button.link-button", {onclick: () => FileActions.loadDeck(i)}, deck.inner_deck.name));
                     })
                 ])
             ])
@@ -174,7 +172,7 @@ export let Splash = {
                 showExplore = true;
                 Explore.fetchDecks();
             }, "", "Discover decks published by other users of Trelane."),
-            Storage.activeDeck != null && button(`Continue Editing '${Storage.activeDeck.name}'`, () => m.route.set(EDITOR_PATH)),
+            Storage.activeDeck != null && button(`Continue Editing '${Storage.activeDeck.inner_deck.name}'`, () => m.route.set(EDITOR_PATH)),
         ]),
         showExplore && m(Explore),
         showOnboarding && m(Onboarding)

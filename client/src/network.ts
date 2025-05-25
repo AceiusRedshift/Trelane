@@ -20,19 +20,19 @@ export class Network {
             if (user.data.user?.id == null) {
                 throw new Error("No user object");
             }
-            
+
             let userId = user.data.user.id;
             return this.supabase
                 .from("decks")
                 .select()
-                .eq("name", deck.name)
+                .eq("name", deck.inner_deck.name)
                 .then(response => {
                     if (response.data != null && response.data.length > 0) {
                         return this.supabase.from("decks").update({
                             is_public: deck.is_public,
                             inner_deck: deck.inner_deck,
                             updated_at: (new Date()).toISOString(),
-                        }).eq("name", deck.name);
+                        }).eq("name", deck.inner_deck.name).eq("owner", userId);
                     } else {
                         return this.supabase.from("decks").insert({
                             name: deck.inner_deck.name,
@@ -53,10 +53,11 @@ export class Network {
                 .from("decks")
                 .select()
                 .eq("owner", response.data.user?.id)
-                .then(response => {
-                    if (response.data == null) return [];
-                    return response.data.map(col => <Deck>col);
-                })
+                .then(response => response.data == null ? [] : response.data.map(col => {
+                    let castColumn = <Deck>col;
+                    castColumn.inner_deck = JSON.parse(col.inner_deck);
+                    return castColumn;
+                }))
             );
     }
 
@@ -78,5 +79,16 @@ export class Network {
         return this.supabase.auth
             .getUser()
             .then(response => response.data.user != null)
+    }
+
+    static removeDeck(name: string) {
+        return this.supabase.auth
+            .getUser()
+            .then(response => this.supabase
+                .from("decks")
+                .delete()
+                .eq("owner", response.data.user?.id)
+                .eq("name", name)
+            );
     }
 }

@@ -331,9 +331,14 @@ div.dropdown-button {
 
 /* Specific Components */
 
+.load-table-container {
+    max-height: 50vh;
+
+    overflow: scroll;
+}
+
 .load-table {
-    width: var(--width);
-    margin: var(--spacing);
+    width: 100%;
 }
 
 .load-table * {

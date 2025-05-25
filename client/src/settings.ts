@@ -43,7 +43,7 @@ let AccountModal = {
                     }).catch(error => {
                         Toolbar.statusText = "Login failed: " + error;
                         console.log(error);
-                    }).finally(() => m.redraw())
+                    })
                 ),
                 button("Sign up", () =>
                     Network.signUp().then(response => {
@@ -57,7 +57,7 @@ let AccountModal = {
                     }).catch(error => {
                         Toolbar.statusText = "Signup failed: " + error;
                         console.log(error);
-                    }).finally(() => m.redraw())
+                    })
                 )
             ]),
             m("p", Toolbar.statusText),

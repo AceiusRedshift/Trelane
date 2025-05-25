@@ -18,13 +18,27 @@ class EditView {
         return active;
     }
 
-    addNewCard() {
-        Storage.activeDeck?.inner_deck.cards.push(new Card("", ""));
-        this.updateActiveDeckDate();
+    updateActiveDeckDate() {
+        let active = Storage.activeDeck;
+
+        if (!active) {
+            m.route.set(SPLASH_PATH);
+            return new Deck(new InnerDeck("ERROR", "ERROR", []));
+        }
+        
+        active.updated_at = new Date();
     }
 
-    updateActiveDeckDate() {
-        this.activeDeck.updated_at = new Date();
+    addNewCard() {
+        let active = Storage.activeDeck;
+
+        if (!active) {
+            m.route.set(SPLASH_PATH);
+            return new Deck(new InnerDeck("ERROR", "ERROR", []));
+        }
+
+        active.updated_at = new Date();
+        active.inner_deck.cards.push(new Card("", ""));
     }
 
     buildTable() {

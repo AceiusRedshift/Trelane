@@ -7,10 +7,11 @@ import {Deck} from "./deck";
 import m from "mithril";
 
 let onboardingShowStatus = false;
+let showOnboarding = Storage.first_visit;
 let Onboarding = {
     view: () => m(".modal.login-modal", m(".content", [
         [
-            closeButton(() => Storage.confirmVisit()),
+            closeButton(() => showOnboarding = false),
             m("h1.title", "Hiii! ヾ(*ﾟ▽ﾟ)ﾉ"),
             m("p", [
                 "It looks like this is your first time using Trelane on this browser.",
@@ -174,6 +175,6 @@ export let Splash = {
             Storage.activeDeck != null && button(`Continue Editing '${Storage.activeDeck.name}'`, () => m.route.set(EDITOR_PATH)),
         ]),
         showExplore && m(Explore),
-        Storage.isFirstVisit() && m(Onboarding)
+        showOnboarding && m(Onboarding)
     ])
 }

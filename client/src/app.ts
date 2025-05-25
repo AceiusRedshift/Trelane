@@ -11,8 +11,6 @@ import m from "mithril";
 
 export class App {
     run(toolbarElement: Element, appElement: Element): void {
-        Storage.init();
-
         if (Storage.hasCredentials()) {
             validateAccount();
         }

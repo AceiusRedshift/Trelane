@@ -5,9 +5,13 @@ import {Storage} from "./storage";
 import {LEARN_PATH, REVIEW_PATH, SPLASH_PATH} from "./constants";
 
 function makeTable() {
-    let deck = Storage.getActiveDeck();
+    let deck = Storage.activeDeck?.inner_deck;
+    if (!deck) {
+        return [];
+    }
+
     let table = [];
-    
+
     for (const index in deck.cards) {
         const i = Number(index);
         let card = deck.cards[i];
@@ -19,7 +23,7 @@ function makeTable() {
                     placeholder: `Term ${Number(i) + 1}`,
                     oninput: (e: { target: { value: string; }; }) => {
                         deck.cards[i].front = e.target.value;
-                        Storage.setActiveDeck(deck);
+                        Storage.activeDeck = (deck);
                     }
                 })),
                 m("td", m("input.card-input", {

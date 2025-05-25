@@ -1,12 +1,11 @@
+import {STORAGE_MAIN_KEY} from "./constants";
+import {isDarkMode} from "./utils";
 import {Toolbar} from "./toolbar";
 import {Network} from "./network";
-import {isDarkMode} from "./utils";
 import {Theme} from "./theme";
-import {STORAGE_MAIN_KEY} from "./constants";
+import {Deck} from "./deck";
 // @ts-ignore
 import {version} from "../package.json";
-import {Deck} from "./deck";
-import m from "mithril";
 
 export class StorageData {
     public readonly layout_version = version;
@@ -141,6 +140,8 @@ function sync() {
 
                 Toolbar.statusText = "Synchronization error: " + reason;
             });
+        } else {
+            Toolbar.statusText = "Data saved locally at " + (new Date()).toLocaleTimeString();
         }
     });
 }
@@ -149,4 +150,5 @@ export const Storage = loadStorage();
 
 setInterval(() => localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(Storage)), 500);
 setInterval(() => document.hasFocus() && sync(), 10000);
+
 document.onblur = sync;

@@ -19,7 +19,6 @@ export class StorageData {
     public password: string = "";
 
     public theme: Theme = Theme.System;
-    Storage: import("/home/aceius/Projects/Trelane/client/src/innerDeck").InnerDeck;
 
     /**
      * Set up local storage.
@@ -104,26 +103,43 @@ function sync() {
         if (hasAccount) {
             Toolbar.statusText = "Synchronization initialized...";
 
+            console.group("Synchronizing...")
+
             console.debug("Downloading server decks");
+
             Network.downloadMyDecks().then(serverDecks => {
                 console.debug(serverDecks);
-                for (const localDeck of Storage.decks) {
+                for (let i = 0; i < Storage.decks.length; i++) {
+                    const localDeck = Storage.decks[i];
+
                     if (localDeck.local) return;
 
                     if (serverDecks.some(d => d.inner_deck.name === localDeck.inner_deck.name)) {
-                        console.debug("Found a local deck with a remote counterpart: " + localDeck.inner_deck.name);
-                        console.debug(localDeck);
+                        console.debug("Found synchronized deck", localDeck.inner_deck.name);
+
+                        let serverDeck = <Deck>serverDecks.find(d => d.inner_deck.name === localDeck.inner_deck.name);
+
+                        let serverDeckIsNewer = localDeck.updated_at < serverDeck.updated_at;
+                        if (serverDeckIsNewer) {
+                            console.debug("Server deck is newer, downloading");
+                            Storage.decks[i] = serverDeck;
+                        } else {
+                            console.debug("Local deck is newer, uploading");
+                            Network.addOrUpdateDeck(localDeck);
+                        }
                     } else {
-                        console.debug("Adding or Updating " + localDeck.inner_deck.name);
+                        console.debug("Found un-synchronized deck", localDeck.inner_deck.name);
                         Network.addOrUpdateDeck(localDeck);
                     }
                 }
 
-                Toolbar.statusText = "Synchronization completed.";
+                console.groupEnd();
+                Toolbar.statusText = "Synchronization completed at " + (new Date()).toLocaleTimeString();
             }).catch(reason => {
-                Toolbar.statusText = "Synchronization error: " + reason;
-                
                 console.error(reason);
+                console.groupEnd();
+
+                Toolbar.statusText = "Synchronization error: " + reason;
             });
         }
     });

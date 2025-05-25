@@ -20,6 +20,11 @@ class EditView {
 
     addNewCard() {
         Storage.activeDeck?.inner_deck.cards.push(new Card("", ""));
+        this.updateActiveDeckDate();
+    }
+
+    updateActiveDeckDate() {
+        this.activeDeck.updated_at = new Date();
     }
 
     buildTable() {
@@ -36,14 +41,16 @@ class EditView {
                         placeholder: `Term ${Number(i) + 1}`,
                         oninput: (e: { target: { value: string; }; }) => {
                             this.activeDeck.inner_deck.cards[i].front = e.target.value;
+                            this.updateActiveDeckDate();
                         }
                     })),
                     m("td", m("input.card-input", {
                         value: card.back,
                         placeholder: `Definition ${Number(i) + 1}`,
-                        oninput: (e: {
-                            target: { value: string; };
-                        }) => this.activeDeck.inner_deck.cards[i].back = e.target.value,
+                        oninput: (e: { target: { value: string; }; }) => {
+                            this.activeDeck.inner_deck.cards[i].back = e.target.value;
+                            this.updateActiveDeckDate();
+                        },
                         onkeypress: (e: { code: any; key: any; }) => {
                             let keyCode = e.code || e.key;
                             let validKeyCode = keyCode == "Enter";
@@ -59,6 +66,8 @@ class EditView {
 
                                 this.activeDeck.inner_deck.cards[i] = this.activeDeck.inner_deck.cards[i - 1];
                                 this.activeDeck.inner_deck.cards[i - 1] = hold;
+
+                                this.updateActiveDeckDate();
                             }
                         }, "↑"),
                         i === this.activeDeck.inner_deck.cards.length - 1 ? m("a.disabled", "↓") : m("a", {
@@ -67,6 +76,8 @@ class EditView {
 
                                 this.activeDeck.inner_deck.cards[i] = this.activeDeck.inner_deck.cards[i + 1];
                                 this.activeDeck.inner_deck.cards[i + 1] = hold;
+
+                                this.updateActiveDeckDate();
                             }
                         }, "↓"),
                         m("a", {
@@ -74,6 +85,7 @@ class EditView {
                                 if (confirm("Are you sure you want to delete this card?")) {
                                     this.activeDeck.inner_deck.cards.splice(i, 1);
                                 }
+                                this.updateActiveDeckDate();
                             }
                         }, "×")
                     ]),
@@ -119,11 +131,11 @@ class EditView {
             ]),
             m(".buttons", [
                 button("Learn Terms", () => {
-                    this.activeDeck.inner_deck= deck;
+                    this.activeDeck.inner_deck = deck;
                     m.route.set(LEARN_PATH);
                 }),
                 button("Review Flashcards", () => {
-                    this.activeDeck.inner_deck= deck;
+                    this.activeDeck.inner_deck = deck;
                     m.route.set(REVIEW_PATH);
                 }),
                 button("Close Deck", () => m.route.set(SPLASH_PATH))
@@ -133,7 +145,8 @@ class EditView {
                     `Save to cloud? `,
                     m("input", {
                         checked: !this.activeDeck.local,
-                        type: "checkbox", oninput: (e: { target: { checked: boolean; }; }) => this.activeDeck.local = !e.target.checked
+                        type: "checkbox",
+                        oninput: (e: { target: { checked: boolean; }; }) => this.activeDeck.local = !e.target.checked
                     })
                 ]),
                 !Storage.activeDeck?.local && m("label", [
@@ -144,7 +157,7 @@ class EditView {
                         oninput: (e: { target: { checked: boolean; }; }) => {
                             this.activeDeck.inner_deck.author = Storage.email;
                             this.activeDeck.is_public = e.target.checked;
-                            console.debug("Set is public to:" , this.activeDeck.is_public);
+                            console.debug("Set is public to:", this.activeDeck.is_public, "\n\nActive Deck:", Storage.activeDeck);
                         }
                     })
                 ]),

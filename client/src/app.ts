@@ -1,4 +1,4 @@
-import { EDITOR_PATH, SPLASH_PATH } from "./constants";
+import { EDITOR_PATH, SPLASH_PATH, STORAGE_MAIN_KEY } from "./constants";
 import { validateAccount } from "./utils";
 import { Storage } from "./storage";
 import { Toolbar } from "./toolbar";
@@ -10,10 +10,22 @@ import { Help } from "./help";
 import m from "mithril";
 
 export class App {
+    private buildConsoleInterface() {
+        // @ts-ignore
+        window.trelane = {
+            reset() {
+                localStorage.setItem(STORAGE_MAIN_KEY, "");
+                location.reload();
+            }
+        }
+    }
+
     run(toolbarElement: Element, appElement: Element): void {
         if (Storage.hasCredentials()) {
             validateAccount();
         }
+
+        this.buildConsoleInterface();
 
         document.body.setAttribute("data-theme", Storage.getActiveTheme().toString().toLowerCase());
 

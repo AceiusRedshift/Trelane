@@ -1,11 +1,11 @@
-import {STORAGE_MAIN_KEY} from "./constants";
-import {isDarkMode} from "./utils";
-import {Toolbar} from "./toolbar";
-import {Network} from "./network";
-import {Theme} from "./theme";
-import {Deck} from "./deck";
+import { STORAGE_MAIN_KEY } from "./constants";
+import { isDarkMode } from "./utils";
+import { Toolbar } from "./toolbar";
+import { Network } from "./network";
+import { Theme } from "./theme";
+import { Deck } from "./deck";
 // @ts-ignore
-import {version} from "../package.json";
+import { version } from "../package.json";
 
 export class StorageData {
     public readonly layout_version = version;
@@ -103,7 +103,7 @@ function sync() {
             Toolbar.statusText = "Synchronization initialized...";
 
             console.group("Synchronizing...")
-
+            console.time("sync");
             console.debug("Downloading server decks");
 
             Network.downloadMyDecks().then(serverDecks => {
@@ -132,6 +132,7 @@ function sync() {
                     }
                 }
 
+                console.timeEnd("sync");
                 console.groupEnd();
                 Toolbar.statusText = "Synchronization completed at " + (new Date()).toLocaleTimeString();
             }).catch(reason => {

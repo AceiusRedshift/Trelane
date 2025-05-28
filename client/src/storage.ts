@@ -148,9 +148,13 @@ function sync() {
     });
 }
 
+function setupSync() {
+    setInterval(() => localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(Storage)), 500);
+    setInterval(() => document.hasFocus() && sync(), 10000);
+
+    document.onblur = sync;
+}
+
+setupSync();
+
 export const Storage = loadStorage();
-
-setInterval(() => localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(Storage)), 500);
-setInterval(() => document.hasFocus() && sync(), 10000);
-
-document.onblur = sync;

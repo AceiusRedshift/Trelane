@@ -121,35 +121,11 @@ let Loader = {
                                 return;
                             }
 
-                            const sameName = (d: Deck) => d.inner_deck.name == deck.inner_deck.name;
+                            Toolbar.statusText = "Loading deck " + deck.inner_deck.name + "...";
+                            Storage.activeDeck = deck;
 
-                            let localDeckWithSameName = Storage.decks.find(sameName);
-
-                            if (localDeckWithSameName != null) {
-                                Toolbar.statusText = "Loading deck " + deck.inner_deck.name + "...";
-                                Storage.activeDeck = localDeckWithSameName;
-
-                                m.route.set(EDITOR_PATH);
-                                showLoader = false;
-                            }
-                            else {
-                                Toolbar.statusText = "Loading remote deck " + deck.inner_deck.name + "...";
-
-                                Network.downloadMyDecks().then(decks => {
-                                    let downloadedDeck = decks.find(sameName);
-
-                                    if (downloadedDeck == null) {
-                                        console.error("Downloaded an undefined deck.");
-                                    } else {
-
-                                        Storage.activeDeck = downloadedDeck;
-
-                                        m.route.set(EDITOR_PATH);
-                                        showLoader = false;
-                                    }
-                                });
-
-                            }
+                            m.route.set(EDITOR_PATH);
+                            showLoader = false;
                         }
                     }, "Load"),
                     " ",

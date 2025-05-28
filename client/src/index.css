@@ -5,7 +5,7 @@
     --toolbar: #111;
     --text: #fff;
 
-    --primary: #4F79F7FF;
+    --primary: #4F79F7;
     --link: var(--primary);
     --close: #f55;
     --visited: #86c;
@@ -29,7 +29,7 @@
     --text: #f5f5f5;
 
     --primary: #448;
-    --link: #4F79F7FF;
+    --link: #4F79F7;
 
     --border: 1px dotted white;
 }
@@ -40,7 +40,7 @@
     --text: #222;
 
     --primary: #faf;
-    --link: #4F79F7FF;
+    --link: #794FF7;
 }
 
 body {

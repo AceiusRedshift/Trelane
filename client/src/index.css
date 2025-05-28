@@ -101,7 +101,7 @@ input,
 select {
     border: 0;
     border-bottom: var(--border);
-    background: transparent;
+    background: var(--background);
     color: var(--text);
     font-size: inherit;
     text-align: center;
@@ -125,6 +125,11 @@ input[type="file"]::file-selector-button {
 input[type="file"]::file-selector-button:hover {
     background: var(--text);
     color: var(--background);
+}
+
+option {
+    background-color: var(--background);
+    color: var(--text);
 }
 
 /* Modifiers */

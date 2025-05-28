@@ -104,18 +104,20 @@ function sync() {
 
             console.group("Synchronizing...")
             console.time("sync");
-            console.debug("Downloading server decks");
+
+            Storage.decks = Storage.decks.filter((val) => val !== null);
 
             Network.downloadMyDecks().then(serverDecks => {
-                console.debug(serverDecks);
+
                 for (let i = 0; i < Storage.decks.length; i++) {
                     const localDeck = Storage.decks[i];
+                    if (localDeck == null) {
+                        console.error("LocalDeck is not defined", localDeck, Storage.decks);
+                    }
 
                     if (localDeck.local) return;
 
                     if (serverDecks.some(d => d.inner_deck.name === localDeck.inner_deck.name)) {
-                        console.debug("Found synchronized deck", localDeck.inner_deck.name);
-
                         let serverDeck = <Deck>serverDecks.find(d => d.inner_deck.name === localDeck.inner_deck.name);
 
                         let serverDeckIsNewer = localDeck.updated_at < serverDeck.updated_at;
@@ -127,7 +129,6 @@ function sync() {
                             Network.addOrUpdateDeck(localDeck);
                         }
                     } else {
-                        console.debug("Found un-synchronized deck", localDeck.inner_deck.name);
                         Network.addOrUpdateDeck(localDeck);
                     }
                 }

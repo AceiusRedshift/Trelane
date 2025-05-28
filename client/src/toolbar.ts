@@ -1,19 +1,19 @@
-import {closeButton, download, FileActions, isValidDeck} from "./utils";
+import { closeButton, download, FileActions, isValidDeck } from "./utils";
 import {
     EDITOR_PATH,
     HELP_PATH,
     LEARN_PATH,
     REVIEW_PATH
 } from "./constants";
-import {InnerDeck} from "./innerDeck";
-import {Settings} from "./settings";
-import {Network} from "./network";
-import {Storage} from "./storage";
+import { InnerDeck } from "./innerDeck";
+import { Settings } from "./settings";
+import { Network } from "./network";
+import { Storage } from "./storage";
 import m from "mithril";
 
 // @ts-ignore
-import {version} from "../package.json";
-import {Deck} from "./deck";
+import { version } from "../package.json";
+import { Deck } from "./deck";
 
 /**
  * Special toolbar button
@@ -32,7 +32,7 @@ function convertCsvToDeck(text: string): InnerDeck {
     const lines = text.split("\n");
     return new InnerDeck("Imported Deck", "Unknown", lines.map(line => {
         const [front, back] = line.split(",").map(s => s.trim());
-        return {front, back};
+        return { front, back };
     }).filter(card => card.front && card.back));
 }
 
@@ -75,7 +75,7 @@ let Loader = {
     },
     view: () => m(".modal", m(".content", [
         m(".buttons", [
-            m("button", {className: loaderTab === 0 ? "primary" : "", onclick: () => loaderTab = 0}, "Local Decks"),
+            m("button", { className: loaderTab === 0 ? "primary" : "", onclick: () => loaderTab = 0 }, "Local Decks"),
             Storage.hasCredentials() && m("button", {
                 className: loaderTab === 1 ? "primary" : "", onclick: () => {
                     if (loaderTab !== 1) {
@@ -84,70 +84,96 @@ let Loader = {
                     }
                 }
             }, "Cloud Decks"),
-            m("button", {className: loaderTab === 2 ? "primary" : "", onclick: () => loaderTab = 2}, "Import")
+            m("button", { className: loaderTab === 2 ? "primary" : "", onclick: () => loaderTab = 2 }, "Import")
         ]),
         m("br"),
         loaderTab === 0 && m(".load-table-container", Storage.decks.length === 0 ? m("p", "No decks saved :c") : m("table.load-table", Storage.decks.map((deckRecord, i, decks) => {
-                const loadDeck = () => FileActions.loadDeck(i);
+            const loadDeck = () => FileActions.loadDeck(i);
 
-                return m("tr", [
-                    m("td", {onclick: loadDeck}, deckRecord.inner_deck.name),
-                    m("td", {onclick: loadDeck}, deckRecord.inner_deck.author),
-                    m("td", {onclick: loadDeck}, deckRecord.inner_deck.cards.length + " cards"),
-                    m("td.load-table-solid", [
-                        m("a", {onclick: loadDeck}, "Load"),
-                        " ",
-                        m("a", {
-                            onclick: () => {
-                                if (confirm("Are you sure you want to delete this deck?")) {
-                                    Storage.decks.splice(i, 1);
-                                }
+            return m("tr", [
+                m("td", { onclick: loadDeck }, deckRecord.inner_deck.name),
+                m("td", { onclick: loadDeck }, deckRecord.inner_deck.author),
+                m("td", { onclick: loadDeck }, deckRecord.inner_deck.cards.length + " cards"),
+                m("td.load-table-solid", [
+                    m("a", { onclick: loadDeck }, "Load"),
+                    " ",
+                    m("a", {
+                        onclick: () => {
+                            if (confirm("Are you sure you want to delete this deck?")) {
+                                Storage.decks.splice(i, 1);
                             }
-                        }, "Delete")
-                    ])
-                ]);
-            }))
+                        }
+                    }, "Delete")
+                ])
+            ]);
+        }))
         ),
         loaderTab === 1 && m(".load-table-container", remoteDecks == null || remoteDecks.length === 0 ? m("p", "No decks on cloud :c") : m("table.load-table", remoteDecks.map((deck, i, _) => {
-                console.log(i, deck)
-                return m("tr", [
-                    m("td", deck.inner_deck.name),
-                    m("td", deck.inner_deck.author),
-                    m("td", deck.inner_deck.cards.length + " cards"),
-                    m("td.load-table-solid", [
-                        m("a", {
-                            onclick: () => {
-                                if (Storage.activeDeck != null && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
-                                    return;
-                                }
+            console.log(i, deck)
+            return m("tr", [
+                m("td", deck.inner_deck.name),
+                m("td", deck.inner_deck.author),
+                m("td", deck.inner_deck.cards.length + " cards"),
+                m("td.load-table-solid", [
+                    m("a", {
+                        onclick: () => {
+                            if (Storage.activeDeck != null && !confirm("Are you sure you want to load a new deck? Any unsaved changes will be lost.")) {
+                                return;
+                            }
 
-                                Storage.activeDeck = Storage.decks[(i)];
+                            const sameName = (d: Deck) => d.inner_deck.name == deck.inner_deck.name;
+
+                            let localDeckWithSameName = Storage.decks.find(sameName);
+
+                            if (localDeckWithSameName != null) {
+                                Toolbar.statusText = "Loading deck " + deck.inner_deck.name + "...";
+                                Storage.activeDeck = localDeckWithSameName;
+
                                 m.route.set(EDITOR_PATH);
                                 showLoader = false;
                             }
-                        }, "Load"),
-                        " ",
-                        m("a", {
-                            onclick: () => {
-                                if (confirm("Are you sure you want to delete this deck?")) {
-                                    Network.removeDeck(deck.inner_deck.name).then(Loader.fetchRemoteDecks);
-                                }
+                            else {
+                                Toolbar.statusText = "Loading remote deck " + deck.inner_deck.name + "...";
+
+                                Network.downloadMyDecks().then(decks => {
+                                    let downloadedDeck = decks.find(sameName);
+
+                                    if (downloadedDeck == null) {
+                                        console.error("Downloaded an undefined deck.");
+                                    } else {
+
+                                        Storage.activeDeck = downloadedDeck;
+
+                                        m.route.set(EDITOR_PATH);
+                                        showLoader = false;
+                                    }
+                                });
+
                             }
-                        }, "Delete")
-                    ])
-                ]);
-            }))
+                        }
+                    }, "Load"),
+                    " ",
+                    m("a", {
+                        onclick: () => {
+                            if (confirm("Are you sure you want to delete this deck?")) {
+                                Network.removeDeck(deck.inner_deck.name).then(Loader.fetchRemoteDecks);
+                            }
+                        }
+                    }, "Delete")
+                ])
+            ]);
+        }))
         ),
         loaderTab === 2 && [
             m("p", [
-                m("label", {for: "load-file-select"}, "Import from file: "),
+                m("label", { for: "load-file-select" }, "Import from file: "),
                 m("select#load-file-select", {
                     value: selectedFormat || "",
                     onchange: (e: { target: { value: string | null; }; }) => selectedFormat = e.target.value
                 }, [
-                    m("option", {value: "", disabled: true, selected: selectedFormat == null}, "Select file format..."),
-                    m("option", {value: "json", selected: selectedFormat === "json"}, "Trelane JSON"),
-                    m("option", {value: "csv", selected: selectedFormat === "csv"}, "Generic CSV")
+                    m("option", { value: "", disabled: true, selected: selectedFormat == null }, "Select file format..."),
+                    m("option", { value: "json", selected: selectedFormat === "json" }, "Trelane JSON"),
+                    m("option", { value: "csv", selected: selectedFormat === "csv" }, "Generic CSV")
                 ]),
             ]),
             selectedFormat && m("p", m("input", {
@@ -182,13 +208,13 @@ let About = {
     view: () => m(".modal", m(".content", [
         closeButton(() => showAbout = false),
         m("h1", [
-            m("img", {src: "favicon.png", width: 24, height: 24}),
+            m("img", { src: "favicon.png", width: 24, height: 24 }),
             " Trelane " + version
         ]),
         m("p", "Trelane is a FOSS memorization tool with optional cloud sync functionality."),
         m("p", [
             "Powered by ",
-            m("a", {href: "https://mithril.js.org", target: "_blank"}, "Mithril.js"),
+            m("a", { href: "https://mithril.js.org", target: "_blank" }, "Mithril.js"),
         ]),
     ]))
 }
@@ -202,11 +228,11 @@ class ToolbarView {
 
     set statusText(value: string) {
         this._statusText = value;
-        
+
         console.info(value);
         m.redraw();
     }
-    
+
     private _statusText: string = "Loading...";
 
     showLoader() {

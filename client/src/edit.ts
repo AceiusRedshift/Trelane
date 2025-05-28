@@ -171,7 +171,6 @@ class EditView {
                         oninput: (e: { target: { checked: boolean; }; }) => {
                             this.activeDeck.inner_deck.author = Storage.email;
                             this.activeDeck.is_public = e.target.checked;
-                            console.debug("Set is public to:", this.activeDeck.is_public, "\n\nActive Deck:", Storage.activeDeck);
                         }
                     })
                 ]),

@@ -1,9 +1,9 @@
-import {button, closeButton, FileActions, getRandomKaomoji} from "./utils";
-import {EDITOR_PATH, HELP_PATH} from "./constants";
-import {Storage} from "./storage";
-import {Network} from "./network";
-import {Toolbar} from "./toolbar";
-import {Deck} from "./deck";
+import { button, closeButton, FileActions, getRandomKaomoji } from "./utils";
+import { EDITOR_PATH, HELP_PATH } from "./constants";
+import { Storage } from "./storage";
+import { Network } from "./network";
+import { Toolbar } from "./toolbar";
+import { Deck } from "./deck";
 import m from "mithril";
 
 let onboardingShowStatus = false;
@@ -73,7 +73,7 @@ let Onboarding = {
                     }).finally(() => onboardingShowStatus = true)
                 )
             ]),
-            onboardingShowStatus ? m("p", {style: "text-align: center;"}, Toolbar.statusText) : [
+            onboardingShowStatus ? m("p", { style: "text-align: center;" }, Toolbar.statusText) : [
                 m("br"),
                 m("details.hint", [
                     m("summary", "The fine print"),
@@ -94,7 +94,6 @@ let Explore = {
     fetchDecks: () => {
         Network.exploreDecks().then(response => {
             console.log("Downloaded decks from server.");
-            console.debug(response);
             exploreDecks = response;
         }).catch(error => {
             Toolbar.statusText = "Explore Error: " + error.message;
@@ -122,19 +121,11 @@ let Explore = {
                 }
 
                 return m("tr.load-table", [
-                    m("td", {onclick: loadDeck}, deck.inner_deck.name),
-                    m("td", {onclick: loadDeck}, deck.inner_deck.author),
-                    m("td", {onclick: loadDeck}, deck.inner_deck.cards.length + " cards"),
+                    m("td", { onclick: loadDeck }, deck.inner_deck.name),
+                    m("td", { onclick: loadDeck }, deck.inner_deck.author),
+                    m("td", { onclick: loadDeck }, deck.inner_deck.cards.length + " cards"),
                     m("td.load-table-solid", [
-                        m("a", {onclick: loadDeck}, "Load"),
-                        // " ",
-                        // m("a", {
-                        //     onclick: () => {
-                        //         if (confirm("Are you sure you want to delete this deck?")) {
-                        //             Storage.removeDeck(i);
-                        //         }
-                        //     }
-                        // }, "Delete")
+                        m("a", { onclick: loadDeck }, "Load"),
                     ])
                 ]);
             })),
@@ -153,16 +144,16 @@ export let Splash = {
             m(".column", [
                 m("h3", "Quick Actions"),
                 m("ul", [
-                    m("li", m("button.link-button", {onclick: FileActions.newDeck}, "New Deck")),
-                    m("li", m("button.link-button", {onclick: Toolbar.showLoader}, "Open Deck")),
-                    m("li", m("button.link-button", {onclick: () => m.route.set(HELP_PATH)}, "Help"))
+                    m("li", m("button.link-button", { onclick: FileActions.newDeck }, "New Deck")),
+                    m("li", m("button.link-button", { onclick: Toolbar.showLoader }, "Open Deck")),
+                    m("li", m("button.link-button", { onclick: () => m.route.set(HELP_PATH) }, "Help"))
                 ])
             ]),
             Storage.decks.length > 0 && m(".column", [
                 m("h3", "Recent"),
                 m("ul", [
                     Storage.decks.slice(-Math.min(Storage.decks.length, 5) + (Storage.activeDeck != null ? 1 : 0)).map((deck, i, _) => {
-                        return m("li", m("button.link-button", {onclick: () => FileActions.loadDeck(i)}, deck.inner_deck.name));
+                        return m("li", m("button.link-button", { onclick: () => FileActions.loadDeck(i) }, deck.inner_deck.name));
                     })
                 ])
             ])

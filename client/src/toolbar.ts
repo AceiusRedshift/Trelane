@@ -60,7 +60,6 @@ let Loader = {
     fetchRemoteDecks() {
         Network.downloadMyDecks().then(response => {
             remoteDecks = <Deck[]>response;
-            console.log(response);
         }).catch(error => {
             Toolbar.statusText = "Load Error: " + error.message;
 

@@ -3,5 +3,6 @@ export enum Theme {
     Light = "light",
     Dark = "dark",
     Gunmetal = "gunmetal",
-    Rosemary = "rosemary"
+    Rosemary = "rosemary",
+    Elite = "elite"
 }

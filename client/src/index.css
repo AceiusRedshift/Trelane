@@ -43,6 +43,25 @@
     --link: #794FF7;
 }
 
+[data-theme="elite"] {
+    --background: #111;
+    --toolbar: #222;
+    --text: #ff7100;
+
+    --primary: var(--text);
+    --link: var(--text);
+
+    font-family: monospace;
+
+    * {
+        border-color: var(--primary) !important;
+    }
+
+    .toolbar {
+        background: var(--toolbar) !important;
+    }
+}
+
 body {
     font-family: system-ui, -apple-system, sans-serif;
     font-size: calc(var(--spacing) * 2);

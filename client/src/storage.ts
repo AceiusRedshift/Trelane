@@ -1,11 +1,11 @@
-import {STORAGE_MAIN_KEY} from "./constants";
-import {isDarkMode} from "./utils";
-import {Toolbar} from "./toolbar";
-import {Network} from "./network";
-import {Theme} from "./theme";
-import {Deck} from "./deck";
+import { STORAGE_MAIN_KEY } from "./constants";
+import { isDarkMode } from "./utils";
+import { Toolbar } from "./toolbar";
+import { Network } from "./network";
+import { Theme } from "./theme";
+import { Deck } from "./deck";
 // @ts-ignore
-import {version} from "../package.json";
+import { version } from "../package.json";
 
 export class StorageData {
     public readonly layout_version = version;
@@ -103,19 +103,21 @@ function sync() {
             Toolbar.statusText = "Synchronization initialized...";
 
             console.group("Synchronizing...")
+            console.time("sync");
 
-            console.debug("Downloading server decks");
+            Storage.decks = Storage.decks.filter((val) => val !== null);
 
             Network.downloadMyDecks().then(serverDecks => {
-                console.debug(serverDecks);
+
                 for (let i = 0; i < Storage.decks.length; i++) {
                     const localDeck = Storage.decks[i];
+                    if (localDeck == null) {
+                        console.error("LocalDeck is not defined", localDeck, Storage.decks);
+                    }
 
                     if (localDeck.local) return;
 
                     if (serverDecks.some(d => d.inner_deck.name === localDeck.inner_deck.name)) {
-                        console.debug("Found synchronized deck", localDeck.inner_deck.name);
-
                         let serverDeck = <Deck>serverDecks.find(d => d.inner_deck.name === localDeck.inner_deck.name);
 
                         let serverDeckIsNewer = localDeck.updated_at < serverDeck.updated_at;
@@ -127,11 +129,11 @@ function sync() {
                             Network.addOrUpdateDeck(localDeck);
                         }
                     } else {
-                        console.debug("Found un-synchronized deck", localDeck.inner_deck.name);
                         Network.addOrUpdateDeck(localDeck);
                     }
                 }
 
+                console.timeEnd("sync");
                 console.groupEnd();
                 Toolbar.statusText = "Synchronization completed at " + (new Date()).toLocaleTimeString();
             }).catch(reason => {
@@ -146,9 +148,13 @@ function sync() {
     });
 }
 
+function setupSync() {
+    setInterval(() => localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(Storage)), 500);
+    setInterval(() => document.hasFocus() && sync(), 10000);
+
+    document.onblur = sync;
+}
+
+setupSync();
+
 export const Storage = loadStorage();
-
-setInterval(() => localStorage.setItem(STORAGE_MAIN_KEY, JSON.stringify(Storage)), 500);
-setInterval(() => document.hasFocus() && sync(), 10000);
-
-document.onblur = sync;

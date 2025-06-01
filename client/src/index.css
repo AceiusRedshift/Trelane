@@ -5,7 +5,7 @@
     --toolbar: #111;
     --text: #fff;
 
-    --primary: #4F79F7FF;
+    --primary: #4F79F7;
     --link: var(--primary);
     --close: #f55;
     --visited: #86c;
@@ -23,15 +23,24 @@
     --border: 1px solid #ccc;
 }
 
-[data-theme="quadrant"] {
+[data-theme="gunmetal"] {
     --background: #1d1e35;
     --toolbar: #002;
     --text: #f5f5f5;
 
-    --primary: #ccc;
-    --link: #4F79F7FF;
+    --primary: #448;
+    --link: #4F79F7;
 
     --border: 1px dotted white;
+}
+
+[data-theme="rosemary"] {
+    --background: #fff9ff;
+    --toolbar: #fcf;
+    --text: #222;
+
+    --primary: #faf;
+    --link: #794FF7;
 }
 
 body {
@@ -88,10 +97,11 @@ table {
     }
 }
 
-input, select {
+input,
+select {
     border: 0;
     border-bottom: var(--border);
-    background: transparent;
+    background: var(--background);
     color: var(--text);
     font-size: inherit;
     text-align: center;
@@ -117,10 +127,15 @@ input[type="file"]::file-selector-button:hover {
     color: var(--background);
 }
 
+option {
+    background-color: var(--background);
+    color: var(--text);
+}
+
 /* Modifiers */
 
 button.primary {
-    background: var(--link);
+    background: var(--primary);
     color: #fff;
 
     border-color: #fff;
@@ -154,7 +169,8 @@ button.primary:hover {
     opacity: 75%;
 }
 
-*:disabled, .disabled {
+*:disabled,
+.disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
@@ -180,12 +196,14 @@ button.primary:hover {
     text-align: center;
 }
 
-h1, .heading.title {
+h1,
+.heading.title {
     font-size: 24pt;
     font-weight: bold;
 }
 
-h2, .heading.subtitle {
+h2,
+.heading.subtitle {
     font-size: 16pt;
     font-weight: normal;
 }
@@ -244,7 +262,8 @@ h2, .heading.subtitle {
 }
 
 
-.dropdown, .status {
+.dropdown,
+.status {
     display: inline-block;
 
     font-size: calc(var(--spacing) * 1.75);
@@ -253,7 +272,8 @@ h2, .heading.subtitle {
     padding: 0;
 }
 
-.dropdown-button, .status {
+.dropdown-button,
+.status {
     padding: calc(var(--spacing) / 2);
     background: var(--toolbar) !important;
 
